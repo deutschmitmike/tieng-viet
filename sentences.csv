@@ -1,0 +1,122 @@
+id|vi|tts|pron_note|hanzi|en|zh|tags
+s0001|Chào em.||chào: huyền tone, low and relaxed; em: short, mid, flat||Hi. (to someone younger than you)|嗨。（對比你小的人說）|greeting;tone
+s0002|Chào anh.||anh: short a plus n at the teeth, [ăn]; the final is not the ng of ăn||Hi. (what a younger person says to you)|嗨。（比你小的人對你說）|greeting;tone
+s0003|Em khỏe không?||khỏe: dip then rise, like a Mandarin 3rd tone; không is often "hông" in casual Saigon speech||How are you?|你好嗎？|greeting;question
+s0004|Anh khỏe. Còn em?||||I'm fine. And you?|我很好，你呢？|greeting
+s0005|Dạ, em khỏe.||dạ: d sounds like English y in Saigon; low tone. dạ is the Southern polite yes / response particle (Hanoi: vâng)||Yes, I'm fine.|嗯，我很好。（dạ 是南部禮貌的應答詞）|greeting;particle
+s0006|Cảm ơn em.|||感恩|Thank you.|謝謝你。|greeting
+s0007|Không có gì.||||You're welcome. / It's nothing.|不客氣。|greeting
+s0008|Anh tên là Mike.||||My name is Mike.|我叫 Mike。|intro
+s0009|Em tên gì?||||What's your name?|你叫什麼名字？|intro;question
+s0010|Rất vui được gặp em.||rất: Saigon r, tongue curled back. the voice says z here and that is wrong: you say the Mandarin 日, tongue curled back 錄音的 r 不對，你要唸捲舌的 日||Nice to meet you.|很高興認識你。|intro
+s0120|Em ăn cơm chưa?||ăn sounds like "ăng" in Saigon||Have you eaten yet? (a common way to greet)|你吃飯了沒？（常見的打招呼）|greeting;question
+s0121|Dạ rồi. Còn anh?||||Yes, I have. And you?|吃了，你呢？|greeting;answer
+s0011|anh, em, ăn, đi, tên||ngang tone: flat, mid, no movement (lower than a Mandarin 1st tone)||(ngang) older brother, you; younger sibling, you; eat; go; name|（平聲 ngang）哥哥、你；弟妹、你；吃；去；名字|tone
+s0012|là, và, nhà, gì, người||huyền tone: low, falling gently, relaxed voice, a bit breathy||(huyền) to be; and; house; what; person|（huyền）是；和；家；什麼；人|tone
+s0013|có, cá, nói, biết, sáng||sắc tone: rising, like a Mandarin 2nd tone; on biết it is short and high||(sắc) have; fish; speak; know; morning, bright|（sắc）有；魚；說；知道；早上、亮|tone
+s0014|khỏe, hỏi, ở, cũng, nữa||hỏi and ngã are one tone in Saigon: dip then rise, like a full Mandarin 3rd tone, longer than the others||(hỏi / ngã) healthy; ask; be at, live; also; more, again|（hỏi／ngã）健康；問；在、住；也；再、更|tone
+s0015|mệt, học, một, được, chị||nặng tone: low and short; on học, một, được it is cut off by the final consonant||(nặng) tired; study; one; can, get; older sister, you|（nặng）累；學；一；可以、得到；姊姊、你|tone
+s0016|ma, mà, má, mã, mạ||one syllable, five Saigon tones: level, low falling, rising, dip-rise, low and cut|魔 (ma) / 媽 (má) / 碼 (mã)|ghost; but, that; mom (Saigon); code; rice seedling|鬼；但是、而；媽（南部）；代碼；秧苗|tone;minimal
+s0017|ba, bà, bả||bả = bà ấy, she (colloquial Southern)|婆 (bà)|three, dad (Saigon); grandmother, Mrs; she (colloquial)|三、爸（南部）；奶奶、太太；她（口語）|tone;minimal
+s0018|mua, mùa, múa||||buy; season; dance|買；季節；跳舞|tone;minimal
+s0019|cơ, cờ, cớ, cỡ||cỡ đó (about that much) is colloquial Southern|肌 (cơ)|muscle; flag, chess; reason (cớ gì?); size, roughly (cỡ đó)|肌肉；旗、棋；理由；大小、大概|tone;minimal
+s0020|mắt, mất, mát||ă: short and clipped; â: short and central, like the e in German "bitte"; a: long and open||eye; lose; cool (weather)|眼睛；丟失；涼快|vowel;minimal
+s0021|tam, tăm, tâm|||三 (tam) / 心 (tâm)|three (Sino); toothpick; heart, mind (tâm lý)|三；牙籤；心|vowel;minimal
+s0022|lan, lăn, lân||in Saigon the final -n here sounds like -ng: lang, lăng, lâng|蘭 (lan) / 鄰 (lân)|orchid, spread; roll; neighbouring (lân cận)|蘭花、擴散；滾；鄰近|vowel;minimal
+s0023|to, tô, tơ||o: open, like German "offen"; ô: closed, like "Ofen"; ơ: unrounded, like the vowel in English "bird" but shorter||big; bowl (Saigon; Hanoi: bát); silk|大；碗（南部用 tô）；絲|vowel;minimal
+s0024|lo, lô, lơ||||worry; lot, plot (lô đất); ignore (lơ đi)|擔心；地塊；不理（lơ đi）|vowel;minimal
+s0025|mua, mưa||ư: say u but spread the lips as for i||buy; rain|買；下雨|vowel;minimal
+s0026|thu, thư|||秋 (thu) / 書 (thư)|autumn; letter|秋天；信|vowel;minimal
+s0027|tu, tư|||修 (tu) / 私 (tư)|practise (religion); private, personal (tư nhân)|修行；私（tư nhân 私人）|vowel;minimal
+s0028|me, mê||e: open, like German "Bett"; ê: closed, like "Beet"|迷 (mê)|tamarind; crazy about|羅望子；迷、著迷|vowel;minimal
+s0029|chè, chê||||sweet soup; criticise, look down on|甜湯；嫌、批評|vowel;minimal
+s0030|bé, bế||||small, little kid; carry (a child) in the arms|小、小孩；抱（小孩）|vowel;minimal
+s0031|bia, biết||ia: i gliding into a lazy ơ; written iê before a final consonant, same sound||beer; know|啤酒；知道|vowel;diphthong
+s0032|mua, muốn||ua: u gliding into ơ; written uô before a final||buy; want|買；想要|vowel;diphthong
+s0033|mưa, mượn||ưa: ư gliding into ơ; written ươ before a final||rain; borrow|下雨；借|vowel;diphthong
+s0034|chưa, được||||not yet; can, get, okay|還沒；可以、得到|vowel;diphthong
+s0035|Trời mát quá.||quá sounds like "wá" in Saigon||The weather is so nice and cool.|天氣好涼快。|weather
+s0036|Hôm nay trời mưa.||||It's raining today.|今天下雨。|weather
+s0037|Anh muốn mua cà phê.||||I want to buy coffee.|我想買咖啡。|coffee
+s0038|Cho anh một ly cà phê sữa đá.||ly = glass (Saigon; Hanoi: cốc); một ends with the lips closed, like "mộc"||One iced milk coffee, please. (literally: give me one glass of ...)|給我一杯冰奶咖啡。|coffee;order
+s0039|Cho anh một tô phở.||||A bowl of phở, please.|給我一碗河粉。|food;order
+s0040|Em biết không?||||Do you know?|你知道嗎？|question
+s0041|Chưa, em chưa biết.||||Not yet, I don't know yet.|還沒，我還不知道。|answer
+s0042|Anh mệt quá.||||I'm so tired.|我好累。|feeling
+s0043|dạ, dài, dễ, gì, giờ, giá||d and gi are both y (as in English yes) in Saigon||yes (polite); long; easy; what; hour, time; price|是、嗯；長；容易；什麼；點、時間；價格|initial;d-gi
+s0044|đi, đâu, đó, được||đ is a real d, tongue at the teeth, with a slight inward gulp (implosive); a plain d is fine||go; where; there, that; can|去；哪裡；那、那個；可以|initial;đ
+s0045|dài, đài||y versus d|臺 (đài)|long; station, platform (đài truyền hình = TV station)|長；台（電台、電視台）|initial;minimal
+s0046|dao, đào|||桃 (đào)|knife; peach, dig|刀；桃子、挖|initial;minimal
+s0047|da, đa|||多 (đa)|skin; many (đa số = majority)|皮膚；多（đa số 多數）|initial;minimal
+s0048|vui, về, vậy, và||v: young urban Saigon speakers keep v in careful speech, it drifts toward y in fast speech; the Mekong Delta says y throughout. Aim for v||happy; return, go home; so, like that; and|開心；回；那樣；和|initial;v
+s0049|rồi, ra, rất, rẻ, rửa||Saigon r: tongue curled back, close to an English r, not the Hanoi z. the voice says z here and that is wrong: you say the Mandarin 日, tongue curled back 錄音的 r 不對，你要唸捲舌的 日||already; go out; very; cheap; wash|了、已經；出去；很；便宜；洗|initial;r
+s0050|ra, da, gia||three spellings, two sounds in Saigon: ra with r, da and gia both with y. the voice says z here and that is wrong: you say the Mandarin 日, tongue curled back 錄音的 r 不對，你要唸捲舌的 日|家 (gia)|go out; skin; family (gia đình)|出去；皮膚；家（gia đình 家庭）|initial;minimal
+s0051|trà, chà||tr: tongue curled back; ch: tongue flat behind the teeth. Saigon keeps them apart, Hanoi does not|茶 (trà)|tea; rub, scrub|茶；搓、擦|initial;minimal
+s0052|trưa, chưa||||noon; not yet|中午；還沒|initial;minimal
+s0053|con trai, cái chai||||boy, son; bottle|男孩、兒子；瓶子|initial;minimal
+s0054|sinh, xinh||s: tongue curled back; x: plain s. Many young Saigon speakers say both as x, so a plain s for both is acceptable. xinh itself is Northern-flavoured; in Saigon say đẹp or dễ thương|生 (sinh)|be born; pretty|生；漂亮|initial;minimal
+s0055|xa, sa|||沙 (sa)|far; fall, sand (sa mạc = desert)|遠；落、沙（sa mạc 沙漠）|initial;minimal
+s0056|tôi, thôi||t = Mandarin d (no puff of air); th = Mandarin t (puff of air)||I (neutral); stop, enough, okay then|我（中性）；算了、好了|initial;minimal
+s0057|tiền, thiền|||錢 (tiền) / 禪 (thiền)|money; zen, meditation|錢；禪|initial;minimal
+s0058|tay, thay||||hand, arm; replace, change|手；替換|initial;minimal
+s0059|cô, khô||c = Mandarin g; kh = Mandarin k, often with friction like the ch in German "Bach"|姑 (cô) / 枯 (khô)|aunt, Ms; dry|姑姑、小姐；乾|initial;minimal
+s0060|cá, khá||||fish; fairly, quite|魚；相當、蠻|initial;minimal
+s0061|quá, quê, quen, quán||qu = w in Saigon: wá, wê, wen, wán|過 (quá) / 館 (quán)|too, very; hometown, countryside; be used to, know (someone); shop, café, eatery|太、非常；家鄉；熟悉、認識；店、館|initial;qu
+s0062|ngon, người, nghe, nghỉ||ng at the start of a syllable: the sound at the end of "sing", then keep going||delicious; person; hear, listen; rest|好吃；人；聽；休息|initial;ng
+s0063|nhà, nhiều, nhớ, nhanh||nh: Spanish ñ, the ny in "canyon"||house; many, much; miss, remember; fast|家；多；想念、記得；快|initial;nh
+s0064|phở, phải, phim||ph = f||phở; must, right; film|河粉；必須、對；電影|initial;ph
+s0065|gà, ghế, ga||g, gh: a soft g with friction, like the g in Spanish "amigo"||chicken; chair; station (ga xe lửa)|雞；椅子；車站|initial;g
+s0066|Dạ, em hiểu rồi.|||曉 (hiểu)|Yes, I understand now. (hiểu rồi = got it)|嗯，我懂了。|understand
+s0067|Anh về nhà.||||I'm going home.|我回家。|daily
+s0068|Trưa nay ăn gì?||||What do we eat at noon today?|今天中午吃什麼？|food;question
+s0069|Cái chai này bự quá.||bự = big (Southern; Hanoi: to)||This bottle is huge.|這個瓶子好大。|describe
+s0070|Thôi, đủ rồi.||||Okay, that's enough.|好了，夠了。|daily
+s0071|Cà phê này ngon quá.||||This coffee is so good.|這杯咖啡好好喝。|coffee
+s0072|Người Sài Gòn nói nhanh quá.||||Saigon people talk so fast.|西貢人講話好快。|describe
+s0073|Em nói chậm chút nha.||nha: soft Southern particle for requests and friendly statements, like 喔 or 吧||Speak a bit slower, please.|你講慢一點喔。|request;particle
+s0074|Anh nghe không hiểu.||||I don't understand (what I'm hearing).|我聽不懂。|understand
+s0075|Cổ đẹp quá.||cổ = cô ấy (she), Saigon contraction||She's so pretty.|她好漂亮。|describe;contraction
+s0076|làm, làn, làng, lành||four finals: -m, -n, -ng, -nh. In Saigon làn sounds like làng, and lành sounds like làn with a short a||do, work; lane; village; benign, gentle|做；車道；村；溫和、良性|final;minimal
+s0077|tin, tinh||identical in Saigon, both like "tưn"|信 (tin) / 精 (tinh)|believe, news; refined, spirit (tinh thần)|相信、消息；精（tinh thần 精神）|final;merger
+s0078|chín, chính||identical in Saigon|正 (chính)|nine; main, exactly (chính xác)|九；正（chính xác 正確）|final;merger
+s0079|một, mộc||identical in Saigon: lips close at the end|木 (mộc)|one; wood (Sino)|一；木|final;merger
+s0080|mắt, mắc||identical in Saigon||eye; expensive (Southern; Hanoi: đắt)|眼睛；貴（南部說 mắc）|final;merger
+s0081|tiếc, tiết||identical in Saigon|節 (tiết)|regret, pity (tiếc quá); economise (tiết kiệm)|可惜；節（tiết kiệm 節省）|final;merger
+s0082|tập, tất, tách||final p, t, ch: close the mouth and stop, no puff of air, no release|習 (tập)|practise; all (tất cả; for socks Saigon says vớ, Hanoi tất); cup|練習；全部（tất cả；襪子南部說 vớ，北部說 tất）；杯子|final;stop
+s0083|học, tốt, đẹp, sách||all four end in a stopped consonant; such syllables only take the sắc or nặng tone|學 (học) / 冊 (sách)|study; good; beautiful; book|學習；好；漂亮；書|final;stop
+s0084|không, ông, đúng, uống||after o, ô, u the final -ng closes the lips as well: like "ngm"||no, not; grandfather, Mr; correct; drink|不；爺爺、先生；對；喝|final;labial
+s0085|học, đọc, cục, tốc||after o, ô, u the final -c closes the lips too: like "kp"|學 (học) / 讀 (đọc) / 速 (tốc)|study; read; lump, piece; speed (tốc độ)|學；讀；塊；速（tốc độ 速度）|final;labial
+s0086|anh, xanh, nhanh, khách||-anh in Saigon: short a plus n at the teeth, [ăn]; -ach: short a plus a cut t, [ăt]|客 (khách)|older brother, you; blue, green; fast; guest, customer|哥哥、你；藍、綠；快；客人|final;anh
+s0087|bệnh, kênh, ếch||-ênh, -êch: Saigon says "ên", "êt"; bệnh is often written and said bịnh in the South|病 (bệnh)|sick, illness; channel; frog|病；頻道；青蛙|final;ênh
+s0088|một, hai, ba, bốn, năm, sáu, bảy, tám, chín, mười||||one to ten|一到十|number
+s0089|Anh ăn cơm rồi.||ăn sounds like "ăng"||I've eaten already.|我吃過飯了。|daily
+s0090|Chín giờ tối.||||Nine in the evening.|晚上九點。|time
+s0091|Cái này mắc quá.||||This is too expensive.|這個太貴了。|shopping
+s0092|Anh học tiếng Việt.|||學 (học) / 越 (Việt)|I'm learning Vietnamese.|我在學越南語。|learn
+s0093|Em nói được tiếng Anh không?|||英 (Anh)|Can you speak English?|你會說英語嗎？|question
+s0094|Sách này hay lắm.|||冊 (sách)|This book is really good.|這本書很好看。|describe
+s0095|Không sao đâu.||||No problem. / It's fine.|沒關係。|daily
+s0096|Anh không hiểu.||||I don't understand.|我不懂。|understand
+s0097|Anh là người Đức.|||德 (Đức)|I'm German.|我是德國人。|intro
+s0098|Anh là giáo viên tiếng Đức.|||教員 (giáo viên) / 德 (Đức)|I'm a German teacher.|我是德語老師。|intro
+s0099|Anh dạy tiếng Đức cho người Trung Quốc.||người Trung Quốc = from China; người Hoa = ethnic Chinese in general, also the Chinese-Vietnamese in Saigon|中國 (Trung Quốc)|I teach German to Chinese people.|我教中國人德語。|intro
+s0100|Ba anh là người Việt.|||越 (Việt)|My dad is Vietnamese.|我爸是越南人。|intro;family
+s0101|Má anh là người Trung Quốc.|||中國 (Trung Quốc)|My mom is Chinese.|我媽是中國人。|intro;family
+s0102|Anh nói được tiếng Trung.||in Saigon "tiếng Hoa" is just as common for the Chinese language|中 (Trung)|I can speak Chinese.|我會說中文。|intro
+s0103|Anh mới học tiếng Việt.||||I just started learning Vietnamese.|我剛開始學越南語。|intro
+s0104|Anh ở Đức.|||德 (Đức)|I live in Germany.|我住在德國。|intro
+s0105|Em ở đâu?||||Where are you? / Where do you live?|你在哪裡？|question
+s0106|Em ở Sài Gòn hả?||hả: question particle for checking or mild surprise, like 喔 or 是嗎||You're in Saigon?|你在西貢喔？|question;particle
+s0107|Em làm nghề gì?||||What do you do for a living?|你做什麼工作？|question
+s0108|Em là sinh viên hả?|||生員 (sinh viên)|You're a student?|你是大學生喔？|question
+s0109|Ổng là ba anh.||ổng = ông ấy (he, an older man), Saigon contraction||He is my dad.|他是我爸。|contraction
+s0110|Ảnh là người Sài Gòn.||ảnh = anh ấy (he), Saigon contraction||He's from Saigon.|他是西貢人。|contraction
+s0111|Cổ là bạn anh.|||伴 (bạn)|She's my friend.|她是我朋友。|contraction
+s0112|Thiệt hả?||thiệt = thật (Southern)|實 (thật)|Really?|真的嗎？|particle
+s0113|Vậy hả?||||Is that so? / Oh really?|是喔？|particle
+s0114|Trời ơi, mắc quá!||||Oh my god, so expensive!|天啊，好貴！|exclaim
+s0115|Em nói lại được không?||||Can you say that again?|你可以再說一次嗎？|request
+s0116|Thôi, anh đi ngủ nha.||||Okay, I'm going to sleep now.|好了，我去睡了喔。|daily;particle
+s0117|Ngủ ngon nghen.||nghen: warm Southern particle, softer and more familiar than nha||Sleep well.|晚安喔。|daily;particle
+s0118|Mai nói tiếp nha.||||Let's talk more tomorrow.|明天再聊喔。|daily;particle
+s0119|Hẹn gặp lại.||||See you again.|再見。|greeting

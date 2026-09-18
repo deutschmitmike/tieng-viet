@@ -1,0 +1,41 @@
+# NIEMALS ins Repo: der ElevenLabs-Schlüssel.
+# Die Vorlage ohne Schlüssel bleibt drin.
+scripts/.env
+*.env
+!scripts/.env.example
+
+# Abgeleitete Dateien. Werden aus csv und den Satz-mp3s in einem Befehl neu gebaut
+# und wären über 41 Wochen mehr als ein Gigabyte.
+# Die geschnittenen Tages- und Echospuren, rund 30 MB pro Woche:
+weeks/*/audio/
+# Die eigenständige Heftfassung mit eingebackenem Audio, 4,4 MB pro Woche.
+# Die Netzfassung heißt index.html und bleibt drin:
+weeks/*/w*.html
+# Die Markdown-Fassung der Tage:
+weeks/*/d*.md
+weeks/*/_alt/
+*.webloc
+*.docx
+
+# Testseiten und Testaufnahmen aus der Stimmenauswahl
+weeks/*.html
+audio/duel/
+audio/fix/
+audio/voicecast/
+audio/blindtest/
+audio/modeltest/
+audio/dtest/
+audio/voicetest/
+
+# Deine Freitagsnotizen mit den rohen Tandem-Nachrichten.
+# Bleiben lokal, weil das Repo oeffentlich ist.
+checkin.md
+
+# Kram
+.DS_Store
+__pycache__/
+*.pyc
+scripts/node_modules/
+scripts/package-lock.json
+*.bak
+*.bak2

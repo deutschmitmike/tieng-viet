@@ -1,0 +1,24 @@
+{
+  "primary": {
+    "name": "saigon-v3",
+    "voice_id": "2vKhvfp40Pq0JeXGdL7F",
+    "model_id": "eleven_v3",
+    "stability": 1.0,
+    "similarity_boost": 0.75,
+    "style": 0.0,
+    "use_speaker_boost": true
+  },
+  "alternate": null,
+  "alternate_weeks": "even",
+  "copy_tracks_to": null,
+  "_notes": [
+    "alternate: copy the primary block, change name and voice_id, and the alternate voice is used on even weeks (or odd, see alternate_weeks).",
+    "copy_tracks_to: e.g. \"~/My Drive/tieng-viet-audio\" to get the finished daily tracks on your phone. Per-sentence files stay local.",
+    "docx_link_base: absolute path of this folder on the Mac where you open the booklets; the audio links in the docx are built from it. Leave null for relative links.",
+    "model_id: eleven_v3, chosen in the blind test of 17 Sep 2026 (v3 beat flash 2.5). v3 takes no language_code and no speed; stability accepts 0.0, 0.5 or 1.0 (0.5 = natural).",
+    "v3 varies a little between generations of the same text, which is why every sentence file is generated once and then reused.",
+    "stability 1.0 (robust) chosen on 18 Sep 2026: at 0.5 the voice glued 'cho anh' into 'choang'. 1.0 separates the syllables. v3 accepts 0.0, 0.5 or 1.0 only.",
+    "The Saigon respelling (d and gi -> y at the start of a syllable) lives in scripts/common.py, function saigon_respell, and runs on every sentence automatically. The tts column in sentences.csv overrides it for single sentences. r stays wrong in every voice and is flagged in the notes instead."
+  ],
+  "docx_link_base": "/Users/mike/Documents/tieng-viet"
+}

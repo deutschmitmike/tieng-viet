@@ -1,0 +1,7 @@
+{
+  "name": "tieng-viet-scripts",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Week booklet renderer for the tieng-viet course",
+  "dependencies": { "docx": "^9.0.0" }
+}
