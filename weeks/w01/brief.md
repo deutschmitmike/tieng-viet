@@ -37,3 +37,21 @@ Two lines in `checkin.md`: what was hard, what you actually used. Add the voice-
 ## Things that are deliberately missing this week
 
 No writing, no Telex typing (week 2), no numbers beyond ten, no verbs beyond a dozen. If you feel under-fed on vocabulary, that is on purpose; the sound work now is what makes the vocabulary usable later.
+
+## Vier Stellen, an denen du besser bist als die Aufnahme
+
+Die Stimme ist ein Modell, kein Mensch aus Saigon, und an vier Lauten liegt sie daneben. Alle vier sind im Heft markiert. Du hörst dort eines und sprichst ein anderes.
+
+Das r kommt als deutsches z. Du sprichst es zurückgerollt wie das Mandarin 日, also ra, nicht sa.
+
+tr und ch klingen bei der Stimme gleich. Du hältst sie auseinander: tr zurückgerollt, ch flach hinter den Zähnen. con trai und cái chai sind zwei verschiedene Dinge.
+
+s und x klingen bei der Stimme gleich. Du hältst sie auseinander: s zurückgerollt wie 師, x ein normales s.
+
+chín und chính klingen bei der Stimme gleich. Das Schluss-n ist wirklich bei beiden gleich, aber der Vokal nicht: chín hat ein klares i, chính zieht Richtung ư. Dasselbe bei tin und tinh, und bei ê geht die Spur Richtung ơ.
+
+Diese vier hörst du dir einmal bewusst an, dann weißt du für den Rest des Kurses Bescheid:
+
+@@play s0049 s0051 s0054 s0078
+
+Und genau diese vier fragst du in den ersten Wochen deine Tandems ab. Sie sind der schnellste Weg zu einer ehrlichen Rückmeldung, weil ein Saigoner sofort hört, ob du sie triffst.

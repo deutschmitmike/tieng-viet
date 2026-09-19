@@ -15,6 +15,11 @@ this file only summarises what must never be got wrong.
   commit, say so immediately: the key has to be replaced at ElevenLabs.
 - Saigon only, in every sentence and every note. Never a Northern production form; the Northern
   equivalent may be named once in `pron_note` for recognition.
+- The production target is careful Saigon, not fast Saigon: qu keeps its k (quá, not wá), v stays v,
+  s and x stay apart, tr and ch stay apart, r stays retroflex. Care is not the same as dialect, and the
+  Southern system itself never changes: d and gi are y and never z, five tones with hỏi = ngã, and the
+  Southern finals stay. Note that the palatal finals are not a full merger: -nh becomes -n but the vowel
+  keeps the trace (anh = ăn, tinh = tưn), so tin and tinh are still two words. `pron_note` gives what you say, then what you hear in Saigon, then what Hanoi does.
 - No em dashes anywhere, in any language. Chinese is Taiwan-register 繁體 with the Chinese comma ，
   and 你, never 您 and never simplified characters.
 - Do not edit `voices.json`. Voice and stability 1.0 were decided on 18 Sep 2026 after a blind test.
@@ -22,9 +27,14 @@ this file only summarises what must never be got wrong.
   `scripts/common.py`, function `saigon_respell`: at the start of a syllable d becomes y and gi becomes y,
   while đ and gh are never touched. The booklet always shows the correct spelling; only the voice sees the
   respelling. Use the column only as a hand override for a single sentence.
-- The r is the one sound no ElevenLabs voice gets right: it comes out as a z, and unlike d and gi there is
-  no second letter in the alphabet carrying the retroflex value, so respelling cannot fix it. Sentences with
-  a syllable-initial r carry the warning in `pron_note` the way s0049 and s0050 do.
+- Four sounds are beyond the voice, established by testing on 19 Sep 2026 across four models and four
+  voices, and by respelling attempts. Do not hunt them again; mark them. Every sentence that contains one
+  carries the standing warning in `pron_note`, the way s0049, s0051, s0054 and s0078 do, and the week's
+  brief repeats the four in one block:
+  r comes out as z (Mike says the Mandarin 日); tr and ch merge; s and x merge; and the vowel trace of the
+  palatal finals is missing, so chín and chính sound the same (Mike pulls the vowel toward ư, and toward ơ
+  after ê). Respelling works only where the alphabet has a letter with the target value, which is why d and
+  gi become y and nothing else does: ư and ơ were tried for the vowel trace and did not take.
 - HTML is the only booklet format. Do not run `scripts/render_week_docx.js`.
 - Sentence mp3s are generated once and reused. Regenerate with
   `python3 scripts/generate_audio.py --force --ids s0123`, never by deleting files.
@@ -47,7 +57,9 @@ Here in Claude Code the usual job is git: commit the new week and push.
 
 ## GitHub
 
-Private repo, GitHub Pages served from the root of the main branch, so the front page is the site root and
-a week is at `/weeks/w01/`. Commit sources, the per-sentence mp3s and the `index.html` booklets. The cut
+Public repo at github.com/deutschmitmike/tieng-viet, published at deutschmitmike.github.io/tieng-viet.
+GitHub Pages is served from the root of the main branch, so the front page is the site root and a week is
+at `/weeks/w01/`. The repo is public, which is why the key, `checkin.md` with its raw tandem messages, and
+the test recordings all stay out of it. Check `git status` before every push. Commit sources, the per-sentence mp3s and the `index.html` booklets. The cut
 daily tracks, the self-contained `wNN.html` and the day markdown files stay out; they are rebuilt in one
 command and would run into gigabytes over 41 weeks.

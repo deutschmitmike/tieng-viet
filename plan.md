@@ -44,7 +44,7 @@ Every eighth week. Record a two-minute monologue on the checkpoint topic, then h
 
 ### Phase 0, weeks 1 to 2: the Saigon sound system
 
-- w01 Tones (five, as Saigon has them), vowels, initials with their Saigon values (d/gi = y, r retroflex, tr vs ch, qu = w, v stays v), finals and the Saigon mergers (-n/-ng, -t/-c, tin = tinh, một = mộc), unreleased stops, lip closure after rounded vowels. Greetings, pronouns anh/em, first persona sentences on Friday.
+- w01 Tones (five, as Saigon has them), vowels, initials with their Saigon values (d/gi = y, r retroflex, tr vs ch, qu = w, v stays v), finals and what Saigon does with them: -t turns into -c after rounded vowels (một = mộc, a true merger), while the palatal -nh and -ch give up their consonant but leave a trace in the vowel (anh = ăn, tinh = tưn, so tin and tinh stay two different words), unreleased stops, lip closure after rounded vowels. Greetings, pronouns anh/em, first persona sentences on Friday.
 - w02 Saigon contractions (ổng, bả, cổ, ảnh, chỉ, ngoải, trỏng), sentence-final particles (nha, nghen, hen, hả, hông, á, đó, luôn), the top 100 function words, numbers, time of day, days of the week, Telex typing on Mac and phone, first structured texting with the tandems.
 
 ### Phase 1, weeks 3 to 10: A1, survival and small talk
@@ -103,6 +103,9 @@ Every eighth week. Record a two-minute monologue on the checkpoint topic, then h
 - Every Southern-specific word is marked in `pron_note` with its Northern equivalent once, so you recognise the Hanoi word when it turns up, but never produce it.
 - `pron_note` is filled only where the Saigon pronunciation contradicts the spelling or a Mandarin or German habit would interfere. Empty means: read it as written.
 - 漢字 only where the etymology is certain. Doubtful cases stay blank rather than guessing.
+- Three layers in `pron_note`, in this order: what you say, what you will hear in Saigon, and what Hanoi does. The last two are recognition only and never enter the echo tracks.
+- The production target throughout is careful Saigon, not fast Saigon: qu keeps its k (quá, never wá), v stays v (về, never yề), s and x stay apart, tr and ch stay apart, r stays retroflex. This is a matter of care, not of dialect. Where the careful Saigon form happens to match Hanoi, as with qu, that is a coincidence of care and no reason to avoid it.
+- What is Southern in the system itself is never touched, whatever "standard" is said to mean: d and gi are y and never z, r is retroflex and never z, the five tones stay with hỏi = ngã, and the Southern finals stay: -t becomes -c after rounded vowels (một = mộc), and the palatal -nh and -ch become -n and -t. That last one is not a full merger, because the vowel keeps the trace: anh is ăn, tinh is tưn, chính is chứn, so tin and tinh remain two words and careful speech keeps them apart. Undoing any of this would not be careful speech, it would be Northern speech, where the difference sits in the final consonant instead.
 - Chinese glosses in Taiwan-register 繁體 with the Chinese comma, 你 not 您.
 - When a tandem's correction and this material disagree on how something is said in Saigon, the tandem wins. Note it in `checkin.md`; the sentence gets fixed.
 
