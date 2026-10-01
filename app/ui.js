@@ -192,7 +192,7 @@ const MODE_LABEL = {new: "New sentence", echo: "Listen and repeat", drill: "Soun
 function renderCard() {
   const R = S.round, it = R.items[R.pos], item = D.sent[it.id];
   if (!cs || cs.id !== it.id + ":" + R.pos) cs = {id: it.id + ":" + R.pos, plays: 0, revealed: it.m !== "recall", shownAt: Date.now(), notes: it.m === "new"};
-  const need = it.m === "recall" ? 1 : 2, ready = cs.revealed && cs.plays >= need;
+  const ready = cs.revealed;   // Mike 2026-10-01: rating never waits for a play
   const pct = Math.round(100 * R.pos / R.items.length);
   let body = "";
   if (!cs.revealed) {
@@ -208,7 +208,7 @@ function renderCard() {
       '<div class="plays">' +
       '<button class="btn play big" data-play="' + it.id + '" data-act="cplay">' + ICON.play + "<span>Play</span></button>" +
       '<button class="btn play" data-act="cplay" data-slow="1">' + ICON.play + "<span>Slow</span></button></div>" +
-      '<p class="hint small">' + (ready ? "" : it.m === "recall" ? "Listen once, then rate yourself." : "Play it, say it, play it again. Then rate yourself.") + "</p>" +
+      (it.m === "new" ? '<p class="hint small">Play it, say it, play it again. Then rate yourself.</p>' : "") +
       '<div class="rate"><button class="btn again" data-act="rate" data-r="again"' + (ready ? "" : " disabled") + ">Again</button>" +
       '<button class="btn ok" data-act="rate" data-r="ok"' + (ready ? "" : " disabled") + ">Got it</button></div>";
   }

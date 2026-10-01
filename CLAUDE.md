@@ -53,7 +53,7 @@ Read `plan.md` first (syllabus, audio, fixed decisions), then `WEEKLY.md` (how a
   `python3 app/pull_checkin.py` reads it (read only) and writes the Friday check-ins into `checkin.md`.
 - Mike's decisions (30 Sep and 1 Oct 2026): sound only on a button press, never autoplay; no record button;
   English interface; phone first; 30 minutes, five days; at most six new sentences a day; rating with two
-  buttons, Again and Got it, which wake after two plays; from box 3 a sentence is said from its meaning;
+  buttons, Again and Got it, always active, no play needed to go on; from box 3 a sentence is said from its meaning;
   sound drills only listened to and repeated, they run out at box 4; Friday check-in in the app; typing
   (Telex) comes with lesson 2, slowly, only for sure sentences, as its own track that never pushes a
   speaking card back.

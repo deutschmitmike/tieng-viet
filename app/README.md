@@ -18,7 +18,7 @@ nothing if a check or a test fails.
 - The time per card is measured (moving average per card type), so the estimate fits Mike's real pace.
 - Card types: `new` (text, meaning and notes visible), `echo` (listen and repeat), `recall` (from box 3:
   meaning only, say it, then Check reveals and plays), `drill` (sound drills, only ever listen and repeat).
-- Nothing plays by itself. Again and Got it wake after two completed plays (recall: one, after Check).
+- Nothing plays by itself. Again and Got it are always active (Mike, 1 Oct 2026: no play needed to go on); on a recall card they appear after Check, which reveals and plays.
 - Again: the card comes back four cards later as listen and repeat; the retry does not count as a review.
 - After the last card the tandem task of the lesson; the day counts as done when it is ticked (Done or Not
   today). On Fridays (and at the weekend) the check-in follows if it is not filled in yet.
