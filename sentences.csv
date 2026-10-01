@@ -12,7 +12,7 @@ s0010|Rất vui được gặp em.||rất: Saigon r, tongue curled back. the voi
 s0120|Em ăn cơm chưa?||ăn sounds like "ăng" in Saigon||Have you eaten yet? (a common way to greet)|你吃飯了沒？（常見的打招呼）|greeting;question
 s0121|Dạ rồi. Còn anh?||||Yes, I have. And you?|吃了，你呢？|greeting;answer
 s0011|anh, em, ăn, đi, tên||ngang tone: flat, mid, no movement (lower than a Mandarin 1st tone)||(ngang) older brother, you; younger sibling, you; eat; go; name|（平聲 ngang）哥哥、你；弟妹、你；吃；去；名字|tone
-s0012|là, và, nhà, gì, người||huyền tone: low, falling gently, relaxed voice, a bit breathy||(huyền) to be; and; house; what; person|（huyền）是；和；家；什麼；人|tone
+s0012|là, và, nhà, gì, người||huyền tone: low, falling gently, relaxed voice||(huyền) to be; and; house; what; person|（huyền）是；和；家；什麼；人|tone
 s0013|có, cá, nói, biết, sáng||sắc tone: rising, like a Mandarin 2nd tone; on biết it is short and high||(sắc) have; fish; speak; know; morning, bright|（sắc）有；魚；說；知道；早上、亮|tone
 s0014|khỏe, hỏi, ở, cũng, nữa||hỏi and ngã are one tone in Saigon: dip then rise, like a full Mandarin 3rd tone, longer than the others||(hỏi / ngã) healthy; ask; be at, live; also; more, again|（hỏi／ngã）健康；問；在、住；也；再、更|tone
 s0015|mệt, học, một, được, chị||nặng tone: low and short; on học, một, được it is cut off by the final consonant||(nặng) tired; study; one; can, get; older sister, you|（nặng）累；學；一；可以、得到；姊姊、你|tone
@@ -23,7 +23,7 @@ s0019|cơ, cờ, cớ, cỡ||cỡ đó (about that much) is colloquial Southern|
 s0020|mắt, mất, mát||ă: short and clipped; â: short and central, like the e in German "bitte"; a: long and open||eye; lose; cool (weather)|眼睛；丟失；涼快|vowel;minimal
 s0021|tam, tăm, tâm|||三 (tam) / 心 (tâm)|three (Sino); toothpick; heart, mind (tâm lý)|三；牙籤；心|vowel;minimal
 s0022|lan, lăn, lân||in Saigon the final -n here sounds like -ng: lang, lăng, lâng|蘭 (lan) / 鄰 (lân)|orchid, spread; roll; neighbouring (lân cận)|蘭花、擴散；滾；鄰近|vowel;minimal
-s0023|to, tô, tơ||o: open, like German "offen"; ô: closed, like "Ofen"; ơ: unrounded, like the vowel in English "bird" but shorter||big; bowl (Saigon; Hanoi: bát); silk|大；碗（南部用 tô）；絲|vowel;minimal
+s0023|to, tô, tơ||o: open, like German "offen"; ô: closed, like "Ofen"; ơ: unrounded, like the vowel in English "bird", long; â is its short partner||big; bowl (Saigon; Hanoi: bát); silk|大；碗（南部用 tô）；絲|vowel;minimal
 s0024|lo, lô, lơ||||worry; lot, plot (lô đất); ignore (lơ đi)|擔心；地塊；不理（lơ đi）|vowel;minimal
 s0025|mua, mưa||ư: say u but spread the lips as for i||buy; rain|買；下雨|vowel;minimal
 s0026|thu, thư|||秋 (thu) / 書 (thư)|autumn; letter|秋天；信|vowel;minimal

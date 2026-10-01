@@ -1,12 +1,13 @@
 # Tiếng Việt Sài Gòn: project rules
 
-Mike's own Southern Vietnamese self-study course. Target: B1 by 1 July 2027, able to hold a
-30 minute casual conversation with a Saigon tandem partner. One hour Monday to Friday, all active:
-shadowing, echoing, mimicking. No apps, no flashcards, no tutor.
+Mike's own Southern Vietnamese self-study course. Target: B1 by about July 2027, able to hold a
+30 minute casual conversation with a Saigon tandem partner. Since 1 October 2026 the course runs as an app
+(the site root, deutschmitmike.github.io/tieng-viet): 30 minutes Monday to Friday, whole sentences, lots of
+listening and repeating, spaced repetition instead of a day plan. No tutor for now (Mike finds a native
+speaker himself, maybe in a year; do not raise it).
 
-Read `plan.md` first. It holds the 41 week syllabus, the daily hour, how the audio is made, and the
-output format. `README.md` holds the folder mechanics and the repo rules. Both are authoritative;
-this file only summarises what must never be got wrong.
+Read `plan.md` first (syllabus, audio, fixed decisions), then `WEEKLY.md` (how a lesson is built) and
+`app/README.md` (how the app works). This file only summarises what must never be got wrong.
 
 ## Hard rules
 
@@ -25,56 +26,52 @@ this file only summarises what must never be got wrong.
 - Do not edit `voices.json`. Voice and stability 1.0 were decided on 18 Sep 2026 after a blind test.
 - Leave the `tts` column in `sentences.csv` empty. The Saigon respelling runs automatically in
   `scripts/common.py`, function `saigon_respell`: at the start of a syllable d becomes y and gi becomes y,
-  while đ and gh are never touched. The booklet always shows the correct spelling; only the voice sees the
+  while đ and gh are never touched. The app always shows the correct spelling; only the voice sees the
   respelling. Use the column only as a hand override for a single sentence.
 - Four sounds are beyond the voice, established by testing on 19 Sep 2026 across four models and four
-  voices, and by respelling attempts. Do not hunt them again; mark them. Every sentence that contains one
-  carries the standing warning in `pron_note`, the way s0049, s0051, s0054 and s0078 do, and the week's
-  brief repeats the four in one block:
+  voices, and by respelling attempts. Do not hunt them again. The app dots every syllable with one of them
+  automatically (`voiceMarks` in `app/core.js`) and explains it on tap; lesson 1 has a page on them:
   r comes out as z (Mike says the Mandarin 日); tr and ch merge; s and x merge; and the vowel trace of the
   palatal finals is missing, so chín and chính sound the same (Mike pulls the vowel toward ư, and toward ơ
   after ê). Respelling works only where the alphabet has a letter with the target value, which is why d and
   gi become y and nothing else does: ư and ơ were tried for the vowel trace and did not take.
-- HTML is the only booklet format. Do not run `scripts/render_week_docx.js`.
 - Sentence mp3s are generated once and reused. Regenerate with
   `python3 scripts/generate_audio.py --force --ids s0123`, never by deleting files.
+- Ids never change and are never reused: the app stores Mike's progress per sentence id. Changing the text
+  of a sentence keeps its id (and its progress); a sentence that is wrong beyond repair stays in the csv and
+  is taken out of its lesson's `ids:` line.
 
-## Build a week
+## The app (details in app/README.md)
 
-From the folder root, with N as the week number:
-
-```
-python3 scripts/render_day.py --week N
-python3 scripts/generate_audio.py --week N
-python3 scripts/build_day.py --week N
-python3 scripts/render_week_html.py --week N            # wNN.html, audio baked in, for the Mac
-python3 scripts/render_week_html.py --week N --pages    # weeks/wNN/index.html, the web version
-python3 scripts/render_index.py                         # the front page listing the weeks
-```
-
-Weeks are built here, in this folder, from a Claude Code session started in `~/Documents/tieng-viet` so
-that this file is loaded. Building a week means writing the new sentences into `sentences.csv`, the
-recycling rows into `schedule.csv`, then `brief.md` and `notes/d1.md` to `d5.md`, then the commands above,
-then the commit and the push. Decided 26 Sep 2026: no scheduled task, the week is built on request. The
-sentences are the course and they are not written unsupervised. Run
-`python3 scripts/generate_audio.py --week N --dry-run` before the real run, so the number of new files is
-seen before credits are spent.
+- Sources: `app/core.js` (learning logic, tested), `app/ui.js` (screens), `app/shell.html` (page and style),
+  `sentences.csv`, `lessons/lNN.md`. `python3 app/build.py` checks, tests and writes `index.html` and
+  `version.json`. Count `BUILD` up (YYYY-MM-DD-N) before every deploy and tell Mike the new number; he sees
+  it at the bottom right.
+- Mike's progress is in Firebase at `save/__tieng_viet/mike` (same database as the kids' apps in
+  ~/Documents/quizzes, whose rules allow only `lb/` and `save/`). Never change that path. The app syncs only
+  on deutschmitmike.github.io; any local preview is automatically test mode. Never write test data there.
+  `python3 app/pull_checkin.py` reads it (read only) and writes the Friday check-ins into `checkin.md`.
+- Mike's decisions (30 Sep and 1 Oct 2026): sound only on a button press, never autoplay; no record button;
+  English interface; phone first; 30 minutes, five days; at most six new sentences a day; rating with two
+  buttons, Again and Got it, which wake after two plays; from box 3 a sentence is said from its meaning;
+  sound drills only listened to and repeated, they run out at box 4; Friday check-in in the app; typing
+  (Telex) comes with lesson 2, slowly, only for sure sentences, as its own track that never pushes a
+  speaking card back.
+- The old week booklets (`scripts/render_*`, `build_day.py`, `schedule.csv`, `weeks/`) are out of the
+  routine. Do not run them. `weeks/w01/index.html` stays online as an archive for now.
 
 ## GitHub
 
-Public repo at github.com/deutschmitmike/tieng-viet, published at deutschmitmike.github.io/tieng-viet.
-GitHub Pages is served from the root of the main branch, so the front page is the site root and a week is
-at `/weeks/w01/`. The repo is public, which is why the key, `checkin.md` with its raw tandem messages, and
-the test recordings all stay out of it. Check `git status` before every push. Commit sources, the per-sentence mp3s and the `index.html` booklets. The cut
-daily tracks, the self-contained `wNN.html` and the day markdown files stay out; they are rebuilt in one
-command and would run into gigabytes over 41 weeks.
+Public repo at github.com/deutschmitmike/tieng-viet, published at deutschmitmike.github.io/tieng-viet from the
+root of the main branch. The repo is public, which is why the key, `checkin.md` with its raw tandem messages,
+and the test recordings stay out of it. Check `git status` before every push. Commit sources, the
+per-sentence mp3s, `index.html` and `version.json`.
 
 ## Where things stand
 
-- Built so far: week 1 (s0001 to s0121), studied from Monday 21 September 2026. Next is week 2, as soon as
-  Mike's week 1 check-in is in checkin.md.
-- To build a week, follow WEEKLY.md. That file replaces the Cowork scheduled task that used to do it.
-- Here in Claude Code git works normally: commit and push after every change that should reach the site.
-- The course was designed and set up in a long Cowork session in September 2026. Everything decided there is
-  in plan.md, README.md, this file and WEEKLY.md. If something is not written down in one of them, ask Mike
-  rather than guess.
+- Lesson 1 (s0001 to s0121, the sound system) was studied from the booklet from 21 September 2026 and moved
+  into the app on 1 October 2026 as already met. Next is lesson 2, as soon as Mike's check-in is in.
+- To build a lesson, follow WEEKLY.md. Lessons are built on request, never by a scheduled task: the
+  sentences are the course and they are not written unsupervised.
+- Work from a Claude Code session started in `~/Documents/tieng-viet`, so that this file is loaded.
+  If something is not written down in plan.md, WEEKLY.md, app/README.md or here, ask Mike rather than guess.

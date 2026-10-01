@@ -1,82 +1,84 @@
-# Building the next week
+# Building the next lesson
 
-The recipe for one week of the course, written for Claude Code running on Mike's Mac in this folder.
-Mike starts it with one sentence, for example "baue die nächste Woche nach WEEKLY.md". He never types
+The recipe for one lesson of the course, written for Claude Code running on Mike's Mac in this folder.
+Mike starts it with one sentence, for example "baue die nächste Lektion nach WEEKLY.md". He never types
 commands; everything below is yours to run. Read CLAUDE.md first, it holds the hard rules.
+
+A lesson is one line of plan.md (lesson N = plan week N), about 30 new sentences, met in the app at up to
+six a day, so roughly one lesson a week at Mike's 30 minutes. There is no day plan and no recycling schedule:
+the app's spaced repetition brings old sentences back by itself.
 
 ## 0. Before anything
 
-Check the tools once per session: `python3 --version`, `ffmpeg -version`, `node --version`. The scripts
-need python3 (stdlib only) and ffmpeg. If ffmpeg is missing and Homebrew exists, install it with
-`brew install ffmpeg`; if Homebrew is missing too, say so and stop. The ElevenLabs key is in `scripts/.env`.
-Never print it.
+Check the tools once per session: `python3 --version`, `node --version`. ffmpeg is no longer needed (only
+the retired booklet scripts used it). The ElevenLabs key is in `scripts/.env`. Never print it.
 
 ## 1. Read and decide
 
-Read plan.md (one line per week: that line is the brief), checkin.md (Mike's Friday notes, newest at top),
-sentences.csv, schedule.csv, and the previous week's brief.md and notes/d1.md to d5.md. The highest week in
-schedule.csv is week N; you build week N+1.
+Run `python3 app/pull_checkin.py`. It reads Mike's app state (read only), writes new Friday check-ins into
+`checkin.md` and prints the check-ins, the cards he needed "Again" for most, the problem cards and his totals.
 
-Stop condition, before anything else: if checkin.md has no entry for week N, Mike has not finished week N.
-Build nothing, change nothing, tell him you are waiting for his check-in. Mike can also give the check-in
-to you in the chat: then write it into checkin.md yourself, in the format at the top of that file, and go on.
+Stop condition: if there is no check-in for the week in which the current lesson ran, Mike has not finished
+it. Build nothing, change nothing, tell him you are waiting for his check-in. He can also give the check-in to
+you in the chat: then write it into checkin.md yourself, in the format the script uses, and go on.
 
-## 2. Write the week
+Then read plan.md (the line for lesson N+1 is the brief), checkin.md, sentences.csv, `words.csv` and the
+previous lesson file `lessons/lNN.md`.
+
+## 2. Write the lesson
 
 Follow plan.md and CLAUDE.md exactly. The short version of what matters most:
 
 - Saigon only, careful Saigon as the production target: qu keeps its k, v stays v, s/x and tr/ch apart,
-  r retroflex. The Southern system never changes: d and gi are y, five tones with hỏi = ngã, -t becomes -c
-  after rounded vowels and after ă and iê, -n becomes -ng after a, ă, â, and the palatal finals -nh/-ch
-  become -n/-t with a trace in the vowel (anh = ăn, tinh = tưn).
+  r retroflex. The Southern system never changes: d and gi are y, five tones with hỏi = ngã, the Southern
+  finals as lesson 1 describes them (page "Final consonants"), and -nh/-ch after i and ê become -n/-t with a
+  trace in the vowel (tinh = tưn).
 - Every pron_note: what he says, then what he will hear in Saigon, then what Hanoi does. The last two are
-  recognition only and never enter the echo tracks.
-- Any sentence with r, tr/ch, s/x or a palatal final carries the standing voice warning, shaped like
-  s0049, s0051, s0054 and s0078. The brief repeats the four deviations in one block with
-  `@@play s0049 s0051 s0054 s0078`, as week 1 does.
+  recognition only. The voice warnings no longer need to be written into pron_note: the app dots r, tr, s
+  and the palatal finals automatically. A pron_note is for what the dot does not say.
 - Persona: German teacher living in Germany, Chinese students, Vietnamese father, Chinese mother.
   Countries: Germany, Vietnam, China. No Taiwan, no Portugal, no daughter.
-- 3 to 12 syllables per sentence, something a Saigon speaker in their twenties says to a friend.
+- About 30 sentences, 3 to 12 syllables each, something a Saigon speaker in their twenties says to a friend.
   Neutral colloquial register; youth slang only as recognition items tagged `recog`.
+- Vocabulary grows slowly out of the sentences: each new sentence brings at most one or two words that are
+  not yet in `words.csv` and otherwise recombines known ones. Add the new words to `words.csv`
+  (`word|en|zh|first_id`, pipe-separated; create it from lessons 1 and 2 when lesson 2 is built).
+- Whatever the check-in and the "Again" list flag as hard comes back as new sentences that use it in a new
+  combination (new ids, never copies). A tandem correction beats your judgement on Saigon naturalness: fix the
+  sentence in sentences.csv under its old id and regenerate its mp3 with `--force --ids`.
 - Glosses in English plus Taiwan-register 繁體 (Chinese comma ， inside Chinese text, 你 never 您).
-  hanzi only where the Sino-Vietnamese etymology is certain. From week 6 on, the Hán Việt items the plan asks for.
+  hanzi only where the Sino-Vietnamese etymology is certain. From lesson 6 on, the Hán Việt items the plan asks for.
 - No em dashes anywhere.
-- Monday to Thursday about 20 new sentences plus about 10 recycled from weeks N and N-1 (the same id again
-  with new=0, never a copy). Friday about 30 recycled only, in dialogue order, no new ids.
-- Whatever checkin.md flags as hard comes back as recycled or corrected material. A tandem correction beats
-  your judgement on Saigon naturalness: fix the sentence and regenerate its mp3 with `--force --ids`.
-- Ids continue the sequence, never reuse. Rows go into sentences.csv (8 columns) and schedule.csv
-  (5 columns), pipe-separated, exact existing format. The tts column stays empty.
-- Write weeks/wNN/notes/d1.md to d5.md (250 to 400 words each) and weeks/wNN/brief.md, in the tone and
-  structure of week 1. No commands for Mike in any of them. `@@play s0123 s0124` renders play buttons.
+- Ids continue the sequence, never reuse. Rows go into sentences.csv (8 columns), exact existing format,
+  tts column empty.
+- Write `lessons/lNN.md` in the format of lessons/l01.md: first line `# Lesson N: Title`, then `ids:` in the
+  order they should be met, `drills:` for rows that are sound drills (word lists, only listened to), then
+  pages starting with `== Page title`, and a `== Tandem` page with the task Mike sees after every round.
+  Pages: short, English, in the tone of lesson 1; together no longer than about 800 words. No commands and no
+  file names for Mike. `@@play s0123 s0124` renders play buttons.
+- Lesson 2 also brings Telex typing (plan.md, week 2): a page on setting up the Vietnamese Telex keyboard on
+  the Mac and the iPhone, and the typing cards in the app (not built yet; see app/README.md, "Typing").
 
 ## 3. Validate and build
 
-Validate with Python: every schedule id exists in sentences.csv, every new id is scheduled exactly once with
-new=1, column counts are right, no simplified Chinese characters, no em dashes. Then, from the folder root:
+`python3 scripts/generate_audio.py --lesson N --dry-run` first, so the number of new files is seen before
+credits are spent, then without `--dry-run`. Count `BUILD` up, then `python3 app/build.py`. It stops on
+unknown ids, missing audio, em dashes, ASCII commas in Chinese, missing glosses, respelled forms in the
+text, and failing tests. Also check by hand that sentences.csv has no simplified characters.
 
-```
-python3 scripts/render_day.py --week N
-python3 scripts/generate_audio.py --week N
-python3 scripts/build_day.py --week N
-python3 scripts/render_week_html.py --week N
-python3 scripts/render_week_html.py --week N --pages
-python3 scripts/render_index.py
-```
-
-Check: ten mp3 files in weeks/wNN/audio, weeks/wNN/wNN.html several MB, weeks/wNN/index.html a few hundred KB,
-the root index.html lists the new week, and no respelled form (yạ, yì, yờ and so on) appears in the visible
-text of either page.
+Look at the new lesson in the local preview (it is test mode there, nothing reaches Mike's state).
 
 ## 4. Review
 
-Spawn one subagent with fresh context to review the new week strictly: Vietnamese correctness and Saigon
-naturalness, phonology claims, glosses, hanzi, dialect labels, consistency. Fix what it finds and rebuild.
+Spawn one subagent with fresh context to review the new lesson strictly: Vietnamese correctness and Saigon
+naturalness, phonology claims, glosses, hanzi, dialect labels, consistency with earlier lessons. Fix what it
+finds and rebuild.
 
 ## 5. Publish
 
-`git status` first: scripts/.env, checkin.md, the cut tracks, wNN.html and backups must not appear. Then
-commit and push. The site updates one or two minutes later at https://deutschmitmike.github.io/tieng-viet/
+`git status` first: scripts/.env, checkin.md and backups must not appear. Then commit and push. The site
+updates one or two minutes later at https://deutschmitmike.github.io/tieng-viet/ ; check that `version.json`
+shows the new build.
 
-Tell Mike in two sentences what the week covers and that it is online. The file he studies from on the Mac is
-weeks/wNN/wNN.html, on the phone the site.
+Tell Mike in two sentences what the lesson covers, that it is online, and the new version number. In the app
+the lesson starts with its introduction the next time he opens it.

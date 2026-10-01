@@ -38,3 +38,6 @@ __pycache__/
 scripts/node_modules/
 scripts/package-lock.json
 *.bak*
+
+# Testeingabe der App, wird von app/build.py erzeugt
+app/tests/data.json

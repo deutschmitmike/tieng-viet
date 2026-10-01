@@ -170,3 +170,22 @@ def tts_text(s):
     if override:
         return override
     return split_glue(saigon_respell(s["vi"]))
+
+
+def load_lesson_ids(n):
+    """The ids of lessons/lNN.md, from its 'ids:' line (ranges like s0011-s0119 follow sentences.csv order)."""
+    path = ROOT / "lessons" / f"l{n:02d}.md"
+    if not path.exists():
+        sys.exit(f"{path} not found")
+    m = re.search(r"^ids:\s*(.+)$", path.read_text(encoding="utf-8"), flags=re.M)
+    if not m:
+        sys.exit(f"{path.name}: no 'ids:' line")
+    order = list(load_sentences())
+    ids = []
+    for part in [x.strip() for x in m.group(1).split(",") if x.strip()]:
+        if "-" in part:
+            a, b = (int(x[1:]) for x in part.split("-"))
+            ids += [i for i in order if a <= int(i[1:]) <= b]
+        else:
+            ids.append(part)
+    return ids

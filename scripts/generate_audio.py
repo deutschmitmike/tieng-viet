@@ -19,7 +19,7 @@ import time
 import urllib.error
 import urllib.request
 
-from common import (AUDIO_DIR, load_env, load_schedule, load_sentences,
+from common import (AUDIO_DIR, load_env, load_lesson_ids, load_schedule, load_sentences,
                     load_voices, sentence_audio, tts_text, voice_for_week)
 
 API = "https://api.elevenlabs.io/v1/text-to-speech/{voice_id}?output_format=mp3_44100_128"
@@ -58,6 +58,7 @@ def synthesize(text, voice, api_key):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--lesson", type=int, help="all ids of lessons/lNN.md")
     ap.add_argument("--week", type=int)
     ap.add_argument("--day", type=int)
     ap.add_argument("--ids", nargs="*")
@@ -72,12 +73,15 @@ def main():
 
     if args.ids:
         ids = args.ids
-        week = args.week or 1
+        week = args.week or args.lesson or 1
+    elif args.lesson:
+        ids = load_lesson_ids(args.lesson)
+        week = args.lesson
     elif args.week:
         ids = [s["id"] for s in load_schedule(args.week, args.day)]
         week = args.week
     else:
-        sys.exit("give --week N or --ids ...")
+        sys.exit("give --lesson N, --week N or --ids ...")
 
     # keep order, drop duplicates (a sentence recycled on two days of the same week)
     seen, todo = set(), []

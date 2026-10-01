@@ -1,6 +1,6 @@
 # Tiếng Việt Sài Gòn: master plan
 
-Start: Monday 21 September 2026, decided on 18 Sep 2026 (the first planned week went by while the voice was still being fixed). Target: conversational B1 by 1 July 2027, measured as a 30-minute casual conversation with a Saigon tandem partner in their twenties, following their normal speed, and a comfortable conversation with your father. 40 weeks, one active hour Monday to Friday, no passive listening, no apps, no Anki, no tutor. Week 40 ends Friday 25 June 2027, so the last checkpoint sits just before the target date. The week that was given up came out of the old buffer week, not out of the teaching weeks.
+Start: Monday 21 September 2026, decided on 18 Sep 2026 (the first planned week went by while the voice was still being fixed). Target: conversational B1 by 1 July 2027, measured as a 30-minute casual conversation with a Saigon tandem partner in their twenties, following their normal speed, and a comfortable conversation with your father. 40 weeks (in the app since 1 October 2026: lessons instead of weeks, 30 minutes Monday to Friday, see below), no passive listening, no tutor for now. Week 40 ends Friday 25 June 2027, so the last checkpoint sits just before the target date. The week that was given up came out of the old buffer week, not out of the teaching weeks.
 
 Progress is counted in week numbers, not calendar weeks. If you skip a week, the next generated week is still the next week number; nothing is lost, the end date moves.
 
@@ -10,23 +10,17 @@ Progress is counted in week numbers, not calendar weeks. If you skip a week, the
 - Register: neutral colloquial Saigon for production. Youth slang appears only in the recognition layer (what tandems write to you), never in the echo tracks.
 - Persona in all material: a German teacher living in Germany, Chinese students, Vietnamese father, Chinese mother. Countries that come up: Germany, Vietnam, China.
 - Glosses: English, plus Chinese (繁體) wherever Mandarin is the closer analogue. 漢字 on every word that has a Sino-Vietnamese etymology. From week 6 a small correspondence track (Mandarin sound to Hán Việt sound) runs alongside.
-- Review is written into the material, not scheduled separately. Monday to Thursday about a third of the sentences recycle the previous two weeks in new combinations. Friday is pure recombination, no new words. Week 1 is the exception: its Friday introduces the persona sentences, because the first four days are the sound system.
-- Audio: ElevenLabs only, one file per sentence, generated once, reused whenever the sentence is recycled. Two daily tracks: listen (sentences once, short gap) and echo (sentence, pause for your echo, sentence again).
-- Feedback loop: `checkin.md`, two lines on Friday (what was hard, what you used with the tandems). The next week's generation reads it. Corrections of your tandem messages feed the recycled sentences too.
+- Since 1 October 2026 (Mike's decision): the course runs in an app with spaced repetition. Each plan week below is one lesson of about 30 new sentences; the app brings old sentences back by itself, so there is no recycling schedule and no day plan. Whole sentences, lots of listening and repeating, vocabulary growing slowly out of the sentences (at most one or two new words per sentence). With 30 minutes a day the app fits about six new sentences a day, so a lesson takes about a week and all 40 topics stay, each one leaner. How a lesson is built: WEEKLY.md; how the app works: app/README.md.
+- Audio: ElevenLabs only, one file per sentence, generated once, reused every time the sentence comes back. The app plays them on a button press only, never by itself.
+- Feedback loop: the Friday check-in in the app (what was hard, what you used with the tandems, what the tandem said), plus the app's own count of which sentences needed "Again". `app/pull_checkin.py` writes both into `checkin.md`; the next lesson is built from it. Tandem corrections fix the sentence itself.
 
-## The daily hour
+## The daily half hour
 
-| min | block | what you do |
-|---|---|---|
-| 0 to 10 | listen | play `wNN_dD_listen.mp3` two or three times, no text. Just hear it. |
-| 10 to 35 | shadow | `dD.md` open, `wNN_dD_echo.mp3` running. Say each sentence in the pause, then again on top of the second playing. Loop single sentences from `audio/sentences/` when one won't come out. |
-| 35 to 45 | echo from gloss | `dD_gloss.md` only, no Vietnamese visible. Say each sentence from the meaning, then check with the sentence file. |
-| 45 to 55 | output | write three to five messages to a tandem using today's patterns (the week's `brief.md` says which), or record a one-minute monologue on your phone. |
-| 55 to 60 | preview | read tomorrow's `dD.md` cold, once, out loud. |
+One round in the app, about 30 minutes, Monday to Friday. First the sentences that are due, then up to six new ones. Each card: play, say it in the pause, play again and say it on top of the voice, then Again or Got it. From the third time on a sentence comes as its meaning only: say it from memory, then check against the voice. Sound drills are only listened to and repeated and run out after a few days. After the round, the tandem task of the lesson (a few messages using what you have). Friday adds the check-in.
 
-Friday: the output block becomes review of the week's corrected messages plus the two-line check-in.
+Shadowing means matching the voice, not translating. Pitch, length, the cut at the end of stopped syllables, the lip closure after o, ô, u. Meaning comes from the gloss, not from the shadowing.
 
-Shadowing means matching the voice, not translating. Pitch, length, the cut at the end of stopped syllables, the lip closure after o, ô, u. Meaning comes from the gloss blocks, not from the shadowing block.
+(Until 30 September 2026 the course ran as an hour a day with week booklets and cut daily tracks: listen, shadow, echo from gloss, output, preview. Lesson 1 was studied that way.)
 
 ## Checkpoints
 
@@ -119,7 +113,5 @@ Every eighth week. Record a two-minute monologue on the checkpoint topic, then h
 
 ## Output format
 
-- HTML only, decided 18 Sep 2026. One file per week, `weeks/wNN/wNN.html`, with the sentence audio baked into the page, so it plays in the browser, on the phone and in the Claude chat without any folder or path.
-- The two big daily tracks stay as mp3 files next to the booklet; at 30 minutes they are too large to bake in. They play from the booklet as long as it sits in its week folder.
-- The docx renderer `render_week_docx.js` still exists but is out of the weekly routine. Word links to local audio break in Google Drive, which is where you open documents.
-
+- The app at the site root, decided 30 September 2026, replacing the week booklets. Phone first, English interface, progress synced between phone and Mac. Lesson introductions, notes, the searchable list of all sentences met, a listening mode started by hand, the tandem task and the check-in all live in it.
+- The old HTML week booklet of week 1 stays online at /weeks/w01/ as an archive. The docx renderer and the booklet scripts are out of the routine.
