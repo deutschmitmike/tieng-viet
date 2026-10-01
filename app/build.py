@@ -8,6 +8,7 @@ The version number lives in BUILD (format YYYY-MM-DD-N). Count it up before ever
 """
 import html
 import json
+import os
 import re
 import subprocess
 import sys
@@ -166,15 +167,31 @@ def main():
         r = sent_rows[i]
         sent[i] = {"vi": r["vi"], "note": r["pron_note"], "hz": r["hanzi"], "en": r["en"], "zh": r["zh"], "kind": "d" if i in drills else "s"}
 
-    # visible text: no em dashes, Chinese comma inside Chinese text
-    blob = json.dumps({"s": sent, "l": lessons}, ensure_ascii=False)
-    if "—" in blob:
-        err("em dash found in the visible text")
+    # text rules (CLAUDE.md): no em dashes anywhere, Taiwan-register traditional Chinese with full-width punctuation,
+    # 你 never 您. SIMPLIFIED holds common simplified-only characters, not all of them: still read the zh yourself.
+    SIMPLIFIED = set("们这个说话时会对过还没给让钱见长门问间头书学习语读写车东来电视点开关热爱发应样经么为认识进远运选银饭馆鸡鱼鸟马龙风飞买卖丽岁华汉宁兰号吗贵哪儿边乐场机网单师课节妈爷") - set("哪")   # 哪 is Taiwan usage too
+    texts = [(f"{r['id']} {k}", r[k]) for r in sent_rows.values() for k in ("vi", "pron_note", "hanzi", "en", "zh")]
+    texts += [(f"lesson {L['n']} page '{p['t']}'", re.sub("<[^>]+>", " ", p["h"])) for L in lessons for p in L["pages"]]
+    texts += [(f"lesson {L['n']} tandem", re.sub("<[^>]+>", " ", L["tandem"])) for L in lessons]
+    for where, s in texts:
+        if "—" in s:
+            err(f"{where}: em dash")
+        if re.search(r"[一-鿿][,.;:?!]\s*[一-鿿]", s):   # inside Chinese text; English after a quoted 字 is fine
+            err(f"{where}: ASCII punctuation inside Chinese text")
+        if "您" in s:
+            err(f"{where}: 您 (use 你)")
+        bad = sorted(set(s) & SIMPLIFIED)
+        if bad:
+            err(f"{where}: simplified characters {''.join(bad)}")
     for i, s in sent.items():
-        if re.search(r"[一-鿿],|,[一-鿿]", s["zh"]):
-            err(f"{i}: ASCII comma next to Chinese in zh")
         if not s["en"] or not s["zh"]:
             err(f"{i}: gloss missing")
+    for L in lessons:   # 3 to 12 syllables per sentence (lesson 1 predates the rule)
+        if L["n"] >= 2:
+            for i in L["ids"]:
+                n_syl = len(re.findall(r"[^\s.,?!;:]+", sent_rows[i]["vi"])) if i in sent_rows else 0
+                if not 3 <= n_syl <= 12:
+                    err(f"{i}: {n_syl} syllables, the rule is 3 to 12")
     respelled = re.compile(r"\by[ạàảãáaờởớợơ]\b")
     for L in lessons:
         for p in L["pages"]:
@@ -214,7 +231,11 @@ def main():
     if r.returncode == 0:
         r = subprocess.run(["node", str(APP / "tests" / "smoke.js"), str(chk)], capture_output=True, text=True)
         print(r.stdout.rstrip())
-    chk.unlink()
+    if r.returncode == 0:
+        r = subprocess.run(["node", str(APP / "tests" / "sync_test.js"), str(chk)], capture_output=True, text=True)
+        print(r.stdout.rstrip())
+    if not os.environ.get("KEEP_PAGE"):   # KEEP_PAGE=1 keeps app/tests/page_check.js for debugging a failing test
+        chk.unlink()
     if r.returncode != 0:
         print(r.stderr.strip())
         print("PAGE SCRIPT BROKEN (syntax or smoke test), nothing written.")

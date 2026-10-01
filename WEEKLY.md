@@ -4,8 +4,9 @@ The recipe for one lesson of the course, written for Claude Code running on Mike
 Mike starts it with one sentence, for example "baue die nächste Lektion nach WEEKLY.md". He never types
 commands; everything below is yours to run. Read CLAUDE.md first, it holds the hard rules.
 
-A lesson is one line of plan.md under Lessons (lNN), with the notes from the review below the list, about 30 new sentences, met in the app at as many a
-day as fit into Mike's minutes (15 minutes: about 3 a day, a lesson in a bit more than a week). There is no day plan and no recycling schedule:
+A lesson is one line of plan.md under Lessons (lNN; the review notes below that list apply to all lessons). It has
+about 30 new sentences. The app introduces as many a day as fit into Mike's minutes (at 15 minutes about 3 a day,
+so a lesson takes a bit more than a week). There is no day plan and no recycling schedule:
 the app's spaced repetition brings old sentences back by itself.
 
 ## 0. Before anything
@@ -15,20 +16,23 @@ the retired booklet scripts used it). The ElevenLabs key is in `scripts/.env`. N
 
 ## 1. Read and decide
 
-Run `python3 app/pull_checkin.py`. It reads Mike's app state (read only), writes new Friday check-ins into
-`checkin.md` and prints the check-ins, the cards he needed "Again" for most, the problem cards and his totals.
+Run `python3 app/pull_checkin.py`. It reads Mike's app state (read only), writes new or updated Friday check-ins
+into `checkin.md` and prints the check-ins, how many sentences of each lesson he has met, the cards he needed
+"Again" for most, the problem cards and his totals.
 
-Stop condition: if there is no check-in dated after the current lesson was published (for lesson 1: after it
-moved into the app on 1 October 2026), Mike has not finished it. Build nothing, change nothing, tell him you are
-waiting for his check-in. He can also give the check-in to you in the chat: then write it into checkin.md
-yourself, newest at the top, in exactly the format the script writes:
+Stop condition, before anything else: build lesson N+1 only when both hold:
+1. all sentences of lesson N are met in the app (pull_checkin prints met / total per lesson), and
+2. there is a check-in for lesson N in checkin.md (its heading says "lesson N"; for lesson 1 any check-in counts).
+Otherwise build nothing, change nothing, and tell Mike what is missing. He can also give the check-in in the chat:
+then write it into checkin.md yourself, newest at the top, in exactly the format the script writes:
 
 ```
-## Week of 2026-10-05, lesson 1      (the Monday of that week, ISO date)
+## Week of YYYY-MM-DD, lesson N      (YYYY-MM-DD = the Monday of that week)
 hard: ...
 used: ...
 tandem said: ...
 app, most Again: ...
+saved: (leave empty when written by hand)
 ```
 
 Reference books, on Mike's Mac only, never in the repo and never copied (copyrighted, and Northern at the core):
@@ -38,8 +42,8 @@ Southern variants with (S), so grep it with `pdftotext` to check that no Norther
 `~/Downloads/Tieng Viet for Foreigners.pdf` (Lê Thị Hiệp; a scan, Hanoi). Use them for the grammar of the lesson and as
 a cross-check, never as a source of sentences.
 
-Then read plan.md (the line for lesson N+1 is the brief), checkin.md, sentences.csv, `words.csv` (from lesson 3 on;
-when building lesson 2, create it first, see step 2) and the
+Then read plan.md (the line for lesson N+1 is the brief), checkin.md, sentences.csv, `words.csv` (when building
+lesson 2 it does not exist yet: create it first, see step 2) and the
 previous lesson file `lessons/lNN.md`.
 
 ## 2. Write the lesson
@@ -60,14 +64,17 @@ Follow plan.md and CLAUDE.md exactly. The short version of what matters most:
   into the lesson pages only.
 - Vocabulary grows slowly out of the sentences: each new sentence brings at most one or two words that are
   not yet in `words.csv` and otherwise recombines known ones. Add the new words to `words.csv`
-  (`word|en|zh|first_id`, pipe-separated; create it from lessons 1 and 2 when lesson 2 is built).
+  while writing. Format `word|en|zh|first_id`, pipe-separated, with a header line. A word is a dictionary entry:
+  compounds count as one (cà phê, tiếng Việt, Sài Gòn), and so do fixed particles (nha, hả). Before writing
+  lesson 2, create the file from the 62 sentences of lesson 1 (not from its sound drills).
 - Whatever the check-in and the "Again" list flag as hard comes back as new sentences that use it in a new
   combination (new ids, never copies). A tandem correction beats your judgement on Saigon naturalness: fix the
   sentence in sentences.csv under its old id and regenerate its mp3 with `--force --ids`.
 - Glosses in English plus Taiwan-register 繁體 (Chinese comma ， inside Chinese text, 你 never 您).
-  hanzi only where the Sino-Vietnamese etymology is certain. From lesson 6 on, the Hán Việt items the plan asks for.
+  hanzi only where the Sino-Vietnamese etymology is certain. From lesson 9 on, the Hán Việt items the plan asks for.
 - No em dashes anywhere.
-- Ids continue the sequence, never reuse. Rows go into sentences.csv (8 columns), exact existing format,
+- Ids continue the sequence: next id = highest number in sentences.csv + 1 (the rows are not sorted; after lesson 1
+  the next is s0122). Never reuse an id. Rows go into sentences.csv (8 columns), exact existing format,
   tts column empty.
 - Write `lessons/lNN.md` in the format of lessons/l01.md, without its `drills:` and `start:` lines (lesson 1 only): first line `# Lesson N: Title`, then `ids:` in the
   order they should be met (whole sentences only; no sound drills, Mike's decision of 1 Oct 2026), then
@@ -82,10 +89,13 @@ Follow plan.md and CLAUDE.md exactly. The short version of what matters most:
 
 `python3 scripts/generate_audio.py --lesson N --dry-run` first, so the number of new files is seen before
 credits are spent, then without `--dry-run`. Count `BUILD` up, then `python3 app/build.py`. It stops on
-unknown ids, missing audio, em dashes, ASCII commas in Chinese, missing glosses, respelled forms in the
-text, and failing tests. Also check by hand that sentences.csv has no simplified characters.
+unknown ids, missing audio, missing glosses, failing tests, a page script that does not run (smoke test), em
+dashes and 您 anywhere in sentences.csv and the lessons, ASCII punctuation inside Chinese text, common
+simplified characters (a list, not all of them: still read the zh yourself), respelled forms on the lesson pages,
+and from lesson 2 on any sentence outside 3 to 12 syllables.
 
-Look at the new lesson in the local preview (it is test mode there, nothing reaches Mike's state).
+Look at the new lesson locally: `python3 -m http.server 8767` from the repo root, then http://localhost:8767 (every
+address except deutschmitmike.github.io is test mode, nothing reaches Mike's state).
 
 ## 4. Review
 

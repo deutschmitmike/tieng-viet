@@ -75,10 +75,10 @@ def main():
 
     if args.ids:
         ids = args.ids
-        week = args.week or args.lesson or 1
+        week = args.week or 1
     elif args.lesson:
         ids = load_lesson_ids(args.lesson)
-        week = args.lesson
+        week = 1   # always the primary voice; the alternate-voice rule belongs to the old weeks
     elif args.week:
         ids = [s["id"] for s in load_schedule(args.week, args.day)]
         week = args.week

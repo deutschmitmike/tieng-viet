@@ -24,9 +24,10 @@ function load() { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s &
 let S = load();
 const SYNCED_KEY = KEY + "_synced";
 let synced = 0; try { synced = +localStorage.getItem(SYNCED_KEY) || 0; } catch (e) {}
-let syncInfo = {ok: null, at: 0}, lastCloudAt = 0, saveTimer = 0, syncing = false, syncAgain = false;
+let syncInfo = {ok: null, at: 0}, lastCloudAt = 0, saveTimer = 0, syncing = false, syncAgain = false, etag = null, staleRuns = 0;
 function persist() { S.build = APP_BUILD; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
-function save() { S.ts = Date.now(); persist(); clearTimeout(saveTimer); saveTimer = setTimeout(cloudSync, 800); }
+function save() { S.ts = Math.max(Date.now(), synced + 1, (S.ts || 0) + 1); persist();   // always above anything synced, whatever the clocks say
+  clearTimeout(saveTimer); saveTimer = setTimeout(cloudSync, 800); }
 function setSynced(ts) { synced = ts || 0; try { localStorage.setItem(SYNCED_KEY, String(synced)); } catch (e) {} }
 function setSync(ok) { syncInfo = {ok, at: Date.now()}; const el = $("sync"); if (el) el.textContent = syncText(); }
 function syncText() {
@@ -35,11 +36,19 @@ function syncText() {
   if (!syncInfo.ok) return "not synced";
   return "synced " + new Date(syncInfo.at).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
 }
-function cloudGet() { return fetch(SYNC_URL + "?t=" + Date.now()).then(r => { if (!r.ok) throw 0; return r.json(); }).then(o => { lastCloudAt = Date.now(); return o; }); }
+// Writes are conditional (Firebase ETag): a PUT only lands if the cloud is still exactly what this device last read.
+// If another device wrote in between, the PUT fails with 412, nothing is lost (it is all in localStorage), and the
+// next sync reads again and merges.
+function cloudGet() {
+  return fetch(SYNC_URL + "?t=" + Date.now(), {headers: {"X-Firebase-ETag": "true"}})
+    .then(r => { if (!r.ok) throw 0; etag = r.headers.get("ETag"); return r.json(); }).then(o => { lastCloudAt = Date.now(); return o; });
+}
 function cloudPut(leaving) {
-  const body = JSON.stringify(S), ts = S.ts;
-  return fetch(SYNC_URL, {method: "PUT", body, keepalive: !!leaving && body.length < 60000})   // keepalive bodies over 64 KB are refused
-    .then(r => { if (!r.ok) throw 0; setSynced(ts); setSync(true); });
+  if (!etag) return Promise.reject("stale");   // never write blind
+  const body = JSON.stringify(S), ts = S.ts, keep = !!leaving && new Blob([body]).size < 60000;   // keepalive bodies over 64 KB are refused
+  const tag = etag; etag = null;
+  return fetch(SYNC_URL, {method: "PUT", body, keepalive: keep, headers: {"if-match": tag}})
+    .then(r => { if (r.status === 412) throw "stale"; if (!r.ok) throw 0; etag = r.headers.get("ETag") || null; setSynced(ts); setSync(true); });
 }
 function adopt(o) { S = fixState(o); persist(); setSynced(S.ts); }
 function afterReplace() {   // the state came from the cloud: keep the open screen consistent with it
@@ -47,22 +56,27 @@ function afterReplace() {   // the state came from the cloud: keep the open scre
   else if (cur === "card") { const R = S.round; if (R && R.day === today() && !roundDone(R)) { cs = null; renderCard(); } else show("home"); }
   else if (cur === "tandem") { if (!S.round || !roundDone(S.round) || S.round.tandem) show("home"); }
 }
+const buildKey = b => String(b || "0").split("-").map(x => x.padStart(4, "0")).join("-");   // 2026-10-01-10 after 2026-10-01-9
 function cloudSync() {
   if (!SYNC_URL) return;
   if (syncing) { syncAgain = true; return; }
   syncing = true;
   cloudGet().then(o => {
-    const act = syncAction(S, o, synced);
+    let act = syncAction(S, o, synced);
+    if (act === "adopt" && o && buildKey(o.build) < buildKey(APP_BUILD) && (o.resetAt || 0) <= (S.resetAt || 0)) act = "merge";   // a tab on an older build: merge, never take it wholesale
     if (act === "adopt") { adopt(o); setSync(true); afterReplace(); }
-    else if (act === "merge") { S = mergeStates(S, o); S.ts = Date.now(); persist(); afterReplace(); return cloudPut(); }
+    else if (act === "merge") { S = mergeStates(S, o); S.ts = Math.max(Date.now(), (o.ts || 0) + 1, (S.ts || 0) + 1); persist(); afterReplace(); return cloudPut(); }
     else if (act === "upload") return cloudPut();
     else setSync(true);
-  }).catch(() => setSync(false)).then(() => { syncing = false; if (syncAgain) { syncAgain = false; cloudSync(); } });
+  }).then(() => { staleRuns = 0; }, e => {
+    if (e === "stale" && ++staleRuns <= 3) syncAgain = true;   // someone wrote in between: read again and merge (never loop forever)
+    else { staleRuns = 0; setSync(false); }
+  }).then(() => { syncing = false; if (syncAgain) { syncAgain = false; cloudSync(); } });
 }
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") {   // leaving with changes not yet uploaded: upload now, iOS freezes the page otherwise
     persist();
-    if (SYNC_URL && (S.ts || 0) > synced && Date.now() - lastCloudAt < 5 * 60000) { clearTimeout(saveTimer); cloudPut(true).catch(() => {}); }
+    if (SYNC_URL && (S.ts || 0) > synced && etag && !syncing) { clearTimeout(saveTimer); cloudPut(true).catch(() => {}); }   // conditional: lands only if nobody wrote since the last read
   } else { if (cs) cs.shownAt = Date.now(); cloudSync(); checkVersion(); }
 });
 function checkVersion() {
@@ -260,6 +274,7 @@ function rate(r) {
   const R = S.round, it = R && R.items[R.pos];
   if (!cs || !it || cs.id !== it.id + ":" + R.pos) { if (it) renderCard(); else show("home"); return; }   // the state changed under the card
   if (Date.now() < cs.readyAt) return;   // a double tap must not rate the next card unseen
+  if (R.day !== today()) { show("home"); return; }   // the card stayed open past midnight: today gets its own round
   const ms = Date.now() - cs.shownAt;
   answer(S, D, R, r, today(), ms); cs = null; stopAudio(); save();
   if (roundDone(R)) show("tandem"); else renderCard();

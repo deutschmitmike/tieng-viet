@@ -2,7 +2,8 @@
 const assert = require("assert");
 const path = require("path");
 const C = require("../core.js");
-const D = require(path.join(__dirname, "data.json"));
+const DATA = require(path.join(__dirname, "data.json"));
+const D = {sent: DATA.sent, lessons: [DATA.lessons[0]]};   // the logic tests run on lesson 1 alone, so later lessons never break them
 
 let n = 0;
 function t(name, f) { try { f(); n++; } catch (e) { console.error("FAIL " + name + ": " + e.message); process.exitCode = 1; } }
@@ -28,7 +29,7 @@ t("lesson 1 has 121 items, drills and sentences", () => {
   assert.strictEqual(D.sent.s0088.kind, "s", "numbers are a sentence");
   assert.strictEqual(D.sent.s0001.kind, "s");
 });
-t("every lesson has pages and a tandem task", () => { for (const L of D.lessons) { assert.ok(L.pages.length); assert.ok(L.tandem.length > 20); } });
+t("every lesson has pages and a tandem task", () => { for (const L of DATA.lessons) { assert.ok(L.pages.length); assert.ok(L.tandem.length > 20); } });
 
 // ---- migration ----
 t("lesson 1 migrates as met, spread over five days", () => {

@@ -3,7 +3,8 @@
 
     python3 app/pull_checkin.py
 
-New check-ins are added at the top of checkin.md (newest first, the file stays local, it is in .gitignore).
+New check-ins are added to checkin.md (newest first, the file stays local, it is in .gitignore); a check-in that was
+updated in the app later replaces its entry (the "saved:" line holds the app timestamp; hand-written entries have none).
 Then it prints what the next lesson needs: the check-ins, the cards that needed "Again" most, the problem
 cards, and how far each lesson is.
 """
@@ -15,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
-from common import load_sentences  # noqa: E402
+from common import load_lesson_ids, load_sentences  # noqa: E402
 
 URL = "https://ddd-spiel-default-rtdb.europe-west1.firebasedatabase.app/save/__tieng_viet/mike.json"
 CHECKIN = ROOT / "checkin.md"
@@ -29,26 +30,53 @@ def main():
     cards = S.get("cards") or {}
     checkins = S.get("checkins") or {}
 
-    text = CHECKIN.read_text(encoding="utf-8") if CHECKIN.exists() else "# Friday check-in\n\n---\n"
-    added = []
+    text = CHECKIN.read_text(encoding="utf-8") if CHECKIN.exists() else "# Check-ins\n\n---\n"
+    head, sep, body = text.partition("\n---\n")
+    if not sep:
+        head, sep, body = text, "\n---\n", ""
+    # existing entries by week key; an entry edited later in the app (newer ts) replaces the old one
+    blocks = re.split(r"(?m)^(?=## Week of )", body.strip("\n")) if body.strip() else []
+    entries = {}
+    for b in blocks:
+        m = re.match(r"## Week of (\S+?),", b)
+        if m:
+            entries[m.group(1)] = b.strip("\n")
+    changed = []
     for key in sorted(checkins):
-        if f"## Week of {key}" in text:
-            continue
         c = checkins[key]
+        old = entries.get(key)
+        if old:
+            m = re.search(r"^saved: (\d+)", old, flags=re.M)
+            if not m or int(m.group(1)) >= int(c.get("ts") or 0):
+                continue   # written by hand, or nothing newer in the app
         again = ", ".join(f"{vi(i)} ({n})" for i, n in (c.get("again") or [])[:8]) or "none"
-        entry = (f"## Week of {key}, lesson {c.get('lesson', '?')}\n"
-                 f"hard: {c.get('hard', '').strip()}\n"
-                 f"used: {c.get('used', '').strip()}\n"
-                 f"tandem said: {c.get('tandem', '').strip()}\n"
-                 f"app, most Again: {again}\n\n")
-        added.append((key, entry))
-    if added:
-        head, sep, rest = text.partition("\n---\n")
-        if not sep:
-            head, sep, rest = text, "\n---\n", ""
-        new = "".join(e for _, e in sorted(added, reverse=True))
-        CHECKIN.write_text(head + sep + "\n" + new + rest.lstrip("\n"), encoding="utf-8")
-    print(f"check-ins in the app: {len(checkins)}, newly written to checkin.md: {[k for k, _ in added] or 'none'}")
+        entries[key] = (f"## Week of {key}, lesson {c.get('lesson', '?')}\n"
+                        f"hard: {c.get('hard', '').strip()}\n"
+                        f"used: {c.get('used', '').strip()}\n"
+                        f"tandem said: {c.get('tandem', '').strip()}\n"
+                        f"app, most Again: {again}\n"
+                        f"saved: {int(c.get('ts') or 0)}")
+        changed.append(key)
+    if changed:
+        new_body = "\n\n".join(entries[k] for k in sorted(entries, reverse=True))
+        CHECKIN.write_text(head + sep + "\n" + new_body + "\n", encoding="utf-8")
+    print(f"check-ins in the app: {len(checkins)}, new or updated in checkin.md: {changed or 'none'}")
+
+    # how far each lesson is (sound drills of lesson 1 are never practised and do not count)
+    drills = set()
+    l01 = ROOT / "lessons" / "l01.md"
+    m = re.search(r"^drills:\s*(.+)$", l01.read_text(encoding="utf-8"), flags=re.M) if l01.exists() else None
+    if m:
+        order = list(sent)
+        for part in [x.strip() for x in m.group(1).split(",") if x.strip()]:
+            a, b = (int(x[1:]) for x in part.split("-")) if "-" in part else (int(part[1:]),) * 2
+            drills |= {i for i in order if a <= int(i[1:]) <= b}
+    print("\nlessons, sentences met / total:")
+    for f in sorted((ROOT / "lessons").glob("l[0-9][0-9].md")):
+        n = int(f.stem[1:])
+        ids = [i for i in load_lesson_ids(n) if i not in drills]
+        met = sum(1 for i in ids if i in cards)
+        print(f"  lesson {n}: {met} / {len(ids)}" + ("  (complete)" if met == len(ids) else ""))
 
     for key in sorted(checkins, reverse=True)[:2]:
         c = checkins[key]

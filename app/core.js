@@ -92,7 +92,11 @@ function answer(S, D, R, rating, T, ms) {
   let c = S.cards[id]; if (!c) c = S.cards[id] = newCard(T);
   const log = dayLog(S, T);
   ms = Math.min(Math.max(0, ms || 0), MS_CAP);   // a phone left lying on a card must not count as an hour of practice
-  if (!it.retry) {
+  // a card counts once a day: if the other device already rated it today (rounds built separately, then merged),
+  // a second answer neither promotes it again nor lapses it again
+  const retry = it.retry || c.rv === T;
+  if (!retry) c.rv = T;
+  if (!retry) {
     if (ms > 0) { S.avg = S.avg || {}; const old = estOf(S, it.m); S.avg[it.m] = Math.round(0.85 * old + 0.15 * Math.max(4000, ms)); }
     c.n = (c.n || 0) + 1; log.n++;
     if (it.m === "new") log.fresh++;
@@ -100,14 +104,14 @@ function answer(S, D, R, rating, T, ms) {
   if (ms > 0) { R.ms += ms; log.ms += ms; }
   if (rating === "ok") {
     if (!c.box) { c.box = 1; c.iv = 1; c.last = T; c.due = addPractice(T, 1); }
-    else if (!it.retry) {
+    else if (!retry) {
       c.box = Math.min(c.box + 1, MAX_BOX); c.ok = (c.ok || 0) + 1; c.miss = Math.max(0, (c.miss || 0) - 1);
       if (c.box > 4) c.ease = Math.min(2.5, (c.ease || 2.5) + 0.05);   // with two buttons ease could only fall; let it recover slowly
       planCard(c, T);
       if (item.kind === "d" && c.box >= DRILL_DONE_BOX) c.ret = 1;      // sound drills run out
     }
   } else {
-    if (!it.retry) {
+    if (!retry) {
       c.ag = (c.ag || 0) + 1; log.ag.push(id);
       if (c.box) { c.box = (!isLeech(c) && c.box >= SURE_BOX) ? c.box - 2 : 1; c.ok = 0; c.miss = (c.miss || 0) + 1; lapseCard(c, T); }
     }
@@ -153,7 +157,7 @@ function syncAction(L, o, synced) {
   const localChanged = (L.ts || 0) > synced;
   if (!o || typeof o !== "object" || !o.cards) return localChanged || Object.keys(L.cards || {}).length ? "upload" : "none";
   if ((o.resetAt || 0) > (L.resetAt || 0)) return "adopt";
-  const cloudChanged = (o.ts || 0) > synced;
+  const cloudChanged = (o.ts || 0) !== synced;   // "different", not "newer": writes can land out of order, clocks differ
   if (cloudChanged && localChanged) return "merge";
   if (cloudChanged) return "adopt";
   if (localChanged) return "upload";
@@ -164,7 +168,11 @@ function mergeStates(local, cloud) {
   const L = fixState(JSON.parse(JSON.stringify(local))), M = fixState(JSON.parse(JSON.stringify(cloud)));
   const more = (a, b) => (a.n || 0) > (b.n || 0) || ((a.n || 0) === (b.n || 0) && (a.last || 0) > (b.last || 0));
   for (const id in L.cards) { const a = L.cards[id], b = M.cards[id]; if (!b || more(a, b)) M.cards[id] = a; }
-  for (const d in L.days) { const a = L.days[d], b = M.days[d]; if (!b || a.n > b.n || (a.n === b.n && a.done && !b.done)) M.days[d] = a; }
+  for (const d in L.days) {   // field by field: a day done on either device stays done
+    const a = L.days[d], b = M.days[d];
+    M.days[d] = !b ? a : {n: Math.max(a.n || 0, b.n || 0), fresh: Math.max(a.fresh || 0, b.fresh || 0), ms: Math.max(a.ms || 0, b.ms || 0),
+      ag: (a.ag || []).length >= (b.ag || []).length ? a.ag || [] : b.ag || [], done: !!(a.done || b.done), tandem: a.tandem || b.tandem || undefined, free: a.free || b.free || undefined};
+  }
   for (const k in L.checkins) { const a = L.checkins[k], b = M.checkins[k]; if (!b || (a.ts || 0) > (b.ts || 0)) M.checkins[k] = a; }
   for (const k in L.introRead) if (L.introRead[k]) M.introRead[k] = true;
   if ((L.cfgTs || 0) > (M.cfgTs || 0)) { M.cfg = L.cfg; M.cfgTs = L.cfgTs; }
@@ -173,7 +181,7 @@ function mergeStates(local, cloud) {
   if (ra && (!rb || ra.day > rb.day || (ra.day === rb.day && (ra.pos > rb.pos || (ra.pos === rb.pos && ra.tandem && !rb.tandem))))) M.round = ra;
   if (L.wk && (!M.wk || L.wk.w > M.wk.w)) M.wk = L.wk;
   M.resetAt = Math.max(L.resetAt || 0, M.resetAt || 0);
-  M.ts = Math.max(L.ts || 0, M.ts || 0);
+  M.ts = Math.max(L.ts || 0, M.ts || 0) + 1;
   return M;
 }
 

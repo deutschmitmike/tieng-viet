@@ -41,3 +41,4 @@ scripts/package-lock.json
 
 # Testeingabe der App, wird von app/build.py erzeugt
 app/tests/data.json
+app/tests/page_check.js

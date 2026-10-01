@@ -40,12 +40,18 @@ sentences a week; at 30 minutes about 33 minutes and 41 a week.
 
 - localStorage key `tv_mike_v1`, Firebase `save/__tieng_viet/mike` (database of the kids' apps). Never change
   either: Mike's progress is stored under them.
-- Sync since build 2026-10-01-6 (after a code review): `S.ts` changes only with a real change (`save()`). Each
-  device stores the cloud ts it last synced with (`tv_mike_v1_synced`). Only the cloud changed: adopt. Only this
-  device changed: upload. Both: `mergeStates` card by card (the card answered more often wins, then the later
-  one), then upload. A device that changed nothing never uploads, so a stale tab cannot overwrite newer progress.
-  A device with no local state starts only after the cloud has answered. Leaving the page uploads at once if
-  something is unsynced and the cloud was read in the last 5 minutes; keepalive only under 60 KB.
+- Sync (builds 2026-10-01-6 and -7, after two code reviews): `S.ts` changes only with a real change (`save()`) and
+  always lands above the last synced ts, whatever the device clocks say. Each device stores the cloud ts it last
+  synced with (`tv_mike_v1_synced`). Cloud ts different from that: the cloud changed. Only the cloud changed: adopt
+  (but a state from an older build is merged, never adopted). Only this device changed: upload. Both: `mergeStates`
+  card by card (the card answered more often wins, then the later one; day logs field by field), then upload.
+- Every write is conditional: GET with `X-Firebase-ETag: true`, PUT with `if-match`. If another device wrote in
+  between, Firebase answers 412, nothing is lost (it is all in localStorage) and the next sync reads and merges.
+  A device never writes without a fresh ETag. Leaving the page uploads at once (keepalive only under 60 KB).
+- A card counts once a day (`c.rv` = day of its last rating): rounds built separately on two devices cannot promote
+  a card twice. A device with no local state starts only after the cloud has answered.
+- `app/tests/sync_test.js` runs the built page on two simulated devices against a fake Firebase with ETags (hide
+  upload of a stale tab, out-of-order writes, clock skew, separate rounds on one day). build.py runs it.
 - Firebase drops empty objects and arrays; `fixState` fills them in again.
 - The app only syncs on deutschmitmike.github.io. Anywhere else, and with `?local`, it is test mode with its
   own localStorage key and no cloud.

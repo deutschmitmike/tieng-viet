@@ -9,7 +9,7 @@ Progress is counted in lessons. A skipped day loses nothing; the end date moves.
 - Saigon only. Strict Saigon pronunciation from day one, also where it contradicts the spelling. No Northern module.
 - Register: neutral colloquial Saigon for production. Youth slang appears only in the lesson pages for recognition (what tandems write to you), never in the sentences practised in the app.
 - Persona in all material: a German teacher living in Germany, Chinese students, Vietnamese father, Chinese mother. Countries that come up: Germany, Vietnam, China.
-- Glosses: English, plus Chinese (繁體) wherever Mandarin is the closer analogue. 漢字 on every word that has a Sino-Vietnamese etymology. From lesson 9 a small correspondence track (Mandarin sound to Hán Việt sound) runs alongside.
+- Glosses: English and Chinese (繁體) on every sentence. 漢字 on every word that has a Sino-Vietnamese etymology. From lesson 9 a small correspondence track (Mandarin sound to Hán Việt sound) runs alongside.
 - Since 1 October 2026 (Mike's decision): the course runs in an app with spaced repetition. Each line under Lessons below is one lesson of about 30 new sentences; the app brings old sentences back by itself, so there is no recycling schedule and no day plan. Whole sentences, lots of listening and repeating, vocabulary growing slowly out of the sentences (at most one or two new words per sentence). Simulated 1 October 2026, every day: 10 minutes fit about 2 new sentences a day (14 a week, a lesson in about two weeks), 15 minutes about 3, 20 minutes about 4, 30 minutes about 6. All topics stay in 50 lessons (see Lessons), each one leaner; the pace follows the minutes Mike chooses. How a lesson is built: WEEKLY.md; how the app works: app/README.md.
 - Audio: ElevenLabs only, one file per sentence, generated once, reused every time the sentence comes back. The app plays them on a button press only, never by itself.
 - Feedback loop: the Friday check-in in the app (what was hard, what you used with the tandems, what the tandem said), plus the app's own count of which sentences needed "Again". `app/pull_checkin.py` writes both into `checkin.md`; the next lesson is built from it. Tandem corrections fix the sentence itself.
@@ -41,35 +41,35 @@ Restructured on 1 October 2026 (Mike approved): 50 lessons instead of 40 weeks, 
 ### Phase 1, lessons 1 to 14: A1, survival and small talk
 
 - l01 (done) The Saigon sound system, greetings, the persona sentences | anh / em
-- l02 Particles, asking back, Telex typing | nha, á, luôn, vậy, nè, đi; hả, hông; repair phrases nói lại đi, nói chậm chút, nghĩa là gì?, cái này tiếng Việt nói sao?, anh hông hiểu
-- l03 Numbers to 100, clock time, times of day | mấy vs bao nhiêu; giờ, phút, rưỡi, mười giờ thiếu năm (thiếu, never Northern kém); sáng, trưa, chiều, tối
-- l04 Me, my family, pronouns | là, không phải là, có; tui, mình, tụi mình, tụi em, nó, tụi nó, bạn (tao / mày recognition only); contractions ổng, bả, cổ, ảnh, chỉ; của, này / đó / kia; a few con / ba sentences for the father right away
-- l05 Questions and answers | gì, đâu, ai, nào, sao (why and how: thấy sao?), chừng nào (future) / hồi nào (past); có … không, chưa, hả, phải không; answers dạ, ừ, phải, hông, chưa. Chat abbreviations (k, ko, dc, r) in the lesson notes only, never as audio
-- l06 Why? Giving reasons | vì, tại vì, nên, cho nên, để (so that); nhưng. The first tandem question: why do you learn Vietnamese?
-- l07 Daily routine, days of the week | đang, đã (已經), sẽ, rồi, chưa; trước khi, sau khi; đi với ai
+- l02 Particles, asking back, Telex typing | nha, á, luôn, vậy, nè, đi, ủa; hả, hông; repair phrases in new combinations (s0073, s0096 and s0115 already exist): nói lại đi, nghĩa là gì?, cái này tiếng Việt nói sao?
+- l03 Numbers to 100, clock time, times of day | mấy vs bao nhiêu; Saigon number forms mốt (21), lăm (15, 25; nhăm is Northern), hăm (hăm mốt) for recognition; giờ, phút, rưỡi, mấy giờ rồi?, mười giờ thiếu năm (thiếu, never Northern kém); sáng, trưa, chiều, tối
+- l04 Me, my family, pronouns | là, không phải là, có; tui, mình, tụi mình, tụi em, nó, tụi nó, bạn (tao / mày recognition only); the contractions ổng, bả, cổ, ảnh, chỉ only as review (they came in lesson 1); của, này / đó / kia; a few con / ba sentences for the father right away. The persona has no defined siblings or partner: ask Mike before inventing family members
+- l05 Questions and answers | gì, đâu, ai, nào, sao as how (thấy sao?, sao rồi?; why comes in l06), chừng nào (future) / hồi nào (past); có … không, chưa, hả, phải không; answers dạ, ừ, phải, hông, chưa. Chat abbreviations (k, ko, dc, r) in the lesson notes only, never as audio
+- l06 Why? Giving reasons | sao, tại sao, vì, tại vì, nên, cho nên, để (so that); nhưng. The first tandem question: why do you learn Vietnamese?
+- l07 Daily routine, days of the week | đang, sẽ, rồi first, đã optional (đã … rồi ≈ 已經…了; Saigon mostly just says rồi), chưa; trước khi, sau khi; đi với ai
 - l08 Dates, birthday, weather | ngày, tháng, năm, hôm nay ngày mấy, sinh nhật; nóng, mưa, nắng, mùa mưa, mùa khô; từ … tới, bao lâu rồi, vẫn / còn; tuần rồi, hôm bữa, hai ngày nữa
 - l09 Food and coffee, the Hán Việt track begins (學 → học, 國 → quốc, 時 → thời) | classifiers ly, tô, dĩa, chén, muỗng; cho anh …; A hay B? (nóng hay đá?); thêm … nữa
 - l10 CHECKPOINT 1. Shopping and money | chỉ … thôi (and the clash with the contraction chỉ), hết; vài, mấy (a few), chút xíu, nửa, mỗi; trăm lẻ (never linh), ngàn, triệu, năm chục ngàn, 50k for recognition; classifiers cái, trái, cuốn; để anh trả, cho anh hỏi chút
-- l11 Getting around | đi, về, tới, vô, ra, qua, lên, xuống with the geography (ra Hà Nội, lên Đà Lạt, xuống Cần Thơ, về quê); trên, dưới, trong, ngoài, giữa, trước, sau, bên cạnh, đối diện; quẹo, Grab, hẻm, quận; cách … bao xa
+- l11 Getting around | đi, về, tới, vô, ra, qua, lên, xuống with the geography (ra Hà Nội, lên Đà Lạt, xuống Cần Thơ, về quê); trên, dưới, trong, ngoài, giữa, trước, sau, kế bên (bên cạnh for recognition), đối diện; quẹo, Grab, hẻm, quận; cách … bao xa
 - l12 Likes, ability, a first opinion | muốn, cần, phải, nên; V được / V hông được and biết + V (more common in Saigon than có thể); thích … hơn, mê; anh thấy …, em thấy sao?
 - l13 The weekend, plans, the past | xong, sắp (快要), vừa mới, mới (才, only then); đã … rồi; tính, định; hồi nhỏ, hồi đó
 - l14 Requests, invitations, apologies | nhờ, giùm, đi … không?, hay là, được không, đừng, ráng, khỏi (khỏi lo); nếu … thì; xin lỗi, hông sao đâu, có gì đâu; gặp nhau
 
 ### Phase 2, lessons 15 to 32: A2, talking about your life
 
-- l15 Talking with my father | con / ba, dạ, ạ; thưa as the ritual greeting (thưa ba con đi); nghen, warmer and older, fits the father; asking after health and family
+- l15 Talking with my father | con / ba, dạ to open every answer, ạ less often; thưa as the ritual greeting (thưa ba con đi); nghen, warmer and older, fits the father; asking after health and family
 - l16 Work as a German teacher | dạy, học trò, lớp, online, bận, rảnh; cho, với; experience with từng, chưa bao giờ, lần nào chưa (過 / 曾經)
 - l17 Germany, Vietnam, China | countries and languages; hơn, nhất, bằng, giống, khác; người Hoa (ethnic Chinese in Vietnam) vs người Trung Quốc (people from China), important for describing the mother; 德 越 華 國 語
 - l18 Kinship, the father's family in Cần Thơ | bên nội / bên ngoại, cô, dì, chú, bác, cậu, mợ; birth-order names (anh Hai is the eldest, chú Tư, cô Út); kinship terms as pronouns
 - l19 Describing people | appearance and character, hiền, dễ thương, khó tính; reduplication (vui vẻ, sạch sẽ, nho nhỏ); hơi, khá, lắm, dữ, quá trời; ốm means thin in Saigon, mập; hông có đâu, emphatic … mà (em nói rồi mà)
-- l20 CHECKPOINT 2. Body and health | đau, mệt, thuốc; bị / được (bị bệnh, được nghỉ); bệnh is the production form, bịnh for recognition and with the father
+- l20 CHECKPOINT 2. Body and health | đau, mệt, thuốc; bị / được (bị bệnh, được nghỉ); bệnh is the production form everywhere, bịnh for recognition
 - l21 Doing sport | tập gym, tập tạ, chạy bộ, đá banh, bơi; verbs tập, chơi, đánh; frequency mỗi tuần mấy lần, thường, hay, ít khi
-- l22 Barber, skincare, clothes | hớt tóc, uốn, nhuộm, da, kem chống nắng; làm cho; classifiers chiếc, bộ
+- l22 Barber, skincare, clothes | hớt tóc, uốn, nhuộm, da, kem chống nắng; làm cho; cái for clothes (cái áo, cái quần), bộ (bộ đồ); chiếc mainly for vehicles
 - l23 Series and music | coi phim, diễn viên, hay, dở, cảm động; relative clauses with mà and without (phim mà em coi, cái áo em mua)
 - l24 Phone, apps, social media | Zalo, Facebook, TikTok, voice messages, nhắn tin, gọi; Saigon idioms that tandems use, for recognition
 - l25 Pets | nuôi, con chó, con mèo, dắt đi dạo, cho … ăn; classifier con; dễ thương, cưng
 - l26 Housing and daily life in Saigon | thuê nhà, phòng, kẹt xe, tiếng ồn; càng ngày càng, thành (not bookish trở nên); classifiers căn, đứa
-- l27 Travel in Vietnam | Đà Nẵng, Huế, Cần Thơ, miền Tây, đặt phòng, xe khách; đều, cả / tất cả / mọi / từng; ai cũng, gì cũng, đâu cũng
+- l27 Travel in Vietnam | Đà Nẵng, Huế, Cần Thơ, miền Tây, đặt phòng, xe khách (xe đò for recognition); đều, cả / tất cả / mọi / từng; ai cũng, gì cũng, đâu cũng
 - l28 Tết and holidays | về quê, lì xì, family customs; lúc / khi, trong khi; kịp, trễ
 - l29 Storytelling I | đầu tiên, rồi, sau đó, cuối cùng, tự nhiên
 - l30 CHECKPOINT 3. Opinions, agreeing, disagreeing | theo anh, chắc, có lẽ, chứ; đúng rồi, hông phải vậy, thiệt hả
@@ -78,11 +78,11 @@ Restructured on 1 October 2026 (Mike approved): 50 lessons instead of 40 weeks, 
 
 ### Phase 3, lessons 33 to 43: B1, extended turns
 
-- l33 Connectors | tuy … nhưng, mặc dù, vừa … vừa, không chỉ … mà còn, càng … càng, hoặc
+- l33 Connectors | mặc dù … nhưng, vừa … vừa, không chỉ … mà còn, càng … càng, hay / hay là for production; tuy … nhưng and hoặc for recognition (bookish)
 - l34 Result and direction | được, xong, hết, nổi, kịp, ra, thấy, lên (ăn hông nổi, nghĩ ra, đứng lên)
 - l35 What happened to me | bị / được with an agent (bị má la, được thầy khen)
 - l36 Hán Việt I: society, work, education | xã hội, kinh nghiệm, quyết định, giáo dục, cơ hội, vấn đề, ý kiến, văn hóa; decoding new words from 漢字, always inside whole sentences
-- l37 Childhood and memories | hồi nhỏ, hồi đó, từng; telling the past, also for the father
+- l37 Childhood and memories | extended past narration, using hồi nhỏ, hồi đó (l13) and từng (l16) as known items; also for the father
 - l38 Feelings | buồn, vui, lo, nhớ, giận, ghen
 - l39 Friendship and relationships | hẹn hò, độc thân, what to ask and how
 - l40 CHECKPOINT 4. Work and money | lương, tiết kiệm, xài tiền, đi làm thêm, tốn; đủ / thiếu
@@ -93,8 +93,8 @@ Restructured on 1 October 2026 (Mike approved): 50 lessons instead of 40 weeks, 
 ### Phase 4, lessons 44 to 50: B1 in conversation
 
 - l44 Germany, Vietnam, China compared, and what Vietnamese people ask about Germany | longer answers
-- l45 Saigon idiom | quá trời, dữ, hết sức, bao ngon, … gì đâu, … luôn, xạo, chảnh; production and recognition versions
-- l46 Paraphrasing, buying time, repairing | thì, là, kiểu, cái, tức là, ý anh là, ủa
+- l45 Saigon idiom | for production: quá trời, dữ, hết sức, … gì đâu, … luôn; slang for recognition only (lesson pages, never practised): bao ngon, xạo, chảnh
+- l46 Paraphrasing, buying time, repairing | thì, là, kiểu, cái, tức là, ý anh là
 - l47 Storytelling II | a story with an opinion
 - l48 Father II: family history, Cần Thơ and miền Tây | what to ask and what not
 - l49 Plans and dreams | mong, ước gì, hy vọng, sẽ
@@ -106,6 +106,8 @@ Restructured on 1 October 2026 (Mike approved): 50 lessons instead of 40 weeks, 
 - để: so that (l06), leave it to me (để anh trả); cho: a request or permission (cho anh hỏi); làm cho: make someone feel or do. Keep them apart in the notes.
 - nghen reads older or Mekong; tandems in their twenties mostly write nha.
 - Avoid bookish forms in production: thành rather than trở nên, không chỉ … mà còn rather than không những … mà còn.
+- không and hông: negation in practised sentences stays không (careful speech); hông appears as the question-final particle (… hông?), which is ordinary Saigon speech, and in chat. Decided 1 Oct 2026, change it if a tandem disagrees.
+- Open question for a tandem before lessons 10, 11 and 28 assert anything: do ên / êt follow -ng / -c in Saigon (lên like lơng, Tết like tấc)? Standard descriptions say yes; lesson 1 says the rule skips ê. Also whether tin and tinh really stay apart in careful speech.
 - Mandarin bridges worth using: 已經 đã, 才 mới, 快要 sắp, 過 / 曾經 từng, 只要 miễn là, 要是…就好了 phải chi, 如果 / 萬一 nếu / lỡ.
 - Texting abbreviations and Hán Việt decoding go into the lesson notes; the app only ever has whole spoken sentences.
 
@@ -128,7 +130,7 @@ Grammar coverage was checked against the tables of contents of three textbooks: 
 - Voice: your own v3 voice, `2vKhvfp40Pq0JeXGdL7F`, model `eleven_v3`, stability 1.0. Decided 18 Sep 2026 after a head to head against Minh and Anh PM from the library.
 - Stability 1.0, not 0.5: at 0.5 the voice glued "cho anh" into one word. 1.0 keeps the syllables apart. v3 accepts only 0.0, 0.5 and 1.0.
 - Saigon respelling: at the start of a syllable, d becomes y and gi becomes y before the voice sees the text. dạ is read as yạ, giờ as yờ. đ and gh are never touched, so đúng stays đúng and ghi stays ghi. The rule lives in `scripts/common.py`, function `saigon_respell`, and runs on every sentence automatically. The app always shows the correct spelling.
-- The r is the one sound no voice on ElevenLabs gets right: every Vietnamese voice says a z there, and unlike d and gi there is no second letter in the alphabet that carries the retroflex value, so respelling cannot fix it. The app dots every r; tapping it says: you hear z, you say the Mandarin 日.
+- Four sounds are beyond every voice on ElevenLabs (tested 19 Sep 2026): r comes out as z, tr and ch merge, s and x merge, and the vowel trace of the palatal finals after i and ê is missing. Respelling cannot fix them, because the alphabet has no second letter with the target value. The app dots every syllable with one of them and says on tap what you say instead.
 - Every sentence file is generated once and reused when the sentence comes back in a later review, so nothing is paid for twice. v3 varies between generations, so a regenerated file sounds slightly different.
 
 ## Output format
