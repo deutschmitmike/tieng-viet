@@ -43,40 +43,40 @@ Every eighth week. Record a two-minute monologue on the checkpoint topic, then h
 
 ### Phase 1, weeks 3 to 10: A1, survival and small talk
 
-- w03 Self-introduction and family in the persona. là, không phải là, có, không có. Kinship terms ba, má, anh, chị, em, ông, bà. Ages and jobs.
-- w04 Questions. gì, đâu, ai, nào, mấy, bao nhiêu, sao, khi nào / chừng nào (Saigon). Yes/no with có ... không, ... chưa, ... hả, ... phải không. Answering with dạ, ừ, hông, chưa.
-- w05 Daily routine and time. mấy giờ, sáng / trưa / chiều / tối, thường, mỗi ngày, hôm nay / hôm qua / ngày mai. Aspect: đang, đã, sẽ, rồi, chưa, mới, vừa. Mandarin bridge: 了 / 在 / 剛.
+- w03 Self-introduction and family in the persona. là, không phải là, có, không có. Kinship terms ba, má, anh, chị, em, ông, bà. Ages and jobs. Grammar: của for possession (often dropped: ba anh), plural with các and Saigon mấy, này / đó / kia.
+- w04 Questions. gì, đâu, ai, nào, mấy, bao nhiêu, sao, khi nào / chừng nào (Saigon). Yes/no with có ... không, ... chưa, ... hả, ... phải không. Answering with dạ, ừ, hông, chưa. Grammar: question word + cũng for every / any (ai cũng, gì cũng, đâu cũng); bao lâu (how long), bao xa (how far).
+- w05 Daily routine and time. mấy giờ, sáng / trưa / chiều / tối, thường, mỗi ngày, hôm nay / hôm qua / ngày mai. Aspect: đang, đã, sẽ, rồi, chưa, mới, vừa. Mandarin bridge: 了 / 在 / 剛. Dates: ngày, tháng, năm, hôm nay ngày mấy, sinh nhật, sinh năm. Weather: nóng, lạnh, mưa, nắng, mùa mưa, mùa khô. Grammar: từ … tới (from … to), bao lâu rồi (for how long already), vẫn / còn (still).
 - w06 Food and coffee in Saigon. Ordering, classifiers ly, tô, dĩa, cái, con, chiếc, cục, miếng. quán, gọi món, tính tiền. Hán Việt track begins: the first sound correspondences (學 → học, 國 → quốc, 時 → thời).
-- w07 Places and getting around. ở đâu, đi, tới, về, gần, xa, quẹo (Saigon for turn), Grab, xe máy, hẻm, quận. Directions in a Saigon street.
-- w08 Checkpoint 1. Shopping and money: mắc, rẻ, bao nhiêu tiền, trả giá, bớt, numbers to millions, ngàn (Saigon for nghìn).
-- w09 Likes, wants, preferences. thích, muốn, ghét, thích ... hơn, mê. Gym, coffee, Korean dramas as the topics.
-- w10 Past and plans. hôm qua, tuần trước, hồi đó, đã ... rồi, định, tính (Saigon for planning), sẽ. Telling a weekend in ten sentences.
+- w07 Places and getting around. ở đâu, đi, tới, về, gần, xa, quẹo (Saigon for turn), Grab, xe máy, hẻm, quận. Directions in a Saigon street. Grammar: place words trên, dưới, trong, ngoài, giữa, trước, sau, bên cạnh, đối diện, with ngồi / đứng / nằm; cách … bao xa (how far from).
+- w08 Checkpoint 1. Shopping and money: mắc, rẻ, bao nhiêu tiền, trả giá, bớt, numbers to millions, ngàn (Saigon for nghìn). Grammar: thêm … nữa (some more), chỉ … thôi (only), hết (sold out, used up).
+- w09 Likes, wants, preferences. thích, muốn, ghét, thích ... hơn, mê. Gym, coffee, Korean dramas as the topics. Grammar: modal verbs muốn, có thể, cần, phải, nên; mà for contrast.
+- w10 Past and plans. hôm qua, tuần trước, hồi đó, đã ... rồi, định, tính (Saigon for planning), sẽ. Telling a weekend in ten sentences. Grammar: xong / rồi for a finished action, sắp (about to), vừa mới (just now).
 
 ### Phase 2, weeks 11 to 22: A2, talking about your life
 
 - w11 Work as a teacher. dạy, học trò / học sinh, lớp, online, lịch dạy, giờ dạy, bận, rảnh. Explaining what you do to a tandem.
-- w12 Germany, Vietnam, China. Countries, languages, người Đức / người Việt / người Hoa, tiếng Đức / tiếng Việt / tiếng Hoa. Comparison: hơn, nhất, bằng, giống, khác. Hán Việt: 德 / 越 / 華 / 國 / 語.
+- w12 Germany, Vietnam, China. Countries, languages, người Đức / người Việt / người Hoa, tiếng Đức / tiếng Việt / tiếng Hoa. Comparison: hơn, nhất, bằng, giống, khác. Hán Việt: 德 / 越 / 華 / 國 / 語. Grammar: đều (all, both), cả / tất cả / mọi / từng, nhau (each other).
 - w13 Family and kinship in depth. bên nội / bên ngoại, cô, dì, chú, bác, cậu, mợ, thím, dượng. Talking about your father's family in Cần Thơ without yet talking to them.
-- w14 Describing people. Appearance, character, tính tình, hiền, dễ thương, khó tính, vui tính. Southern intensifiers: dữ, quá trời, hết sức.
-- w15 Body, health, gym. đau, mệt, bịnh, tập gym, tập tạ, ăn uống, ngủ, khỏe lên.
+- w14 Describing people. Appearance, character, tính tình, hiền, dễ thương, khó tính, vui tính. Southern intensifiers: dữ, quá trời, hết sức. Grammar: reduplication (vui vẻ, đẹp đẽ, sạch sẽ, nho nhỏ: softer or more vivid), degree words hơi, khá, lắm, quá.
+- w15 Body, health, gym. đau, mệt, bịnh, tập gym, tập tạ, ăn uống, ngủ, khỏe lên. Grammar: bị and được as passive and experience markers (bị bịnh, bị đau, được nghỉ).
 - w16 Checkpoint 2. Barbershop and skincare: cắt tóc, uốn, nhuộm, da, mụn, kem chống nắng, dưỡng da.
 - w17 Korean dramas and entertainment. phim, tập, diễn viên, coi (Saigon for xem), hay, dở, cảm động, hài.
-- w18 Reasons and consequences. tại vì, vì, nên, cho nên, mà, thì, tại. Mandarin bridge: 因為 / 所以 / 才.
+- w18 Reasons and consequences. tại vì, vì, nên, cho nên, mà, thì, tại. Mandarin bridge: 因為 / 所以 / 才. Grammar: bị / được with an agent (bị má la, được thầy khen), làm cho (make someone feel or do), để (so that).
 - w19 Requests, suggestions, invitations. giúp, nhờ, đi ... không?, hay là, thôi, được không, ráng (Saigon for cố gắng).
 - w20 Texting register. Abbreviations (k, ko, hông, dc, đc, ntn, j, ms, r), emoji habits, openers and closers, how tandems actually write. Recognition layer, plus a clean version for your own messages.
-- w21 Housing and daily life in Saigon. thuê nhà, phòng, hẻm, quận, điện nước, tiếng ồn, kẹt xe, mưa.
+- w21 Housing and daily life in Saigon. thuê nhà, phòng, hẻm, quận, điện nước, tiếng ồn, kẹt xe, mưa. Grammar: càng ngày càng (more and more), trở nên (to become).
 - w22 Travel in Vietnam. Đà Nẵng, Huế, Cần Thơ, miền Tây, đi chơi, đặt phòng, chuyến bay, xe khách.
 
 ### Phase 3, weeks 23 to 34: B1, extended turns
 
-- w23 Storytelling I. Sequencing: đầu tiên, rồi, sau đó, cuối cùng, lúc đó, hồi đó, tự nhiên. A story in twenty sentences.
+- w23 Storytelling I. Sequencing: đầu tiên, rồi, sau đó, cuối cùng, lúc đó, hồi đó, tự nhiên. A story in twenty sentences. Grammar: lúc / khi (when), trước khi, sau khi, trong khi.
 - w24 Checkpoint 3. Opinions: theo anh, anh nghĩ, anh thấy, đồng ý, không đồng ý, có lẽ, chắc, chắc chắn.
 - w25 Connectors. tuy ... nhưng, mặc dù, không những ... mà còn, càng ... càng, vừa ... vừa, hoặc ... hoặc, vừa mới ... đã.
 - w26 Conditionals and hypotheticals. nếu ... thì, lỡ, giá mà, phải chi, miễn là. Mandarin bridge: 如果 / 要是 / 萬一.
 - w27 Reported speech. nói là, hỏi là, kêu (Saigon for bảo), nói ... rằng, hỏi ... có ... không.
-- w28 Hán Việt at scale I. Society, work, education: xã hội, kinh nghiệm, quyết định, giáo dục, cơ hội, vấn đề, ý kiến, văn hóa. Decoding new words from 漢字.
+- w28 Hán Việt at scale I. Society, work, education: xã hội, kinh nghiệm, quyết định, giáo dục, cơ hội, vấn đề, ý kiến, văn hóa. Decoding new words from 漢字. Word formation: compounding and borrowing, building on the reduplication of lesson 14.
 - w29 Germany, Vietnam, China compared. Culture, food, punctuality, family, cost of living, what Vietnamese people ask a German about Germany.
-- w30 Feelings and relationships. buồn, vui, lo, nhớ, giận, ghen, hẹn hò, độc thân, register-safe versions for the tandems.
+- w30 Feelings and relationships. buồn, vui, lo, nhớ, giận, ghen, hẹn hò, độc thân, register-safe versions for the tandems. Grammar: chứ (surely, of course), emphatic negation with đâu (đâu có, … đâu), emphatic mà.
 - w31 Emergencies and light bureaucracy. bệnh viện, thuốc, giấy tờ, visa, ngân hàng, sim, mất đồ.
 - w32 Checkpoint 4. Hán Việt at scale II: technology, environment, city life, economy without politics.
 - w33 Saigon idiom and speech habits. quá trời, dữ, hết sức, bao ... (bao ngon, bao rẻ), ... gì đâu, ... luôn, xạo, quẹo lựa, chảnh. Production versions and recognition-only versions.
@@ -90,6 +90,8 @@ Every eighth week. Record a two-minute monologue on the checkpoint topic, then h
 - w38 Long conversation simulations II.
 - w39 Repair and fluency. Paraphrasing, hedging, fillers (thì, là, kiểu, cái, tức là), buying time without switching to English.
 - w40 Checkpoint 5, 30 minutes. Gaps week: whatever the check-ins and corrections flagged most. Ends Friday 25 June 2027.
+
+Grammar additions of 1 October 2026 (the "Grammar:" and "Dates" notes in the lines above) come from checking the plan against the tables of contents of three textbooks: Elementary Vietnamese (Binh Ngo, Tuttle), Colloquial Vietnamese (Bac Hoai Tran, Routledge) and Tiếng Việt cho người nước ngoài (Lê Thị Hiệp). Mike: grammar constructions are always welcome. All three are Northern at the core; every construction is taught in its Saigon form.
 
 ## Conventions for the material
 

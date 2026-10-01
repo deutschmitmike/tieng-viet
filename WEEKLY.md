@@ -22,6 +22,13 @@ Stop condition: if there is no check-in for the week in which the current lesson
 it. Build nothing, change nothing, tell him you are waiting for his check-in. He can also give the check-in to
 you in the chat: then write it into checkin.md yourself, in the format the script uses, and go on.
 
+Reference books, on Mike's Mac only, never in the repo and never copied (copyrighted, and Northern at the core):
+`~/Downloads/Elementary Vietnamese.pdf` (Binh Ngo; the clearest grammar explanations; a scan, read pages as images),
+`~/Downloads/colloquial-vietnamese-the-complete-course-for-beginners.pdf` (Bac Hoai Tran; has a text layer and marks
+Southern variants with (S), so grep it with `pdftotext` to check that no Northern word slips in), and
+`~/Downloads/Tieng Viet for Foreigners.pdf` (Lê Thị Hiệp; a scan, Hanoi). Use them for the grammar of the lesson and as
+a cross-check, never as a source of sentences.
+
 Then read plan.md (the line for lesson N+1 is the brief), checkin.md, sentences.csv, `words.csv` and the
 previous lesson file `lessons/lNN.md`.
 
