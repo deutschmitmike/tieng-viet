@@ -23,7 +23,9 @@ nothing if a check or a test fails.
 - Nothing plays by itself. Again and Got it are always active (Mike, 1 Oct 2026: no play needed to go on); on a recall card they appear after Check, which reveals and plays.
 - Again: the card comes back four cards later as listen and repeat, at most twice per round; the retry does not count as a review. The time estimate per card includes the expected retries (the running share of Again, `S.ar`). Cards still being learned (box 1 and 2) come first, then the oldest due. A problem card (5 open misses) stays in box 2 until it sits three times in a row.
 - After the last card the tandem task of the lesson; the day counts as done when it is ticked (Done or Not
-  today). From Friday to Sunday the check-in follows if it is not filled in yet.
+  today). There is no check-in (Mike, 1 Oct 2026); the app's own data is the feedback.
+- Free practice (home tile "Practise"): any lesson, its met sentences shuffled. Got it changes nothing; Again makes
+  the card due tomorrow at the latest (`practiceAgain`). It does not count as a round, a day or minutes.
 - Every day is a practice day (Mike, 1 Oct 2026). Intervals are in days.
 
 ## Scheduling (ported from ~/Documents/quizzes/src/engine.js)

@@ -16,18 +16,15 @@ the retired booklet scripts used it). The ElevenLabs key is in `scripts/.env`. N
 
 ## 1. Read and decide
 
-Run `python3 app/pull_checkin.py`. It reads Mike's app state (read only), writes new or updated Friday check-ins
-into `checkin.md` and prints the check-ins, how many sentences of each lesson he has met, the cards he needed
-"Again" for most, the problem cards and his totals.
+Run `python3 app/pull_checkin.py`. It reads Mike's app state (read only) and prints how many sentences of each
+lesson he has met, the cards he needed "Again" for most, the problem cards and his totals. (It would also copy old
+Friday check-ins into `checkin.md`; there are none since 1 Oct 2026.)
 
-Stop condition, before anything else: build lesson N+1 only when both hold:
-1. all sentences of lesson N are met in the app (pull_checkin prints met / total per lesson; for lesson 1 this is
-   always true, its sentences were counted as met when it moved into the app), and
-2. there is a check-in for lesson N in checkin.md: a "## Week of …, lesson N" entry from the app or a
-   "## Chat check-in …, lesson N" entry (for lesson 1 any check-in counts).
-Otherwise build nothing, change nothing, and tell Mike what is missing. If he gives the check-in in the chat, write
-it into checkin.md yourself below the line, newest first, under its own heading (the format is at the top of
-checkin.md); the script never touches those entries.
+When to build: there is no check-in any more (Mike, 1 Oct 2026). The rule is one lesson ahead: the lesson after the
+one Mike is currently learning should always exist. Mike asks for it ("nächste Lektion"), usually when a new lesson
+has just started in the app. Build lesson N+1 when lesson N exists; never more than one lesson ahead of the one he is
+learning, so that the app data of the current lesson can still shape the next. If Mike sends tandem corrections in the
+chat, write them into `checkin.md` under a "## Chat check-in YYYY-MM-DD, lesson N" heading and use them.
 
 Reference books, on Mike's Mac only, never in the repo and never copied (copyrighted, and Northern at the core):
 `~/Downloads/Elementary Vietnamese.pdf` (Binh Ngo; the clearest grammar explanations; a scan, read pages as images),
@@ -36,7 +33,7 @@ Southern variants with (S), so grep it with `pdftotext` to check that no Norther
 `~/Downloads/Tieng Viet for Foreigners.pdf` (Lê Thị Hiệp; a scan, Hanoi). Use them for the grammar of the lesson and as
 a cross-check, never as a source of sentences.
 
-Then read plan.md (the line for lesson N+1 is the brief), checkin.md, sentences.csv, `words.csv` (when building
+Then read plan.md (the line for lesson N+1 is the brief), checkin.md (tandem corrections, if any), sentences.csv, `words.csv` (when building
 lesson 2 it does not exist yet: create it first, see step 2) and the
 previous lesson file `lessons/lNN.md`.
 
@@ -66,7 +63,7 @@ Follow plan.md and CLAUDE.md exactly. The short version of what matters most:
   `ids:` line (ăn: s0120, not s0089). Names (Mike) are not words. Before writing lesson 2, create the file from the
   62 practised sentences of lesson 1, including the numbers row s0088 (not from the sound drills). build.py checks
   the file's format, its Chinese and that every first_id exists.
-- Whatever the check-in and the "Again" list flag as hard comes back as new sentences that use it in a new
+- Whatever the "Again" list and the problem cards flag as hard comes back as new sentences that use it in a new
   combination (new ids, never copies). A tandem correction beats your judgement on Saigon naturalness: fix the
   sentence in sentences.csv under its old id and regenerate its mp3 with `--force --ids`.
 - Glosses in English plus Taiwan-register 繁體 (Chinese comma ， inside Chinese text, 你 never 您).

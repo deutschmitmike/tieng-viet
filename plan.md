@@ -12,7 +12,7 @@ Progress is counted in lessons. A skipped day loses nothing; the end date moves.
 - Glosses: English and Chinese (繁體) on every sentence. 漢字 on every word that has a Sino-Vietnamese etymology. From lesson 9 a small correspondence track (Mandarin sound to Hán Việt sound) runs alongside.
 - Since 1 October 2026 (Mike's decision): the course runs in an app with spaced repetition. Each line under Lessons below is one lesson of about 30 new sentences; the app brings old sentences back by itself, so there is no recycling schedule and no day plan. Whole sentences, lots of listening and repeating, vocabulary growing slowly out of the sentences (at most one or two new words per sentence). Simulated 1 October 2026, every day: 10 minutes fit about 2 new sentences a day (14 a week, a lesson in about two weeks), 15 minutes about 3, 20 minutes about 4, 30 minutes about 6. All topics stay in 50 lessons (see Lessons), each one leaner; the pace follows the minutes Mike chooses. How a lesson is built: WEEKLY.md; how the app works: app/README.md.
 - Audio: ElevenLabs only, one file per sentence, generated once, reused every time the sentence comes back. The app plays them on a button press only, never by itself.
-- Feedback loop: the Friday check-in in the app (what was hard, what you used with the tandems, what the tandem said), plus the app's own count of which sentences needed "Again". `app/pull_checkin.py` writes both into `checkin.md`; the next lesson is built from it. Tandem corrections fix the sentence itself.
+- Feedback loop: since 1 Oct 2026 no check-in (Mike). The app's own data (which sentences needed "Again", problem cards, pace) plus any tandem corrections Mike sends in the chat. `app/pull_checkin.py` prints the app data; the next lesson is built from it. Tandem corrections fix the sentence itself.
 
 ## The daily round
 
@@ -98,7 +98,7 @@ Restructured on 1 October 2026 (Mike approved): 50 lessons instead of 40 weeks, 
 - l47 Storytelling II | a story with an opinion; tưởng (to think wrongly), té ra / hóa ra, ai dè
 - l48 Father II: family history, Cần Thơ and miền Tây | what to ask and what not; a recognition page on Mekong speech (r like g, v like y, qu like w) and older words (biểu, xe đò)
 - l49 Plans and dreams | mong, ước gì, hy vọng (sẽ is known)
-- l50 CHECKPOINT 5, 30 minutes. Free conversation; whatever the check-ins flagged most.
+- l50 CHECKPOINT 5, 30 minutes. Free conversation; whatever the app data flagged most.
 
 ### Notes from the review of 1 October 2026, for writing the lessons
 
@@ -123,7 +123,7 @@ Grammar coverage was checked against the tables of contents of three textbooks: 
 - The production target throughout is careful Saigon, not fast Saigon: qu keeps its k (quá, never wá), v stays v (về, never yề), s and x stay apart, tr and ch stay apart, r stays retroflex. This is a matter of care, not of dialect. Where the careful Saigon form happens to match Hanoi, as with qu, that is a coincidence of care and no reason to avoid it.
 - What is Southern in the system itself is never touched, whatever "standard" is said to mean: d and gi are y and never z, r is retroflex and never z, the five tones stay with hỏi = ngã, and the Southern finals stay: -n becomes -ng and -t becomes -c after every vowel except i and ê (một = mộc, mắt = mắc), and the palatal -nh and -ch become -n and -t. That last one is not a full merger, because the vowel keeps the trace: anh is ăn, tinh is tưn, chính is chứn, so tin and tinh remain two words and careful speech keeps them apart. Undoing any of this would not be careful speech, it would be Northern speech, where the difference sits in the final consonant instead.
 - Chinese glosses in Taiwan-register 繁體 with the Chinese comma, 你 not 您.
-- When a tandem's correction and this material disagree on how something is said in Saigon, the tandem wins. Note it in `checkin.md`; the sentence gets fixed.
+- When a tandem's correction and this material disagree on how something is said in Saigon, the tandem wins. Note it in `checkin.md` (a "## Chat check-in" entry); the sentence gets fixed.
 
 ## How the audio is made
 

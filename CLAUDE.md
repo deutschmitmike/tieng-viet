@@ -56,11 +56,11 @@ partner unless Mike decides one.
 - Mike's progress is in Firebase at `save/__tieng_viet/mike` (same database as the kids' apps in
   ~/Documents/quizzes, whose rules allow only `lb/` and `save/`). Never change that path. The app syncs only
   on deutschmitmike.github.io; any local preview is automatically test mode. Never write test data there.
-  `python3 app/pull_checkin.py` reads it (read only) and writes the Friday check-ins into `checkin.md`.
+  `python3 app/pull_checkin.py` reads it (read only) and prints progress and the hardest cards.
 - Mike's decisions (30 Sep and 1 Oct 2026): sound only on a button press, never autoplay; no record button;
   English interface; phone first; every day, minutes chosen on the home screen (10, 15, 20 or 30; 15 by default, Mike's choice); as many new sentences as fit, at most six, and new ones take at most 40 % of the day's minutes; rating with two
   buttons, Again and Got it, always active, no play needed to go on; from box 3 a sentence is said from its meaning;
-  no sound drills (Mike, 1 Oct 2026: the word-list rows of lesson 1 stay only as reference, never practised, and new lessons have none); Friday check-in in the app; typing
+  no sound drills (Mike, 1 Oct 2026: the word-list rows of lesson 1 stay only as reference, never practised, and new lessons have none); no check-in (1 Oct 2026: the app data is the feedback, lessons are built one ahead on request); free practice of any lesson (Got it changes nothing, Again makes the card due tomorrow); typing
   (Telex) comes with lesson 2, slowly, only for sure sentences, as its own track that never pushes a
   speaking card back.
 - The old week booklets (`scripts/render_*`, `build_day.py`, `schedule.csv`, `weeks/`) are out of the
@@ -77,7 +77,7 @@ per-sentence mp3s, `index.html` and `version.json`.
 ## Where things stand
 
 - Lesson 1 (s0001 to s0121, the sound system) was studied from the booklet from 21 September 2026 and moved
-  into the app on 1 October 2026 as already met. Next is lesson 2, as soon as Mike's check-in is in.
+  into the app on 1 October 2026 as already met. Lesson 2 is being built on 1 Oct 2026; from then on one lesson ahead, on request.
 - To build a lesson, follow WEEKLY.md. Lessons are built on request, never by a scheduled task: the
   sentences are the course and they are not written unsupervised.
 - Work from a Claude Code session started in `~/Documents/tieng-viet`, so that this file is loaded.

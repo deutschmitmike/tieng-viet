@@ -1,7 +1,7 @@
 // ui.js: screens, audio, storage and sync. Uses CORE (core.js) and D (the data from build.py).
 // Rules from Mike (2026-09-30): sound only on a button press, never autoplay. English interface. Phone first.
 
-const {practised, dayOf, dow, practiceDay, monday, isoDate, buildRound, roundDone, answer, dayLog, currentLesson, nextNew,
+const {practised, practiceAgain, dayOf, dow, practiceDay, monday, isoDate, buildRound, roundDone, answer, dayLog, currentLesson, nextNew,
   migrateLesson1, freshState, fixState, MINUTES, MIN_DEFAULT, syncAction, mergeStates, voiceMarks, fold, sureCount, weekAgain, SURE_BOX} = CORE;
 
 // Test mode, nothing goes to the cloud: ?local, and always anywhere except the published site (a local preview must never touch Mike's state)
@@ -153,7 +153,7 @@ function show(name, arg) {
   if (name !== cur) stopAudio();
   cur = name;
   document.querySelectorAll("section").forEach(s => s.classList.toggle("on", s.id === name));
-  ({home: renderHome, card: renderCard, tandem: renderTandem, checkin: renderCheckin, listen: renderListen, library: renderLibrary, lessons: renderLessons, page: renderPage})[name](arg);
+  ({home: renderHome, card: renderCard, tandem: renderTandem, practice: renderPractice, listen: renderListen, library: renderLibrary, lessons: renderLessons, page: renderPage})[name](arg);
   window.scrollTo(0, 0);
 }
 
@@ -220,7 +220,7 @@ function renderHome() {
     '<button class="btn tile" data-act="go" data-to="listen">Listen<small>current lesson, with pauses</small></button>' +
     '<button class="btn tile" data-act="go" data-to="library">Sentences<small>everything you have met</small></button>' +
     '<button class="btn tile" data-act="go" data-to="lessons">Lessons<small>introductions and notes</small></button>' +
-    '<button class="btn tile" data-act="go" data-to="checkin">Check-in<small>' + (ci ? "done this week" : dow(real) >= 4 ? "due now" : "on Fridays") + "</small></button>" +
+    '<button class="btn tile" data-act="go" data-to="practice">Practise<small>any lesson, freely</small></button>' +
     "</div>" +
     '<div class="panel minutes"><span>Minutes a day</span><span class="seg">' + MINUTES.map(m => '<button class="btn' + (m === mins ? " on" : "") + '" data-act="mins" data-m="' + m + '">' + m + "</button>").join("") + "</span></div>" +
     '<footer><span id="sync">' + syncText() + "</span><span>v " + APP_BUILD + "</span></footer>";
@@ -316,34 +316,60 @@ document.addEventListener("click", e => {
   const b = e.target.closest('[data-act="tandem"]'); if (!b) return;
   const R = S.round, t = today(); if (!R || !roundDone(R) || (R.tandem && R.tandem !== "open")) { show("home"); return; }
   R.tandem = b.dataset.v; const log = dayLog(S, R.day); log.done = true; log.tandem = b.dataset.v; save();
-  const ci = S.checkins && S.checkins[isoDate(monday(t))];
-  show(dow(dayOf(Date.now())) >= 4 && !ci ? "checkin" : "home");
+  show("home");
 });
 
-// ----- Friday check-in -----
-function renderCheckin() {
-  const t = today(), key = isoDate(monday(t)), saved = (S.checkins || {})[key] || {}, L = roundLesson();
-  let ci = saved; try { const d = JSON.parse(localStorage.getItem(KEY + "_cidraft")); if (d && d.key === key && (d.at || 0) > (saved.ts || 0)) ci = Object.assign({}, saved, d); } catch (e) {}
-  const hard = weekAgain(S, t).slice(0, 8);
-  const list = hard.length ? "<ul class=\"hardlist\">" + hard.map(([id, n]) => "<li><span>" + esc(D.sent[id] ? D.sent[id].vi : id) + "</span><small>" + n + "× again</small></li>").join("") + "</ul>"
-    : '<p class="muted">No “Again” this week yet.</p>';
-  $("checkin").innerHTML = '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + "</button></div>" +
-    '<header><h1>Check-in</h1><div class="sub">Week of ' + key + ", lesson " + L.n + ". The next lesson is built from this.</div></header>" +
-    '<div class="panel"><div class="kicker">Hardest this week, counted by the app</div>' + list + "</div>" +
-    '<div class="panel form">' +
-    '<label>What was hard?<textarea id="ci_hard" rows="3">' + esc(ci.hard) + "</textarea></label>" +
-    '<label>What did you actually use with your tandems?<textarea id="ci_used" rows="3">' + esc(ci.used) + "</textarea></label>" +
-    '<label>What did the tandem say? Paste corrections or replies.<textarea id="ci_tandem" rows="5">' + esc(ci.tandem) + "</textarea></label>" +
-    '<button class="btn primary big" data-act="cisave">' + (saved.ts ? "Update" : "Save") + "</button></div>";
+// ----- free practice: any lesson, any time (Mike, 1 Oct 2026; replaces the Friday check-in) -----
+// Got it changes nothing (reviewing early would push a card too far out); Again makes the card due tomorrow.
+let PR = null;   // {key, items, pos, done, cs}
+function renderPractice() {
+  const back = '<div class="top"><button class="icon" data-act="' + (PR ? "prquit" : "go") + '" data-to="home" aria-label="Back">' + ICON.back + "</button>";
+  if (!PR) {
+    $("practice").innerHTML = back + "</div><header><h1>Practise</h1><div class=\"sub\">Go through a lesson freely. Got it changes nothing; Again brings the sentence into tomorrow's round.</div></header>" +
+      D.lessons.map(L => { const n = practised(D, L).filter(id => S.cards[id] && S.cards[id].box).length;
+        return n ? '<button class="btn tile wide" data-act="prstart" data-key="' + L.key + '">Lesson ' + L.n + ": " + esc(L.title) + "<small>" + n + (n === 1 ? " sentence" : " sentences") + "</small></button>" : ""; }).join("");
+    return;
+  }
+  if (PR.pos >= PR.items.length) {
+    $("practice").innerHTML = back + '</div><div class="panel"><h2>Done.</h2><p>' + PR.done + (PR.done === 1 ? " sentence" : " sentences") + " practised." +
+      (PR.again ? " " + PR.again + " of them come back in tomorrow's round." : "") + '</p><button class="btn primary big" data-act="prquit">Back</button></div>';
+    return;
+  }
+  const id = PR.items[PR.pos], item = D.sent[id], c = S.cards[id] || {}, recall = c.box >= 3;
+  if (!PR.cs || PR.cs.id !== id + ":" + PR.pos) PR.cs = {id: id + ":" + PR.pos, revealed: !recall, readyAt: Date.now() + 350, notes: false};
+  const q = PR.cs, pct = Math.round(100 * PR.pos / PR.items.length);
+  const body = !q.revealed
+    ? '<div class="meaning big">' + esc(item.en) + '</div><div class="zh big">' + esc(item.zh) + '</div><p class="hint">Say it in Vietnamese, out loud. Then check.</p><button class="btn primary big" data-act="prreveal">Check</button>'
+    : '<div class="vi">' + viHtml(item.vi) + '</div>' + (hasMarks(item.vi) ? '<p class="hint small">The voice is off on the dotted syllable. Tap it.</p>' : "") + '<div class="markinfo"></div>' +
+      '<div class="meaning">' + esc(item.en) + '</div><div class="zh">' + esc(item.zh) + "</div>" +
+      ((item.note || item.hz) ? (q.notes ? '<div class="notes">' + noteHtml(item) + "</div>" : '<button class="link" data-act="prnotes">Notes</button>') : "") +
+      '<div class="plays"><button class="btn play big" data-play="' + id + '" data-act="play" data-id="' + id + '">' + ICON.play + "<span>Play</span></button>" +
+      '<button class="btn play" data-play="' + id + '" data-act="play" data-id="' + id + '" data-slow="1">' + ICON.play + "<span>Slow</span></button></div>" +
+      '<div class="rate"><button class="btn again" data-act="prrate" data-r="again">Again</button><button class="btn ok" data-act="prrate" data-r="ok">Got it</button></div>';
+  $("practice").innerHTML = back + '<div class="bar"><i style="width:' + pct + '%"></i></div><span class="count">' + (PR.pos + 1) + "/" + PR.items.length + "</span></div>" +
+    '<div class="card"><div class="kicker">Free practice, lesson ' + PR.n + (recall ? ", say it from the meaning" : ", listen and repeat") + "</div>" + body + "</div>";
 }
 document.addEventListener("click", e => {
-  const b = e.target.closest('[data-act="cisave"]'); if (!b) return;
-  const t = today(), key = isoDate(monday(t));
-  S.checkins = S.checkins || {};
-  S.checkins[key] = {hard: $("ci_hard").value.trim(), used: $("ci_used").value.trim(), tandem: $("ci_tandem").value.trim(), ts: Date.now(),
-    lesson: roundLesson().n, again: weekAgain(S, t).slice(0, 12)};
-  try { localStorage.removeItem(KEY + "_cidraft"); } catch (e) {}
-  save(); show("home");
+  const b = e.target.closest("[data-act]"); if (!b || cur !== "practice") return;
+  const a = b.dataset.act;
+  if (a === "prstart") {
+    const L = D.lessons.find(x => x.key === b.dataset.key), ids = practised(D, L).filter(id => S.cards[id] && S.cards[id].box);
+    for (let i = ids.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [ids[i], ids[j]] = [ids[j], ids[i]]; }   // shuffled
+    PR = {key: L.key, n: L.n, items: ids, pos: 0, done: 0, again: 0, cs: null}; renderPractice();
+  }
+  if (a === "prquit") { PR = null; stopAudio(); show("home"); }
+  if (a === "prreveal") { PR.cs.revealed = true; play(PR.items[PR.pos], false); renderPractice(); }
+  if (a === "prnotes") { PR.cs.notes = true; renderPractice(); }
+  if (a === "prrate") {
+    if (Date.now() < PR.cs.readyAt) return;
+    const id = PR.items[PR.pos];
+    if (b.dataset.r === "again") {
+      if (practiceAgain(S, id, today())) save();
+      if (PR.items.indexOf(id, PR.pos + 1) < 0) PR.items.splice(Math.min(PR.pos + 5, PR.items.length), 0, id);   // once more, a few cards later
+      PR.again += PR.items.indexOf(id) === PR.pos ? 1 : 0;
+    } else PR.done++;
+    stopAudio(); PR.pos++; PR.cs = null; renderPractice();
+  }
 });
 
 // ----- listen: the current lesson in a row, started and stopped by hand -----
@@ -415,10 +441,6 @@ function renderLibList() {
 }
 document.addEventListener("input", e => {
   if (e.target.id === "q") { libQuery = e.target.value; renderLibList(); }
-  if (/^ci_/.test(e.target.id)) {   // the tandem's reply is pasted from another app; iOS may drop the tab meanwhile
-    const v = id => ($(id) || {}).value || "";
-    try { localStorage.setItem(KEY + "_cidraft", JSON.stringify({key: isoDate(monday(today())), hard: v("ci_hard"), used: v("ci_used"), tandem: v("ci_tandem"), at: Date.now()})); } catch (e2) {}
-  }
 });
 document.addEventListener("click", e => {
   if (cur !== "library" || e.target.closest("[data-act]")) return;

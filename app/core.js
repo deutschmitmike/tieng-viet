@@ -127,6 +127,12 @@ function answer(S, D, R, rating, T, ms) {
   }
   R.pos++;
 }
+// Free practice (not the daily round): Again makes a card due tomorrow at the latest, nothing else changes.
+function practiceAgain(S, id, T) {
+  const c = S.cards[id]; if (!c || !c.box) return false;
+  if (c.due > T + 1) { c.due = T + 1; return true; }
+  return false;
+}
 function dayLog(S, T) {
   S.days = S.days || {};
   const g = S.days[T] = S.days[T] || {n: 0, fresh: 0, ms: 0, ag: [], done: false};
@@ -246,5 +252,5 @@ function weekAgain(S, T) {   // which cards needed "Again" most this week (for t
 
 const CORE = {INTERVAL, MAX_BOX, SURE_BOX, RECALL_BOX, DRILL_DONE_BOX, MINUTES, MIN_DEFAULT, budgetMs, NEW_MAX, NEW_SHARE, EST0, dayOf, dow, practiceDay, addPractice,
   practiceBetween, monday, isoDate, isLeech, planCard, lapseCard, newCard, modeOf, currentLesson, nextNew, buildRound, roundDone,
-  practised, answer, dayLog, syncAction, mergeStates, MS_CAP, migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain};
+  practised, answer, practiceAgain, dayLog, syncAction, mergeStates, MS_CAP, migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain};
 if (typeof module !== "undefined") module.exports = CORE;

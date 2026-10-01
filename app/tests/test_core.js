@@ -143,6 +143,13 @@ t("Again brings a card back at most twice per round", () => {
   assert.strictEqual(R.items.filter(x => x.id === "s0001").length, 3);
 });
 
+t("free practice: Again makes a card due tomorrow, nothing else", () => {
+  const S = migrated(MON), c = S.cards.s0001; c.box = 5; c.due = MON + 30; const before = JSON.stringify(Object.assign({}, c, {due: 0}));
+  assert.ok(C.practiceAgain(S, "s0001", MON)); assert.strictEqual(c.due, MON + 1);
+  assert.strictEqual(JSON.stringify(Object.assign({}, c, {due: 0})), before, "box, ease, interval untouched");
+  assert.ok(!C.practiceAgain(S, "s0001", MON), "already due tomorrow");
+});
+
 // ---- the load over months (why the round is limited by time, and new sentences by a share of it) ----
 for (const min of [10, 30]) t("simulated load at " + min + " minutes", () => {
   const DD = fakeLesson(3000), S = migrated(MON); S.introRead.l02 = true; S.cfg = {min};
