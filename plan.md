@@ -1,6 +1,6 @@
 # Tiếng Việt Sài Gòn: master plan
 
-Start: Monday 21 September 2026, decided on 18 Sep 2026 (the first planned week went by while the voice was still being fixed). Target: conversational B1 by 1 July 2027, measured as a 30-minute casual conversation with a Saigon tandem partner in their twenties, following their normal speed, and a comfortable conversation with your father. 40 weeks (in the app since 1 October 2026: lessons instead of weeks, every day, 10 minutes to start, see below; at 10 minutes the target date moves well past July 2027), no passive listening, no tutor for now. Week 40 ends Friday 25 June 2027, so the last checkpoint sits just before the target date. The week that was given up came out of the old buffer week, not out of the teaching weeks.
+Start: Monday 21 September 2026, decided on 18 Sep 2026 (the first planned week went by while the voice was still being fixed). Target: conversational B1 by 1 July 2027, measured as a 30-minute casual conversation with a Saigon tandem partner in their twenties, following their normal speed, and a comfortable conversation with your father. 40 weeks (in the app since 1 October 2026: lessons instead of weeks, every day, 15 minutes, see below), no passive listening, no tutor for now. Week 40 ends Friday 25 June 2027, so the last checkpoint sits just before the target date. The week that was given up came out of the old buffer week, not out of the teaching weeks.
 
 Progress is counted in week numbers, not calendar weeks. If you skip a week, the next generated week is still the next week number; nothing is lost, the end date moves.
 
@@ -16,7 +16,7 @@ Progress is counted in week numbers, not calendar weeks. If you skip a week, the
 
 ## The daily half hour
 
-One round in the app every day, as many minutes as Mike sets (10 to start). First the sentences that are due, then as many new ones as fit. Each card: play, say it in the pause, play again and say it on top of the voice, as often as you like, then Again or Got it. After three Got its a sentence comes as its meaning only: say it from memory, then check against the voice. Whole sentences only, no sound drills (decided 1 October 2026). After the round, the tandem task of the lesson (a few messages using what you have). Friday adds the check-in.
+One round in the app every day, as many minutes as Mike sets (15). First the sentences that are due, then as many new ones as fit. Each card: play, say it in the pause, play again and say it on top of the voice, as often as you like, then Again or Got it. After three Got its a sentence comes as its meaning only: say it from memory, then check against the voice. Whole sentences only, no sound drills (decided 1 October 2026). After the round, the tandem task of the lesson (a few messages using what you have). Friday adds the check-in.
 
 Shadowing means matching the voice, not translating. Pitch, length, the cut at the end of stopped syllables, the lip closure after o, ô, u. Meaning comes from the gloss, not from the shadowing.
 

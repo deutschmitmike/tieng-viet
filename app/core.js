@@ -7,7 +7,7 @@
 const INTERVAL = {1: 1, 2: 2, 3: 4, 4: 8, 5: 15, 6: 30, 7: 60, 8: 120, 9: 240};   // in days
 const MAX_BOX = 9, SURE_BOX = 4, RECALL_BOX = 3, DRILL_DONE_BOX = 4;
 const LEECH_MISS = 5, LEECH_OK = 3;
-const MINUTES = [10, 15, 20, 30], MIN_DEFAULT = 10;   // Mike 2026-10-01: every day, 10 minutes to start with, changeable on the home screen
+const MINUTES = [10, 15, 20, 30], MIN_DEFAULT = 15;   // Mike 2026-10-01: every day, 15 minutes, changeable on the home screen
 const NEW_MAX = 6;                     // never more new sentences in one day, however much time is left
 const NEW_SHARE = 0.4;                 // new sentences take at most 40 % of the time, so the reviews they cause later still fit
 const budgetMs = S => ((S.cfg && S.cfg.min) || MIN_DEFAULT) * 60000;

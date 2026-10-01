@@ -18,7 +18,7 @@ function fakeLesson(nNew) {   // lesson 2 with nNew sentences, borrowing lesson-
 
 // ---- days ----
 t("every day counts, weekends too", () => { assert.strictEqual(C.practiceDay(MON + 5), MON + 5); assert.strictEqual(C.addPractice(MON + 4, 1), MON + 5); assert.strictEqual(C.practiceBetween(MON, MON + 7), 7); });
-t("minutes a day: 10 by default, changeable", () => { const S = C.freshState(); assert.strictEqual(C.budgetMs(S), 600000); S.cfg = {min: 20}; assert.strictEqual(C.budgetMs(S), 1200000); });
+t("minutes a day: 15 by default, changeable", () => { const S = C.freshState(); assert.strictEqual(C.budgetMs(S), 900000); S.cfg = {min: 20}; assert.strictEqual(C.budgetMs(S), 1200000); });
 
 // ---- data ----
 t("lesson 1 has 121 items, drills and sentences", () => {
@@ -46,7 +46,7 @@ t("lesson 1 migrates as met, spread over five days", () => {
 t("round stays within its minutes and puts reviews first", () => {
   const S = migrated(MON); for (const id of ids) S.cards[id].due = MON;
   let R = C.buildRound(S, D, MON);
-  assert.ok(R.est <= C.budgetMs(S) && R.backlog > 0, "62 sentences do not fit into 10 minutes");
+  assert.ok(R.est <= C.budgetMs(S) && R.backlog > 0, "62 sentences do not fit into 15 minutes");
   S.cfg = {min: 30}; R = C.buildRound(S, D, MON);
   assert.strictEqual(R.items.length, 62, "all 62 sentences of lesson 1 fit into 30 minutes");
   const DD = fakeLesson(200), S2 = migrated(MON); S2.introRead.l02 = true;

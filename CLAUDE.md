@@ -2,7 +2,7 @@
 
 Mike's own Southern Vietnamese self-study course. Target: B1 by about July 2027, able to hold a
 30 minute casual conversation with a Saigon tandem partner. Since 1 October 2026 the course runs as an app
-(the site root, deutschmitmike.github.io/tieng-viet): every day, a few minutes (10 to start, changeable in the app), whole sentences, lots of
+(the site root, deutschmitmike.github.io/tieng-viet): every day, 15 minutes (changeable in the app), whole sentences, lots of
 listening and repeating, spaced repetition instead of a day plan. No tutor for now (Mike finds a native
 speaker himself, maybe in a year; do not raise it).
 
@@ -52,7 +52,7 @@ Read `plan.md` first (syllabus, audio, fixed decisions), then `WEEKLY.md` (how a
   on deutschmitmike.github.io; any local preview is automatically test mode. Never write test data there.
   `python3 app/pull_checkin.py` reads it (read only) and writes the Friday check-ins into `checkin.md`.
 - Mike's decisions (30 Sep and 1 Oct 2026): sound only on a button press, never autoplay; no record button;
-  English interface; phone first; every day, minutes chosen on the home screen (10, 15, 20 or 30; 10 to start); as many new sentences as fit, at most six, and new ones take at most 40 % of the round; rating with two
+  English interface; phone first; every day, minutes chosen on the home screen (10, 15, 20 or 30; 15 by default, Mike's choice); as many new sentences as fit, at most six, and new ones take at most 40 % of the round; rating with two
   buttons, Again and Got it, always active, no play needed to go on; from box 3 a sentence is said from its meaning;
   no sound drills (Mike, 1 Oct 2026: the word-list rows of lesson 1 stay only as reference, never practised, and new lessons have none); Friday check-in in the app; typing
   (Telex) comes with lesson 2, slowly, only for sure sentences, as its own track that never pushes a

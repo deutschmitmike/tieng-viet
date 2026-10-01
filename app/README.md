@@ -13,7 +13,7 @@ nothing if a check or a test fails.
 ## How a day works
 
 - A round is built when Mike starts it: first everything due (oldest first), as long as the estimated time
-  stays within Mike's minutes (`S.cfg.min`, 10, 15, 20 or 30, set on the home screen, 10 by default), then as many
+  stays within Mike's minutes (`S.cfg.min`, 10, 15, 20 or 30, set on the home screen, 15 by default), then as many
   new sentences from the current lesson as fit into what is left, at most 40 % of the round and at most six, but only if nothing due was
   left out and the lesson's introduction has been read. Leftover due cards wait for the next day.
 - The time per card is measured (moving average per card type), so the estimate fits Mike's real pace.
