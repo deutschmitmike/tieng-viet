@@ -1,23 +1,26 @@
 // core.js: the learning logic, no DOM. Used by the app (build.py inlines it) and by app/tests.
 // Scheduling is ported from the kids' app (~/Documents/quizzes/src/engine.js): boxes 1 to 9, own interval
 // and ease per card, a forgotten sure card falls back two boxes, problem cards stay in box 2.
-// Differences: days are practice days (Monday to Friday), the round is limited by time, not by card count,
+// Differences: every day is a practice day (Mike, 1 Oct 2026), the round is limited by time, not by card count,
 // and the grade comes from two buttons (Again / Got it), because the app cannot hear you.
 
-const INTERVAL = {1: 1, 2: 2, 3: 4, 4: 8, 5: 15, 6: 30, 7: 60, 8: 120, 9: 240};   // in practice days
+const INTERVAL = {1: 1, 2: 2, 3: 4, 4: 8, 5: 15, 6: 30, 7: 60, 8: 120, 9: 240};   // in days
 const MAX_BOX = 9, SURE_BOX = 4, RECALL_BOX = 3, DRILL_DONE_BOX = 4;
 const LEECH_MISS = 5, LEECH_OK = 3;
-const BUDGET_MS = 30 * 60000;          // Mike: 30 minutes a day, five days a week
-const NEW_MAX = 6;                     // simulated 2026-09-30: about 6 new sentences a day fit into 30 minutes
+const MINUTES = [10, 15, 20, 30], MIN_DEFAULT = 10;   // Mike 2026-10-01: every day, 10 minutes to start with, changeable on the home screen
+const NEW_MAX = 6;                     // never more new sentences in one day, however much time is left
+const NEW_SHARE = 0.4;                 // new sentences take at most 40 % of the time, so the reviews they cause later still fit
+const budgetMs = S => ((S.cfg && S.cfg.min) || MIN_DEFAULT) * 60000;
 const REQUEUE_GAP = 4;                 // "Again" brings the card back four cards later
 const EST0 = {new: 75000, echo: 25000, recall: 25000, drill: 20000};
 
 // ----- days -----
 function dayOf(ms) { const d = new Date(ms); return Math.floor((ms - d.getTimezoneOffset() * 60000) / 86400000); }
 const dow = d => ((d + 3) % 7 + 7) % 7;                       // 0 = Monday ... 6 = Sunday
-function practiceDay(d) { const w = dow(d); return w >= 5 ? d - (w - 4) : d; }   // Saturday and Sunday count as Friday
-function addPractice(d, n) { d = practiceDay(d); while (n > 0) { d++; if (dow(d) < 5) n--; } return d; }
-function practiceBetween(a, b) { let n = 0; for (let d = a + 1; d <= b; d++) if (dow(d) < 5) n++; return n; }
+// Every day counts (Mike, 1 Oct 2026). The names stay from the time of five practice days a week.
+const practiceDay = d => d;
+const addPractice = (d, n) => d + n;
+const practiceBetween = (a, b) => Math.max(0, b - a);
 const monday = d => d - dow(d);
 function isoDate(d) { return new Date(d * 86400000).toISOString().slice(0, 10); }
 
@@ -59,19 +62,22 @@ function nextNew(S, D) { return practised(D, currentLesson(S, D)).filter(id => !
 // ----- the daily round -----
 function estOf(S, m) { return (S.avg && S.avg[m]) || EST0[m]; }
 function buildRound(S, D, T) {
-  const items = []; let est = 0, backlog = 0;
+  const items = [], BUDGET = budgetMs(S); let est = 0, backlog = 0;
   const due = Object.keys(S.cards).filter(id => D.sent[id] && D.sent[id].kind !== "d" && !S.cards[id].ret && S.cards[id].due <= T)
     .sort((a, b) => S.cards[a].due - S.cards[b].due || S.cards[a].box - S.cards[b].box || (a < b ? -1 : 1));
   for (const id of due) {
     const m = modeOf(D.sent[id], S.cards[id]), e = estOf(S, m);
-    if (est + e <= BUDGET_MS) { items.push({id, m}); est += e; } else backlog++;
+    if (est + e <= BUDGET) { items.push({id, m}); est += e; } else backlog++;
   }
   let fresh = 0;
   const L = currentLesson(S, D);
   if (!backlog && (S.introRead || {})[L.key]) {      // new sentences only when the reviews fit and the lesson intro has been read
+    const room = Math.min(BUDGET - est, BUDGET * NEW_SHARE);   // as many as fit
+    let used = 0;
     for (const id of nextNew(S, D)) {
       if (fresh >= NEW_MAX) break;
-      const e = estOf(S, "new"); if (est + e > BUDGET_MS) break;
+      const e = estOf(S, "new"); if (used + e > room) break;
+      used += e;
       items.push({id, m: "new"}); est += e; fresh++;
     }
   }
@@ -177,7 +183,7 @@ function weekAgain(S, T) {   // which cards needed "Again" most this week (for t
   return Object.entries(cnt).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
 }
 
-const CORE = {INTERVAL, MAX_BOX, SURE_BOX, RECALL_BOX, DRILL_DONE_BOX, BUDGET_MS, NEW_MAX, EST0, dayOf, dow, practiceDay, addPractice,
+const CORE = {INTERVAL, MAX_BOX, SURE_BOX, RECALL_BOX, DRILL_DONE_BOX, MINUTES, MIN_DEFAULT, budgetMs, NEW_MAX, NEW_SHARE, EST0, dayOf, dow, practiceDay, addPractice,
   practiceBetween, monday, isoDate, isLeech, planCard, lapseCard, newCard, modeOf, currentLesson, nextNew, buildRound, roundDone,
   practised, answer, dayLog, migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain};
 if (typeof module !== "undefined") module.exports = CORE;

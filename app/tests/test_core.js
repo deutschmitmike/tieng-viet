@@ -17,9 +17,8 @@ function fakeLesson(nNew) {   // lesson 2 with nNew sentences, borrowing lesson-
 }
 
 // ---- days ----
-t("weekend counts as Friday", () => { assert.strictEqual(C.practiceDay(MON + 5), MON + 4); assert.strictEqual(C.practiceDay(MON + 6), MON + 4); });
-t("practice days skip the weekend", () => { assert.strictEqual(C.addPractice(MON + 4, 1), MON + 7); assert.strictEqual(C.addPractice(MON, 5), MON + 7); });
-t("practiceBetween", () => { assert.strictEqual(C.practiceBetween(MON, MON + 7), 5); assert.strictEqual(C.practiceBetween(MON + 4, MON + 7), 1); });
+t("every day counts, weekends too", () => { assert.strictEqual(C.practiceDay(MON + 5), MON + 5); assert.strictEqual(C.addPractice(MON + 4, 1), MON + 5); assert.strictEqual(C.practiceBetween(MON, MON + 7), 7); });
+t("minutes a day: 10 by default, changeable", () => { const S = C.freshState(); assert.strictEqual(C.budgetMs(S), 600000); S.cfg = {min: 20}; assert.strictEqual(C.budgetMs(S), 1200000); });
 
 // ---- data ----
 t("lesson 1 has 121 items, drills and sentences", () => {
@@ -32,7 +31,7 @@ t("lesson 1 has 121 items, drills and sentences", () => {
 t("every lesson has pages and a tandem task", () => { for (const L of D.lessons) { assert.ok(L.pages.length); assert.ok(L.tandem.length > 20); } });
 
 // ---- migration ----
-t("lesson 1 migrates as met, spread over five practice days", () => {
+t("lesson 1 migrates as met, spread over five days", () => {
   const S = migrated(MON);
   assert.strictEqual(Object.keys(S.cards).length, 121);
   assert.ok(S.introRead.l01);
@@ -44,20 +43,21 @@ t("lesson 1 migrates as met, spread over five practice days", () => {
 });
 
 // ---- rounds ----
-t("round stays within 30 minutes and puts reviews first", () => {
+t("round stays within its minutes and puts reviews first", () => {
   const S = migrated(MON); for (const id of ids) S.cards[id].due = MON;
-  const R = C.buildRound(S, D, MON);
-  assert.ok(R.est <= C.BUDGET_MS);
-  assert.strictEqual(R.items.length, 62, "all 62 sentences of lesson 1 fit");
+  let R = C.buildRound(S, D, MON);
+  assert.ok(R.est <= C.budgetMs(S) && R.backlog > 0, "62 sentences do not fit into 10 minutes");
+  S.cfg = {min: 30}; R = C.buildRound(S, D, MON);
+  assert.strictEqual(R.items.length, 62, "all 62 sentences of lesson 1 fit into 30 minutes");
   const DD = fakeLesson(200), S2 = migrated(MON); S2.introRead.l02 = true;
   for (let i = 0; i < 150; i++) { const c = S2.cards["x" + i] = C.newCard(MON - 10); c.box = 2; c.due = MON; }
   for (const id of ids) S2.cards[id].due = MON;
   const R2 = C.buildRound(S2, DD, MON);
-  assert.ok(R2.est <= C.BUDGET_MS && R2.backlog > 0, "212 due cards do not fit");
+  assert.ok(R2.est <= C.budgetMs(S2) && R2.backlog > 0, "212 due cards do not fit");
   assert.ok(R2.items.every(x => x.m !== "new"), "no new cards while reviews wait");
 });
-t("new sentences: at most six, only after the intro is read", () => {
-  const DD = fakeLesson(30), S = migrated(MON);
+t("new sentences: as many as fit, at most six, only after the intro is read", () => {
+  const DD = fakeLesson(30), S = migrated(MON); S.cfg = {min: 30};
   for (const id of ids) { S.cards[id].due = MON + 100; S.cards[id].box = 5; }
   let R = C.buildRound(S, DD, MON);
   assert.strictEqual(R.items.length, 0, "lesson 2 intro not read yet");
@@ -65,6 +65,8 @@ t("new sentences: at most six, only after the intro is read", () => {
   R = C.buildRound(S, DD, MON);
   assert.strictEqual(R.items.filter(x => x.m === "new").length, C.NEW_MAX);
   assert.deepStrictEqual(R.items.map(x => x.id), ["x0", "x1", "x2", "x3", "x4", "x5"], "in lesson order");
+  S.cfg = {min: 10}; R = C.buildRound(S, DD, MON);
+  assert.strictEqual(R.items.length, 3, "10 minutes: new sentences take at most 4 minutes");
 });
 t("modes: drill, echo, recall from box 3", () => {
   assert.strictEqual(C.modeOf({kind: "d"}, {box: 5}), "drill");
@@ -75,14 +77,14 @@ t("modes: drill, echo, recall from box 3", () => {
 });
 
 // ---- answers ----
-t("Got it moves a card up, learning phase 1, 2, 4 practice days", () => {
+t("Got it moves a card up, learning phase 1, 2, 4 days", () => {
   const S = migrated(MON), c = S.cards.s0001;
   let R = {items: [{id: "s0001", m: "echo"}], pos: 0, ms: 0};
   C.answer(S, D, R, "ok", MON, 20000);
   assert.strictEqual(c.box, 2); assert.strictEqual(c.due, MON + 2);
   R = {items: [{id: "s0001", m: "echo"}], pos: 0, ms: 0};
   C.answer(S, D, R, "ok", MON + 2, 20000);
-  assert.strictEqual(c.box, 3); assert.strictEqual(c.due, MON + 8, "4 practice days from Wednesday is next Tuesday");
+  assert.strictEqual(c.box, 3); assert.strictEqual(c.due, MON + 6);
 });
 t("Again requeues four cards later and the retry is listen and repeat", () => {
   const S = migrated(MON); S.cards.s0003.box = 3;
@@ -127,22 +129,21 @@ t("a new card that was interrupted comes back", () => {
   assert.ok(R2.items.some(x => x.id === "x0" && x.m === "new"));
 });
 
-// ---- the load over months (the reason for 30 minutes and six new a day) ----
-t("simulated load stays near 30 minutes", () => {
-  const DD = fakeLesson(2000), S = migrated(MON); S.introRead.l02 = true;
+// ---- the load over months (why the round is limited by time, and new sentences by a share of it) ----
+for (const min of [10, 30]) t("simulated load at " + min + " minutes", () => {
+  const DD = fakeLesson(3000), S = migrated(MON); S.introRead.l02 = true; S.cfg = {min};
   let rnd = 1; const rand = () => { rnd = (rnd * 16807) % 2147483647; return rnd / 2147483647; };
   const mins = [];
   for (let d = MON; d < MON + 7 * 30; d++) {
-    if (C.dow(d) >= 5) continue;
     const R = C.buildRound(S, DD, d);
     while (!C.roundDone(R)) { const it = R.items[R.pos]; C.answer(S, DD, R, rand() < (it.m === "new" ? 0.8 : 0.88) ? "ok" : "again", d, C.EST0[it.m]); }
     mins.push(R.ms / 60000);
   }
-  const last = mins.slice(-40), avg = last.reduce((a, b) => a + b, 0) / last.length, mx = Math.max(...mins);
+  const last = mins.slice(-56), avg = last.reduce((a, b) => a + b, 0) / last.length, mx = Math.max(...mins);
   const met = DD.lessons[1].ids.filter(id => S.cards[id]).length;
-  console.log("  simulation, 30 weeks: last 8 weeks " + avg.toFixed(0) + " min a day on average, max " + mx.toFixed(0) + " min, " + met + " new sentences met");
-  assert.ok(avg <= 36, "average " + avg);
-  assert.ok(met >= 400, "too few new sentences: " + met);
+  console.log("  simulation " + min + " min, 30 weeks: last 8 weeks " + avg.toFixed(1) + " min a day, max " + mx.toFixed(0) + ", " + (met / 30).toFixed(0) + " new sentences a week");
+  assert.ok(avg <= min * 1.2, "average " + avg);
+  assert.ok(met / 30 >= min * 1.2, "too few new sentences: " + met);
 });
 
 // ---- sync ----

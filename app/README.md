@@ -13,7 +13,8 @@ nothing if a check or a test fails.
 ## How a day works
 
 - A round is built when Mike starts it: first everything due (oldest first), as long as the estimated time
-  stays within 30 minutes, then up to six new sentences from the current lesson, but only if nothing due was
+  stays within Mike's minutes (`S.cfg.min`, 10, 15, 20 or 30, set on the home screen, 10 by default), then as many
+  new sentences from the current lesson as fit into what is left, at most 40 % of the round and at most six, but only if nothing due was
   left out and the lesson's introduction has been read. Leftover due cards wait for the next day.
 - The time per card is measured (moving average per card type), so the estimate fits Mike's real pace.
 - Card types: `new` (text, meaning and notes visible), `echo` (listen and repeat), `recall` (from box 3:
@@ -22,18 +23,18 @@ nothing if a check or a test fails.
 - Nothing plays by itself. Again and Got it are always active (Mike, 1 Oct 2026: no play needed to go on); on a recall card they appear after Check, which reveals and plays.
 - Again: the card comes back four cards later as listen and repeat; the retry does not count as a review.
 - After the last card the tandem task of the lesson; the day counts as done when it is ticked (Done or Not
-  today). On Fridays (and at the weekend) the check-in follows if it is not filled in yet.
-- Saturday and Sunday count as Friday: an open Friday round can be finished, nothing new becomes due.
+  today). From Friday to Sunday the check-in follows if it is not filled in yet.
+- Every day is a practice day (Mike, 1 Oct 2026). Intervals are in days.
 
 ## Scheduling (ported from ~/Documents/quizzes/src/engine.js)
 
-Boxes 1 to 9, intervals 1, 2, 4 practice days in the learning phase, then interval times ease (2.5 at the
-start, minus 0.2 per lapse). Practice days are Monday to Friday. A forgotten card in box 4 or higher falls back
+Boxes 1 to 9, intervals 1, 2, 4 days in the learning phase, then interval times ease (2.5 at the
+start, minus 0.2 per lapse). A forgotten card in box 4 or higher falls back
 two boxes, otherwise to box 1. Problem cards (5 open misses, fewer than 3 successes in a row) stay within
 2 days. "Sure" = box 4 or higher.
 
-The simulation in the tests (30 weeks, 88 % Got it) gives about 32 minutes a day and about 29 new
-sentences a week. That is why lessons have about 30 sentences.
+The simulation in the tests (30 weeks, every day, 88 % Got it): at 10 minutes about 11 minutes a day and 14 new
+sentences a week; at 30 minutes about 33 minutes and 41 a week.
 
 ## Storage and sync
 

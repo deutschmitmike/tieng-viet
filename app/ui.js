@@ -2,7 +2,7 @@
 // Rules from Mike (2026-09-30): sound only on a button press, never autoplay. English interface. Phone first.
 
 const {practised, dayOf, dow, practiceDay, monday, isoDate, buildRound, roundDone, answer, dayLog, currentLesson, nextNew,
-  migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain, modeOf, SURE_BOX} = CORE;
+  migrateLesson1, freshState, fixState, nCards, MINUTES, MIN_DEFAULT, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain, modeOf, SURE_BOX} = CORE;
 
 // Test mode, nothing goes to the cloud: ?local, and always anywhere except the published site (a local preview must never touch Mike's state)
 const LOCAL = /[?&]local\b/.test(location.search) || location.hostname !== "deutschmitmike.github.io";
@@ -124,7 +124,7 @@ function weekSnapshot(t) {
   return {sure, gain: sure - S.wk.start, prev: S.wk.prev};
 }
 function weekDots(t) {
-  const real = dayOf(Date.now()), mo = monday(real), names = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+  const real = dayOf(Date.now()), mo = monday(real), names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const first = Math.min(...Object.values(S.cards).map(c => c.born).filter(x => x != null), real);   // days before the app existed are not missed
   let n = 0;
   const dots = names.map((nm, i) => {
@@ -144,7 +144,7 @@ function renderHome() {
   }
   if (R && roundDone(R) && R.tandem) {
     const nc = R.items.filter(x => !x.retry).length, mn = Math.max(1, Math.round(R.ms / 60000));
-    main += '<div class="kicker">Today</div><h2>Done for today.</h2><p>' + nc + (nc === 1 ? " card in " : " cards in ") + mn + (mn === 1 ? " minute." : " minutes.") + (dow(real) >= 5 ? " Enjoy the weekend, the next round is on Monday." : " Next round tomorrow.") + "</p>";
+    main += '<div class="kicker">Today</div><h2>Done for today.</h2><p>' + nc + (nc === 1 ? " card in " : " cards in ") + mn + (mn === 1 ? " minute." : " minutes.") + " Next round tomorrow.</p>";
   } else if (R && roundDone(R)) {
     main += '<div class="kicker">Today</div><h2>Round finished.</h2><p>One thing left: the tandem task.</p><button class="btn primary big" data-act="go" data-to="tandem">Tandem task</button>';
   } else if (R) {
@@ -153,15 +153,15 @@ function renderHome() {
   } else {
     const P = buildRound(S, D, t), nNew = P.items.filter(x => x.m === "new").length, nRev = P.items.length - nNew, min = Math.max(1, Math.round(P.est / 60000));
     if (!P.items.length) main += '<div class="kicker">Today</div><h2>Nothing due today.</h2><p>' + (pending ? "" : "All sentences of this lesson are in. The next lesson comes after your Friday check-in.") + "</p>";
-    else main += '<div class="kicker">' + (dow(real) >= 5 ? "Friday's round, still open" : "Today") + "</div><h2>About " + min + " minutes</h2><p>" +
+    else main += '<div class="kicker">Today</div><h2>About ' + min + " minutes</h2><p>" +
       nRev + (nRev === 1 ? " review" : " reviews") + (nNew ? ", " + nNew + " new" : "") + (P.backlog ? ". " + P.backlog + " more are waiting, new sentences pause until they are through." : ".") + "</p>" +
       '<button class="btn primary big" data-act="start">Start</button>';
   }
   if (!pending && !introNeeded && D.lessons.indexOf(L) === D.lessons.length - 1) main += '<p class="muted">Lesson ' + L.n + " is fully in. Lesson " + (L.n + 1) + " comes after your Friday check-in.</p>";
   const w = weekSnapshot(t), dots = weekDots(t);
-  const wk = '<div class="kicker">This week</div>' + dots.html + '<p class="muted">' + dots.n + " of 5 days. " + w.sure + " sentences sure" +
+  const wk = '<div class="kicker">This week</div>' + dots.html + '<p class="muted">' + dots.n + " of 7 days. " + w.sure + " sentences sure" +
     (w.gain > 0 ? ", " + w.gain + " more than on Monday" : "") + (w.prev != null ? ". Last week: " + (w.prev >= 0 ? "+" : "") + w.prev + "." : ".") + "</p>";
-  const ci = S.checkins && S.checkins[isoDate(monday(t))];
+  const ci = S.checkins && S.checkins[isoDate(monday(t))], mins = (S.cfg && S.cfg.min) || MIN_DEFAULT;
   $("home").innerHTML =
     '<header><h1>Tiếng Việt</h1><div class="sub">Lesson ' + L.n + ": " + esc(L.title) + "</div></header>" +
     '<div class="panel">' + main + "</div>" +
@@ -170,12 +170,14 @@ function renderHome() {
     '<button class="btn tile" data-act="go" data-to="listen">Listen<small>current lesson, with pauses</small></button>' +
     '<button class="btn tile" data-act="go" data-to="library">Sentences<small>everything you have met</small></button>' +
     '<button class="btn tile" data-act="go" data-to="lessons">Lessons<small>introductions and notes</small></button>' +
-    '<button class="btn tile" data-act="go" data-to="checkin">Check-in<small>' + (ci ? "done this week" : dow(real) >= 4 ? "Friday: due today" : "on Fridays") + "</small></button>" +
+    '<button class="btn tile" data-act="go" data-to="checkin">Check-in<small>' + (ci ? "done this week" : dow(real) >= 4 ? "due now" : "on Fridays") + "</small></button>" +
     "</div>" +
+    '<div class="panel minutes"><span>Minutes a day</span><span class="seg">' + MINUTES.map(m => '<button class="btn' + (m === mins ? " on" : "") + '" data-act="mins" data-m="' + m + '">' + m + "</button>").join("") + "</span></div>" +
     '<footer><span id="sync">' + syncText() + "</span><span>v " + APP_BUILD + "</span></footer>";
 }
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b) return;
+  if (b.dataset.act === "mins") { S.cfg = Object.assign({}, S.cfg, {min: +b.dataset.m}); save(); renderHome(); }   // takes effect with the next round that is built
   if (b.dataset.act === "start") startRound();
   if (b.dataset.act === "lesson") show("page", {key: b.dataset.key, i: 0});
 });

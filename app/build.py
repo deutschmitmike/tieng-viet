@@ -205,6 +205,15 @@ def main():
             .replace("%%DATA%%", json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
             .replace("%%CORE%%", "const CORE = (function () {\n" + core + "\nreturn CORE;\n})();")
             .replace("%%UI%%", ui))
+    # the whole page script must parse, or Mike gets a blank page
+    chk = APP / "tests" / "page_check.js"
+    chk.write_text(page.split("<script>", 1)[1].rsplit("</script>", 1)[0], encoding="utf-8")
+    r = subprocess.run(["node", "--check", str(chk)], capture_output=True, text=True)
+    chk.unlink()
+    if r.returncode != 0:
+        print(r.stderr.strip())
+        print("PAGE SCRIPT DOES NOT PARSE, nothing written.")
+        sys.exit(1)
     (ROOT / "index.html").write_text(page, encoding="utf-8")
     (ROOT / "version.json").write_text(json.dumps({"build": build}) + "\n", encoding="utf-8")
     n_d = sum(1 for s in sent.values() if s["kind"] == "d")
