@@ -40,8 +40,12 @@ sentences a week; at 30 minutes about 33 minutes and 41 a week.
 
 - localStorage key `tv_mike_v1`, Firebase `save/__tieng_viet/mike` (database of the kids' apps). Never change
   either: Mike's progress is stored under them.
-- Rules as in the kids' app: a state with fewer cards never replaces one with more; same number, the newer
-  wins; `resetAt` (not used yet) would win everywhere. Leaving the page uploads at once.
+- Sync since build 2026-10-01-6 (after a code review): `S.ts` changes only with a real change (`save()`). Each
+  device stores the cloud ts it last synced with (`tv_mike_v1_synced`). Only the cloud changed: adopt. Only this
+  device changed: upload. Both: `mergeStates` card by card (the card answered more often wins, then the later
+  one), then upload. A device that changed nothing never uploads, so a stale tab cannot overwrite newer progress.
+  A device with no local state starts only after the cloud has answered. Leaving the page uploads at once if
+  something is unsynced and the cloud was read in the last 5 minutes; keepalive only under 60 KB.
 - Firebase drops empty objects and arrays; `fixState` fills them in again.
 - The app only syncs on deutschmitmike.github.io. Anywhere else, and with `?local`, it is test mode with its
   own localStorage key and no cloud.
