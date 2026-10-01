@@ -54,7 +54,7 @@ Read `plan.md` first (syllabus, audio, fixed decisions), then `WEEKLY.md` (how a
 - Mike's decisions (30 Sep and 1 Oct 2026): sound only on a button press, never autoplay; no record button;
   English interface; phone first; 30 minutes, five days; at most six new sentences a day; rating with two
   buttons, Again and Got it, always active, no play needed to go on; from box 3 a sentence is said from its meaning;
-  sound drills only listened to and repeated, they run out at box 4; Friday check-in in the app; typing
+  no sound drills (Mike, 1 Oct 2026: the word-list rows of lesson 1 stay only as reference, never practised, and new lessons have none); Friday check-in in the app; typing
   (Telex) comes with lesson 2, slowly, only for sure sentences, as its own track that never pushes a
   speaking card back.
 - The old week booklets (`scripts/render_*`, `build_day.py`, `schedule.csv`, `weeks/`) are out of the

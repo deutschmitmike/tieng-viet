@@ -17,7 +17,8 @@ nothing if a check or a test fails.
   left out and the lesson's introduction has been read. Leftover due cards wait for the next day.
 - The time per card is measured (moving average per card type), so the estimate fits Mike's real pace.
 - Card types: `new` (text, meaning and notes visible), `echo` (listen and repeat), `recall` (from box 3:
-  meaning only, say it, then Check reveals and plays), `drill` (sound drills, only ever listen and repeat).
+  meaning only, say it, then Check reveals and plays). Sound drills (`drills:` in lesson 1, kind `d`) are
+  never practised since 1 Oct 2026; they stay as reference in the sentence list and on the lesson pages.
 - Nothing plays by itself. Again and Got it are always active (Mike, 1 Oct 2026: no play needed to go on); on a recall card they appear after Check, which reveals and plays.
 - Again: the card comes back four cards later as listen and repeat; the retry does not count as a review.
 - After the last card the tandem task of the lesson; the day counts as done when it is ticked (Done or Not
@@ -29,7 +30,7 @@ nothing if a check or a test fails.
 Boxes 1 to 9, intervals 1, 2, 4 practice days in the learning phase, then interval times ease (2.5 at the
 start, minus 0.2 per lapse). Practice days are Monday to Friday. A forgotten card in box 4 or higher falls back
 two boxes, otherwise to box 1. Problem cards (5 open misses, fewer than 3 successes in a row) stay within
-2 days. Sound drills retire at box 4. "Sure" = box 4 or higher.
+2 days. "Sure" = box 4 or higher.
 
 The simulation in the tests (30 weeks, 88 % Got it) gives about 32 minutes a day and about 29 new
 sentences a week. That is why lessons have about 30 sentences.

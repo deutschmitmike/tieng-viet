@@ -1,7 +1,7 @@
 // ui.js: screens, audio, storage and sync. Uses CORE (core.js) and D (the data from build.py).
 // Rules from Mike (2026-09-30): sound only on a button press, never autoplay. English interface. Phone first.
 
-const {dayOf, dow, practiceDay, monday, isoDate, buildRound, roundDone, answer, dayLog, currentLesson, nextNew,
+const {practised, dayOf, dow, practiceDay, monday, isoDate, buildRound, roundDone, answer, dayLog, currentLesson, nextNew,
   migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain, modeOf, SURE_BOX} = CORE;
 
 // Test mode, nothing goes to the cloud: ?local, and always anywhere except the published site (a local preview must never touch Mike's state)
@@ -185,6 +185,10 @@ let cs = null;   // card state: {plays, revealed, shownAt, notes}
 function startRound() {
   const t = today();
   if (!S.round || S.round.day !== t) { S.round = buildRound(S, D, t); save(); }
+  else {   // a round built before 1 Oct 2026 may still hold sound drills: drop the ones not yet answered
+    const R = S.round, keep = R.items.filter((x, i) => i < R.pos || !D.sent[x.id] || D.sent[x.id].kind !== "d");
+    if (keep.length !== R.items.length) { R.items = keep; save(); }
+  }
   if (roundDone(S.round)) { show(S.round.tandem ? "home" : "tandem"); return; }
   cs = null; show("card");
 }
@@ -287,8 +291,8 @@ document.addEventListener("click", e => {
 let LS = {on: false, i: 0, slow: false, echo: true, timer: 0, list: []};
 function listenList() {
   const L = currentLesson(S, D);
-  let ids = L.ids.filter(id => S.cards[id] && S.cards[id].box);
-  if (!ids.length) { const prev = D.lessons[D.lessons.indexOf(L) - 1]; if (prev) ids = prev.ids.filter(id => S.cards[id]); }
+  let ids = practised(D, L).filter(id => S.cards[id] && S.cards[id].box);
+  if (!ids.length) { const prev = D.lessons[D.lessons.indexOf(L) - 1]; if (prev) ids = practised(D, prev).filter(id => S.cards[id]); }
   return ids;
 }
 function renderListen() {
@@ -342,7 +346,7 @@ function renderLibList() {
     if (!ids.length) continue;
     h += '<div class="kicker sect">Lesson ' + L.n + ": " + esc(L.title) + "</div>";
     for (const id of ids) {
-      const it = D.sent[id], c = S.cards[id], st = it.kind === "d" ? (c.ret ? "done" : "drill") : c.box >= SURE_BOX ? "sure" : c.box ? "learning" : "new";
+      const it = D.sent[id], c = S.cards[id], st = it.kind === "d" ? "sound" : c.box >= SURE_BOX ? "sure" : c.box ? "learning" : "new";
       h += '<div class="row" data-row="' + id + '">' + playBtn(id) + '<div class="rt"><div class="vi s">' + viHtml(it.vi) + '</div><div class="meaning s">' + esc(it.en) + '</div>' +
         (libOpen === id ? '<div class="markinfo"></div><div class="zh s">' + esc(it.zh) + '</div><div class="notes">' + noteHtml(it) + "</div>" : "") + '</div><span class="tag ' + st + '">' + st + "</span></div>";
     }
@@ -359,8 +363,8 @@ document.addEventListener("click", e => {
 // ----- lessons and their introduction pages -----
 function renderLessons() {
   $("lessons").innerHTML = '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + "</button></div><header><h1>Lessons</h1></header>" +
-    D.lessons.map(L => { const met = L.ids.filter(id => S.cards[id]).length;
-      return '<button class="btn tile wide" data-act="lesson" data-key="' + L.key + '">Lesson ' + L.n + ": " + esc(L.title) + "<small>" + met + " of " + L.ids.length + " met, " + L.pages.length + " pages</small></button>"; }).join("");
+    D.lessons.map(L => { const P = practised(D, L), met = P.filter(id => S.cards[id]).length;
+      return '<button class="btn tile wide" data-act="lesson" data-key="' + L.key + '">Lesson ' + L.n + ": " + esc(L.title) + "<small>" + met + " of " + P.length + " sentences met, " + L.pages.length + " pages</small></button>"; }).join("");
 }
 function renderPage(arg) {
   const L = D.lessons.find(x => x.key === arg.key), i = arg.i, P = L.pages[i], last = i === L.pages.length - 1, unread = !(S.introRead || {})[L.key];

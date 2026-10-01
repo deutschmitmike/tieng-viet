@@ -16,7 +16,7 @@ Progress is counted in week numbers, not calendar weeks. If you skip a week, the
 
 ## The daily half hour
 
-One round in the app, about 30 minutes, Monday to Friday. First the sentences that are due, then up to six new ones. Each card: play, say it in the pause, play again and say it on top of the voice, then Again or Got it. From the third time on a sentence comes as its meaning only: say it from memory, then check against the voice. Sound drills are only listened to and repeated and run out after a few days. After the round, the tandem task of the lesson (a few messages using what you have). Friday adds the check-in.
+One round in the app, about 30 minutes, Monday to Friday. First the sentences that are due, then up to six new ones. Each card: play, say it in the pause, play again and say it on top of the voice, as often as you like, then Again or Got it. After three Got its a sentence comes as its meaning only: say it from memory, then check against the voice. Whole sentences only, no sound drills (decided 1 October 2026). After the round, the tandem task of the lesson (a few messages using what you have). Friday adds the check-in.
 
 Shadowing means matching the voice, not translating. Pitch, length, the cut at the end of stopped syllables, the lip closure after o, ô, u. Meaning comes from the gloss, not from the shadowing.
 

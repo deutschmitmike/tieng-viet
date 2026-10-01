@@ -48,8 +48,13 @@ t("round stays within 30 minutes and puts reviews first", () => {
   const S = migrated(MON); for (const id of ids) S.cards[id].due = MON;
   const R = C.buildRound(S, D, MON);
   assert.ok(R.est <= C.BUDGET_MS);
-  assert.ok(R.backlog > 0, "121 cards do not fit into 30 minutes");
-  assert.ok(R.items.every(x => x.m !== "new"), "no new cards while reviews wait");
+  assert.strictEqual(R.items.length, 62, "all 62 sentences of lesson 1 fit");
+  const DD = fakeLesson(200), S2 = migrated(MON); S2.introRead.l02 = true;
+  for (let i = 0; i < 150; i++) { const c = S2.cards["x" + i] = C.newCard(MON - 10); c.box = 2; c.due = MON; }
+  for (const id of ids) S2.cards[id].due = MON;
+  const R2 = C.buildRound(S2, DD, MON);
+  assert.ok(R2.est <= C.BUDGET_MS && R2.backlog > 0, "212 due cards do not fit");
+  assert.ok(R2.items.every(x => x.m !== "new"), "no new cards while reviews wait");
 });
 t("new sentences: at most six, only after the intro is read", () => {
   const DD = fakeLesson(30), S = migrated(MON);
@@ -105,12 +110,13 @@ t("problem cards stay close", () => {
   C.answer(S, D, {items: [{id: "s0001", m: "recall"}], pos: 0, ms: 0}, "ok", MON, 1000);
   assert.ok(c.iv <= 2, "leech interval " + c.iv);
 });
-t("sound drills run out at box 4", () => {
-  const S = migrated(MON), c = S.cards.s0016; c.box = 3;
-  C.answer(S, D, {items: [{id: "s0016", m: "drill"}], pos: 0, ms: 0}, "ok", MON, 1000);
-  assert.strictEqual(c.ret, 1);
-  c.due = MON;
-  assert.ok(!C.buildRound(S, D, MON + 1).items.some(x => x.id === "s0016"));
+t("sound drills are never in a round, never new, never keep a lesson open", () => {
+  const S = migrated(MON); for (const id of ids) S.cards[id].due = MON;
+  assert.ok(!C.buildRound(S, D, MON).items.some(x => D.sent[x.id].kind === "d"));
+  const T = C.freshState(); T.introRead.l01 = true;
+  for (const id of ids) if (D.sent[id].kind === "s") T.cards[id] = C.newCard(MON + 100);
+  assert.deepStrictEqual(C.nextNew(T, D), [], "only drills left: nothing new");
+  assert.strictEqual(C.practised(D, D.lessons[0]).length, 62);
 });
 t("a new card that was interrupted comes back", () => {
   const DD = fakeLesson(3), S = migrated(MON); S.introRead.l02 = true;

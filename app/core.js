@@ -46,18 +46,21 @@ function modeOf(item, c) {
 }
 
 // ----- lessons -----
+// Sound drills (kind "d") are never practised (Mike, 1 Oct 2026: no more sound drills). They stay in the data
+// for the play buttons on the lesson pages and in the sentence list.
+const practised = (D, L) => L.ids.filter(id => D.sent[id] && D.sent[id].kind !== "d");
 // The current lesson is the first one that still has sentences you have not met.
 function currentLesson(S, D) {
-  for (const L of D.lessons) if (L.ids.some(id => !S.cards[id])) return L;
+  for (const L of D.lessons) if (practised(D, L).some(id => !S.cards[id])) return L;
   return D.lessons[D.lessons.length - 1];
 }
-function nextNew(S, D) { const L = currentLesson(S, D); return L.ids.filter(id => !S.cards[id]); }
+function nextNew(S, D) { return practised(D, currentLesson(S, D)).filter(id => !S.cards[id]); }
 
 // ----- the daily round -----
 function estOf(S, m) { return (S.avg && S.avg[m]) || EST0[m]; }
 function buildRound(S, D, T) {
   const items = []; let est = 0, backlog = 0;
-  const due = Object.keys(S.cards).filter(id => D.sent[id] && !S.cards[id].ret && S.cards[id].due <= T)
+  const due = Object.keys(S.cards).filter(id => D.sent[id] && D.sent[id].kind !== "d" && !S.cards[id].ret && S.cards[id].due <= T)
     .sort((a, b) => S.cards[a].due - S.cards[b].due || S.cards[a].box - S.cards[b].box || (a < b ? -1 : 1));
   for (const id of due) {
     const m = modeOf(D.sent[id], S.cards[id]), e = estOf(S, m);
@@ -176,5 +179,5 @@ function weekAgain(S, T) {   // which cards needed "Again" most this week (for t
 
 const CORE = {INTERVAL, MAX_BOX, SURE_BOX, RECALL_BOX, DRILL_DONE_BOX, BUDGET_MS, NEW_MAX, EST0, dayOf, dow, practiceDay, addPractice,
   practiceBetween, monday, isoDate, isLeech, planCard, lapseCard, newCard, modeOf, currentLesson, nextNew, buildRound, roundDone,
-  answer, dayLog, migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain};
+  practised, answer, dayLog, migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain};
 if (typeof module !== "undefined") module.exports = CORE;

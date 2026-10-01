@@ -52,7 +52,7 @@ Follow plan.md and CLAUDE.md exactly. The short version of what matters most:
 - Ids continue the sequence, never reuse. Rows go into sentences.csv (8 columns), exact existing format,
   tts column empty.
 - Write `lessons/lNN.md` in the format of lessons/l01.md: first line `# Lesson N: Title`, then `ids:` in the
-  order they should be met, `drills:` for rows that are sound drills (word lists, only listened to), then
+  order they should be met (whole sentences only; no sound drills, Mike's decision of 1 Oct 2026), then
   pages starting with `== Page title`, and a `== Tandem` page with the task Mike sees after every round.
   Pages: short, English, in the tone of lesson 1; together no longer than about 800 words. No commands and no
   file names for Mike. `@@play s0123 s0124` renders play buttons.
