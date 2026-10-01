@@ -21,19 +21,13 @@ into `checkin.md` and prints the check-ins, how many sentences of each lesson he
 "Again" for most, the problem cards and his totals.
 
 Stop condition, before anything else: build lesson N+1 only when both hold:
-1. all sentences of lesson N are met in the app (pull_checkin prints met / total per lesson), and
-2. there is a check-in for lesson N in checkin.md (its heading says "lesson N"; for lesson 1 any check-in counts).
-Otherwise build nothing, change nothing, and tell Mike what is missing. He can also give the check-in in the chat:
-then write it into checkin.md yourself, newest at the top, in exactly the format the script writes:
-
-```
-## Week of YYYY-MM-DD, lesson N      (YYYY-MM-DD = the Monday of that week)
-hard: ...
-used: ...
-tandem said: ...
-app, most Again: ...
-saved: (leave empty when written by hand)
-```
+1. all sentences of lesson N are met in the app (pull_checkin prints met / total per lesson; for lesson 1 this is
+   always true, its sentences were counted as met when it moved into the app), and
+2. there is a check-in for lesson N in checkin.md: a "## Week of …, lesson N" entry from the app or a
+   "## Chat check-in …, lesson N" entry (for lesson 1 any check-in counts).
+Otherwise build nothing, change nothing, and tell Mike what is missing. If he gives the check-in in the chat, write
+it into checkin.md yourself below the line, newest first, under its own heading (the format is at the top of
+checkin.md); the script never touches those entries.
 
 Reference books, on Mike's Mac only, never in the repo and never copied (copyrighted, and Northern at the core):
 `~/Downloads/Elementary Vietnamese.pdf` (Binh Ngo; the clearest grammar explanations; a scan, read pages as images),
@@ -65,8 +59,12 @@ Follow plan.md and CLAUDE.md exactly. The short version of what matters most:
 - Vocabulary grows slowly out of the sentences: each new sentence brings at most one or two words that are
   not yet in `words.csv` and otherwise recombines known ones. Add the new words to `words.csv`
   while writing. Format `word|en|zh|first_id`, pipe-separated, with a header line. A word is a dictionary entry:
-  compounds count as one (cà phê, tiếng Việt, Sài Gòn), and so do fixed particles (nha, hả). Before writing
-  lesson 2, create the file from the 62 sentences of lesson 1 (not from its sound drills).
+  compounds count as one (cà phê, tiếng Việt, Sài Gòn), and so do fixed particles (nha, hả) and contractions
+  (cổ, ảnh). One row per word and meaning: ba|three and ba|dad are two rows, and so is a new sense of a known word
+  (đi as a softening particle). first_id is the sentence where Mike first meets it, in the order of the lesson's
+  `ids:` line (ăn: s0120, not s0089). Names (Mike) are not words. Before writing lesson 2, create the file from the
+  62 practised sentences of lesson 1, including the numbers row s0088 (not from the sound drills). build.py checks
+  the file's format, its Chinese and that every first_id exists.
 - Whatever the check-in and the "Again" list flag as hard comes back as new sentences that use it in a new
   combination (new ids, never copies). A tandem correction beats your judgement on Saigon naturalness: fix the
   sentence in sentences.csv under its old id and regenerate its mp3 with `--force --ids`.
@@ -82,8 +80,9 @@ Follow plan.md and CLAUDE.md exactly. The short version of what matters most:
   Pages: short, English, in the tone of lesson 1; together no longer than about 800 words. No commands and no
   file names for Mike. `@@play s0123 s0124` renders play buttons.
 - Lesson 2 also brings Telex typing (plan.md, l02): a page on setting up the Vietnamese Telex keyboard on
-  the Mac and the iPhone, and the typing cards in the app (not built yet; see app/README.md, "Typing"). Ask Mike before building the typing
-  track: it is app work, not lesson work.
+  the Mac and the iPhone, which you write and publish with the lesson. The typing cards in the app are separate app
+  work (spec in app/README.md, "Typing"): ask Mike whether to build them now; the answer never blocks publishing
+  the lesson. Until they exist, the Telex page must not mention typing cards.
 
 ## 3. Validate and build
 
@@ -94,8 +93,10 @@ dashes and 您 anywhere in sentences.csv and the lessons, ASCII punctuation insi
 simplified characters (a list, not all of them: still read the zh yourself), respelled forms on the lesson pages,
 and from lesson 2 on any sentence outside 3 to 12 syllables.
 
-Look at the new lesson locally: `python3 -m http.server 8767` from the repo root, then http://localhost:8767 (every
-address except deutschmitmike.github.io is test mode, nothing reaches Mike's state).
+Look at the new lesson locally: `python3 -m http.server 8790` from the repo root, then http://localhost:8790 (every
+address except deutschmitmike.github.io is test mode, nothing reaches Mike's state). Port 8767 may already be
+served by the desktop app's preview; whatever port you use, check that `/version.json` there shows the BUILD you
+just built.
 
 ## 4. Review
 
@@ -109,6 +110,8 @@ finds and rebuild. If a sentence's vi text changes, regenerate its mp3 with
 `git status` first: scripts/.env, checkin.md and backups must not appear. Then commit and push. The site
 updates one or two minutes later at https://deutschmitmike.github.io/tieng-viet/ ; check that `version.json`
 shows the new build.
+
+Update the status: in CLAUDE.md "Where things stand" and in plan.md mark the lesson as built (`- l02 (built)`).
 
 Tell Mike in two sentences what the lesson covers, that it is online, and the new version number. In the app
 the lesson starts with its introduction the next time he opens it.

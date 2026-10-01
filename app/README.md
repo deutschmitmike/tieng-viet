@@ -14,14 +14,14 @@ nothing if a check or a test fails.
 
 - A round is built when Mike starts it: first everything due (oldest first), as long as the estimated time
   stays within Mike's minutes (`S.cfg.min`, 10, 15, 20 or 30, set on the home screen, 15 by default), then as many
-  new sentences from the current lesson as fit into what is left, at most 40 % of the round and at most six, but only if nothing due was
+  new sentences from the current lesson as fit into what is left, at most 40 % of the day's minutes and at most six, but only if nothing due was
   left out and the lesson's introduction has been read. Leftover due cards wait for the next day.
 - The time per card is measured (moving average per card type), so the estimate fits Mike's real pace.
 - Card types: `new` (text, meaning and notes visible), `echo` (listen and repeat), `recall` (from box 3:
   meaning only, say it, then Check reveals and plays). Sound drills (`drills:` in lesson 1, kind `d`) are
   never practised since 1 Oct 2026; they stay as reference in the sentence list and on the lesson pages.
 - Nothing plays by itself. Again and Got it are always active (Mike, 1 Oct 2026: no play needed to go on); on a recall card they appear after Check, which reveals and plays.
-- Again: the card comes back four cards later as listen and repeat; the retry does not count as a review.
+- Again: the card comes back four cards later as listen and repeat, at most twice per round; the retry does not count as a review. The time estimate per card includes the expected retries (the running share of Again, `S.ar`). Cards still being learned (box 1 and 2) come first, then the oldest due. A problem card (5 open misses) stays in box 2 until it sits three times in a row.
 - After the last card the tandem task of the lesson; the day counts as done when it is ticked (Done or Not
   today). From Friday to Sunday the check-in follows if it is not filled in yet.
 - Every day is a practice day (Mike, 1 Oct 2026). Intervals are in days.
@@ -69,3 +69,7 @@ Telex typing as its own track: a typing card only for sentences that are sure (b
 at first, graded by the app (exact spelling, Unicode NFC, case and punctuation ignored), the wrong syllable
 marked, and a note where Saigon pronunciation hides the spelling (hỏi/ngã, d/gi, final t/c, n/ng). A typing
 mistake never moves the speaking card. Its own box per sentence.
+Notes from the review of 1 Oct 2026 for whoever builds it: compare after normalising tone-mark placement too (Telex
+can produce khoẻ, sentences.csv writes khỏe), not only NFC; the typing box needs its own field per card (e.g.
+`c.tb`, `c.tdue`) and must be added to `mergeStates` (card merge by count) and `fixState`; since lesson 1 cards
+start in box 1, the first typing cards appear about a week after the track is switched on.

@@ -6,7 +6,7 @@ const code = fs.readFileSync(process.argv[2], "utf8");
 const cloud = {data: null, tag: 1};
 const dropEmpty = o => { if (o && typeof o === "object") { for (const k of Object.keys(o)) { o[k] = dropEmpty(o[k]); if (o[k] == null || (typeof o[k] === "object" && !Object.keys(o[k]).length)) delete o[k]; } } return o; };
 let clock = Date.UTC(2026, 9, 5, 8, 0, 0);
-function device(name, skew = 0) {
+function device(name, skew = 0, src = code) {
   const els = {}, listeners = {}, timers = [], net = [], store = {};
   const el = id => els[id] = els[id] || {id, innerHTML: "", value: "", style: {}, textContent: "", classList: {toggle() {}}, dataset: {}};
   const FakeDate = class extends Date { constructor(...a) { if (!a.length) super(clock + skew); else super(...a); } static now() { return clock + skew; } };
@@ -21,9 +21,9 @@ function device(name, skew = 0) {
     setTimeout: f => { timers.push(f); return timers.length; }, clearTimeout: i => { if (i) timers[i - 1] = null; },
   };
   sb.globalThis = sb; vm.createContext(sb);
-  new vm.Script(code + `;globalThis.T = {synced: () => synced, etag: () => etag, startRound, rate: r => { if (cs) { cs.readyAt = 0; cs.revealed = true; } rate(r); }, cur: () => cur, S: () => S};`).runInContext(sb);
+  new vm.Script(src + `;globalThis.T = {synced: () => synced, etag: () => etag, startRound, rate: r => { if (cs) { cs.readyAt = 0; cs.revealed = true; } rate(r); }, cur: () => cur, S: () => S};`).runInContext(sb);
   const hdr = v => ({get: k => (k.toLowerCase() === "etag" ? v : null)});
-  const d = {name, T: sb.T, net,
+  const d = {name, T: sb.T, net, els,
     serve() { const r = net.shift(); if (!r) return;
       if (r.method === "PUT") {
         if (r.headers["if-match"] !== "t" + cloud.tag) return r.res({ok: false, status: 412, headers: hdr("t" + cloud.tag)});
@@ -78,5 +78,19 @@ const reset = () => { cloud.data = null; cloud.tag = 1; };
   A.answer(2); B.answer(2); await sync(A, B); await sync(A, B);
   const boxes = Object.values(A.T.S().cards).filter(c => c.n).map(c => c.box);
   if (boxes.some(b => b > 2)) fail("case 4: a card was promoted twice on one day");
-  console.log("  sync: four two-device cases, no answer lost");
+
+  // 5: a device without local state waits for the cloud
+  reset(); const N = device("new"); await settle(); N.net.shift().rej(0); await settle();
+  if (Object.keys(N.T.S().cards).length) fail("case 5: a course was created before the cloud answered");
+  // 6: an adopted state refreshes the open home screen
+  reset(); A = device("phone"); B = device("mac"); await sync(A, B);
+  A.answer(500); await sync(A, B);
+  if (!/Round finished|Done for today/.test(B.els.home.innerHTML)) fail("case 6: home not refreshed after adopt");
+  // 7: a state written by an older build is merged, never adopted wholesale
+  reset(); A = device("phone"); await sync(A);
+  const st = A.T.S(); st.cfg = {min: 20}; st.cfgTs = 5;
+  cloud.data = JSON.parse(JSON.stringify(st)); delete cloud.data.cfg; delete cloud.data.cfgTs; cloud.data.build = "2000-01-01-1"; cloud.data.ts = st.ts + 5; cloud.tag++;
+  await sync(A);
+  if (!A.T.S().cfg || A.T.S().cfg.min !== 20) fail("case 7: an older build's state was adopted wholesale");
+  console.log("  sync: seven two-device cases, no answer lost");
 })().catch(e => fail(e && e.stack || e));

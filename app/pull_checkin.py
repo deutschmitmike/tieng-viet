@@ -35,12 +35,16 @@ def main():
     if not sep:
         head, sep, body = text, "\n---\n", ""
     # existing entries by week key; an entry edited later in the app (newer ts) replaces the old one
-    blocks = re.split(r"(?m)^(?=## Week of )", body.strip("\n")) if body.strip() else []
-    entries = {}
+    # every "## " block below the line: "## Week of DATE, lesson N" comes from the app and may be replaced;
+    # "## Chat check-in DATE, lesson N" was written by hand from the chat and is never touched
+    blocks = [x.strip("\n") for x in re.split(r"(?m)^(?=## )", body.strip("\n")) if x.strip()] if body.strip() else []
+    entries, others = {}, []
     for b in blocks:
         m = re.match(r"## Week of (\S+?),", b)
         if m:
-            entries[m.group(1)] = b.strip("\n")
+            entries[m.group(1)] = b
+        else:
+            others.append(b)
     changed = []
     for key in sorted(checkins):
         c = checkins[key]
@@ -58,7 +62,8 @@ def main():
                         f"saved: {int(c.get('ts') or 0)}")
         changed.append(key)
     if changed:
-        new_body = "\n\n".join(entries[k] for k in sorted(entries, reverse=True))
+        date = lambda blk: (re.search(r"\d{4}-\d{2}-\d{2}", blk.split("\n", 1)[0]) or re.search("", "")).group(0)
+        new_body = "\n\n".join(sorted(list(entries.values()) + others, key=date, reverse=True))
         CHECKIN.write_text(head + sep + "\n" + new_body + "\n", encoding="utf-8")
     print(f"check-ins in the app: {len(checkins)}, new or updated in checkin.md: {changed or 'none'}")
 

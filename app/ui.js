@@ -41,13 +41,13 @@ function syncText() {
 // next sync reads again and merges.
 function cloudGet() {
   return fetch(SYNC_URL + "?t=" + Date.now(), {headers: {"X-Firebase-ETag": "true"}})
-    .then(r => { if (!r.ok) throw 0; etag = r.headers.get("ETag"); return r.json(); }).then(o => { lastCloudAt = Date.now(); return o; });
+    .then(r => { if (!r.ok) throw 0; const tag = r.headers.get("ETag"); return r.json().then(o => { etag = tag; lastCloudAt = Date.now(); return o; }); });   // the tag only counts once the body arrived
 }
 function cloudPut(leaving) {
   if (!etag) return Promise.reject("stale");   // never write blind
   const body = JSON.stringify(S), ts = S.ts, keep = !!leaving && new Blob([body]).size < 60000;   // keepalive bodies over 64 KB are refused
   const tag = etag; etag = null;
-  return fetch(SYNC_URL, {method: "PUT", body, keepalive: keep, headers: {"if-match": tag}})
+  return fetch(SYNC_URL, {method: "PUT", body, keepalive: keep, headers: {"if-match": tag, "X-Firebase-ETag": "true"}})
     .then(r => { if (r.status === 412) throw "stale"; if (!r.ok) throw 0; etag = r.headers.get("ETag") || null; setSynced(ts); setSync(true); });
 }
 function adopt(o) { S = fixState(o); persist(); setSynced(S.ts); }
@@ -57,8 +57,10 @@ function afterReplace() {   // the state came from the cloud: keep the open scre
   else if (cur === "tandem") { if (!S.round || !roundDone(S.round) || S.round.tandem) show("home"); }
 }
 const buildKey = b => String(b || "0").split("-").map(x => x.padStart(4, "0")).join("-");   // 2026-10-01-10 after 2026-10-01-9
+let leavingPut = null;   // the upload started when the page was hidden; a new sync waits for it, so answers cannot cross
 function cloudSync() {
   if (!SYNC_URL) return;
+  if (leavingPut) { syncAgain = true; return; }
   if (syncing) { syncAgain = true; return; }
   syncing = true;
   cloudGet().then(o => {
@@ -71,37 +73,43 @@ function cloudSync() {
   }).then(() => { staleRuns = 0; }, e => {
     if (e === "stale" && ++staleRuns <= 3) syncAgain = true;   // someone wrote in between: read again and merge (never loop forever)
     else { staleRuns = 0; setSync(false); }
+    etag = null;   // after any failure, write only after a fresh read
   }).then(() => { syncing = false; if (syncAgain) { syncAgain = false; cloudSync(); } });
 }
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") {   // leaving with changes not yet uploaded: upload now, iOS freezes the page otherwise
     persist();
-    if (SYNC_URL && (S.ts || 0) > synced && etag && !syncing) { clearTimeout(saveTimer); cloudPut(true).catch(() => {}); }   // conditional: lands only if nobody wrote since the last read
-  } else { if (cs) cs.shownAt = Date.now(); cloudSync(); checkVersion(); }
+    if (SYNC_URL && (S.ts || 0) > synced && etag && !syncing && !leavingPut) {   // conditional: lands only if nobody wrote since the last read
+      clearTimeout(saveTimer);
+      leavingPut = cloudPut(true).catch(() => {}).then(() => { leavingPut = null; if (syncAgain) { syncAgain = false; cloudSync(); } });
+    }
+  } else { if (cs) cs.shownAt = Date.now(); if (cur === "home") renderHome(); cloudSync(); checkVersion(); }   // the app may wake on a new day
 });
 function checkVersion() {
   if (LOCAL) return;
-  fetch("version.json?t=" + Date.now()).then(r => r.json()).then(v => { if (v && v.build && v.build !== APP_BUILD) $("update").style.display = "block"; }).catch(() => {});
+  fetch("version.json?t=" + Date.now()).then(r => r.json()).then(v => { if (v && v.build && v.build !== APP_BUILD) { $("update").style.display = "block"; document.body.classList.add("banner"); } }).catch(() => {});
 }
 
 // ================= audio: only ever on a button press =================
 const A = new Audio(); A.preload = "auto";
-let playing = null, onEnd = null;
+let playing = null, playingSlow = false, onEnd = null;
 const src = id => "audio/sentences/" + id + ".mp3";
 function play(id, slow, done) {
   stopAudio();
-  playing = id; onEnd = done || null;
+  playing = id; playingSlow = !!slow; onEnd = done || null;
   A.src = src(id); A.preservesPitch = true; A.webkitPreservesPitch = true;
   A.defaultPlaybackRate = A.playbackRate = slow ? 0.75 : 1;
   A.play().catch(() => { if (LS.on) { stopListen(); renderListen(); } });
   markPlaying();
 }
-function stopAudio() { try { A.pause(); } catch (e) {} playing = null; onEnd = null; markPlaying(); }
+function stopAudio() { playing = null; onEnd = null; try { A.pause(); } catch (e) {} markPlaying(); }
+// a pause nobody asked for (a call, Siri, the lock screen) ends playback cleanly, so Listen does not hang on "Stop"
+A.addEventListener("pause", () => { if (playing && !A.ended) { playing = null; onEnd = null; markPlaying(); if (LS.on) { stopListen(); renderListen(); } } });
 A.addEventListener("loadedmetadata", () => { if (A.playbackRate !== A.defaultPlaybackRate) A.playbackRate = A.defaultPlaybackRate; });
 A.addEventListener("error", () => { playing = null; onEnd = null; markPlaying(); if (LS.on) { stopListen(); renderListen(); } });
 A.addEventListener("ended", () => { const f = onEnd; playing = null; onEnd = null; markPlaying(); f && f(); });
-function markPlaying() { document.querySelectorAll("[data-play]").forEach(b => b.classList.toggle("on", b.dataset.play === playing)); }
-function preload(id) { if (!id) return; const a = new Audio(); a.preload = "auto"; a.src = src(id); }
+function markPlaying() { document.querySelectorAll("[data-play]").forEach(b => b.classList.toggle("on", b.dataset.play === playing && (b.dataset.slow === "1") === playingSlow)); }
+function preload(id) { if (!id) return; try { fetch(src(id)).catch(() => {}); } catch (e) {} }   // warms the HTTP cache; an unplayed Audio loads only metadata on iOS
 
 // ================= rendering helpers =================
 const MARK_TEXT = {
@@ -195,7 +203,7 @@ function renderHome() {
       const log = dayLog(S, t); if (!log.done && !introNeeded) { log.done = true; log.free = true; save(); }
       main += '<div class="kicker">Today</div><h2>Nothing due today.</h2>';
     }
-    else main += '<div class="kicker">Today</div><h2>About ' + min + " minutes</h2><p>" +
+    else main += '<div class="kicker">Today</div><h2>About ' + min + (min === 1 ? " minute" : " minutes") + "</h2><p>" +
       nRev + (nRev === 1 ? " review" : " reviews") + (nNew ? ", " + nNew + " new" : "") + (P.backlog ? ". " + P.backlog + " more are waiting, new sentences pause until they are through." : ".") + "</p>" +
       '<button class="btn primary big" data-act="start">Start</button>';
   }
@@ -256,7 +264,7 @@ function renderCard() {
       ((item.note || item.hz) ? (cs.notes ? '<div class="notes">' + noteHtml(item) + "</div>" : '<button class="link" data-act="notes">Notes</button>') : "") +
       '<div class="plays">' +
       '<button class="btn play big" data-play="' + it.id + '" data-act="cplay">' + ICON.play + "<span>Play</span></button>" +
-      '<button class="btn play" data-act="cplay" data-slow="1">' + ICON.play + "<span>Slow</span></button></div>" +
+      '<button class="btn play" data-play="' + it.id + '" data-act="cplay" data-slow="1">' + ICON.play + "<span>Slow</span></button></div>" +
       (it.m === "new" ? '<p class="hint small">Play it, say it, play it again. Then rate yourself.</p>' : "") +
       '<div class="rate"><button class="btn again" data-act="rate" data-r="again"' + (ready ? "" : " disabled") + ">Again</button>" +
       '<button class="btn ok" data-act="rate" data-r="ok"' + (ready ? "" : " disabled") + ">Got it</button></div>";
@@ -268,7 +276,7 @@ function renderCard() {
 }
 function cardPlay(slow) {
   const it = S.round.items[S.round.pos];
-  play(it.id, slow, () => { if (cur === "card" && cs) { cs.plays++; renderCard(); } });
+  play(it.id, slow, () => { if (cs) cs.plays++; });   // no redraw: an open explanation of a dotted syllable stays open
 }
 function rate(r) {
   const R = S.round, it = R && R.items[R.pos];
@@ -288,7 +296,7 @@ document.addEventListener("click", e => {
   if (a === "rate" && !b.disabled) rate(b.dataset.r);
 }, true);
 document.addEventListener("keydown", e => {   // on the Mac: space play, s slow, enter check, 1 again, 2 got it
-  if (cur !== "card" || e.repeat || e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
+  if (cur !== "card" || e.repeat || e.metaKey || e.ctrlKey || e.altKey || e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
   const q = s => document.querySelector("#card " + s);
   if (e.key === " ") { e.preventDefault(); if (cs && cs.revealed) cardPlay(false); }
   else if (e.key === "s") { if (cs && cs.revealed) cardPlay(true); }
@@ -343,14 +351,15 @@ let LS = {on: false, i: 0, slow: false, echo: true, timer: 0, list: []};
 function listenList() {
   const L = currentLesson(S, D);
   let ids = practised(D, L).filter(id => S.cards[id] && S.cards[id].box);
-  if (!ids.length) { const prev = D.lessons[D.lessons.indexOf(L) - 1]; if (prev) ids = practised(D, prev).filter(id => S.cards[id]); }
+  LS.fromPrev = false;
+  if (!ids.length) { const prev = D.lessons[D.lessons.indexOf(L) - 1]; if (prev) { ids = practised(D, prev).filter(id => S.cards[id]); LS.fromPrev = true; } }
   return ids;
 }
 function renderListen() {
   LS.list = listenList(); if (LS.i >= LS.list.length) LS.i = 0;
   const id = LS.list[LS.i], item = id && D.sent[id];
   $("listen").innerHTML = '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + "</button></div>" +
-    '<header><h1>Listen</h1><div class="sub">' + LS.list.length + " sentences you have met in this lesson. Each one plays, then a pause to say it" + (LS.echo ? ", then once more." : ".") + "</div></header>" +
+    '<header><h1>Listen</h1><div class="sub">' + LS.list.length + " sentences you have met in " + (LS.fromPrev ? "the previous lesson" : "this lesson") + ". Each one plays, then a pause to say it" + (LS.echo ? ", then once more." : ".") + "</div></header>" +
     '<div class="card">' + (item ? '<div class="kicker">' + (LS.i + 1) + " of " + LS.list.length + '</div><div class="vi">' + viHtml(item.vi) + '</div><div class="markinfo"></div><div class="meaning">' + esc(item.en) + "</div>" : "<p>Nothing to play yet.</p>") + "</div>" +
     '<div class="plays"><button class="btn primary big" data-act="lstart">' + (LS.on ? ICON.stop + "<span>Stop</span>" : ICON.play + "<span>" + (LS.i ? "Go on" : "Start") + "</span>") + "</button></div>" +
     '<div class="toggles"><label><input type="checkbox" id="l_slow"' + (LS.slow ? " checked" : "") + "> slow</label>" +
@@ -399,7 +408,7 @@ function renderLibList() {
     for (const id of ids) {
       const it = D.sent[id], c = S.cards[id], st = it.kind === "d" ? "sound" : c.box >= SURE_BOX ? "sure" : c.box ? "learning" : "new";
       h += '<div class="row" data-row="' + id + '">' + playBtn(id) + '<div class="rt"><div class="vi s">' + viHtml(it.vi) + '</div><div class="meaning s">' + esc(it.en) + '</div>' +
-        (libOpen === id ? '<div class="markinfo"></div><div class="zh s">' + esc(it.zh) + '</div><div class="notes">' + noteHtml(it) + "</div>" : "") + '</div><span class="tag ' + st + '">' + st + "</span></div>";
+        (libOpen === id ? '<div class="markinfo"></div><div class="zh s">' + esc(it.zh) + '</div>' + (noteHtml(it) ? '<div class="notes">' + noteHtml(it) + "</div>" : "") : "") + '</div><span class="tag ' + st + '">' + st + "</span></div>";
     }
   }
   $("liblist").innerHTML = h || '<p class="muted">Nothing found.</p>';
@@ -431,12 +440,21 @@ function renderPage(arg) {
     (last ? (unread ? '<button class="btn ok" data-act="pgdone" data-k="' + L.key + '">Start learning</button>' : '<button class="btn" data-act="go" data-to="lessons">Done</button>')
       : '<button class="btn ok" data-act="pg" data-k="' + L.key + '" data-i="' + (i + 1) + '">Next</button>') + "</div>";
   // play buttons inside the text, as written in the lesson file with @@play
-  document.querySelectorAll("#page .pl").forEach(b => { const id = b.dataset.id; b.outerHTML = playBtn(id, viHtml(D.sent[id] ? D.sent[id].vi : id)); });
+  document.querySelectorAll("#page .pl").forEach(b => { const id = b.dataset.id; b.outerHTML = playBtn(id, esc(D.sent[id] ? D.sent[id].vi : id)); });   // no dots inside buttons: a tap there plays
 }
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b) return;
   if (b.dataset.act === "pg") show("page", {key: b.dataset.k, i: +b.dataset.i});
-  if (b.dataset.act === "pgdone") { S.introRead = S.introRead || {}; S.introRead[b.dataset.k] = true; save(); show("home"); }
+  if (b.dataset.act === "pgdone") {
+    S.introRead = S.introRead || {}; S.introRead[b.dataset.k] = true;
+    // a round of reviews may already be under way or done today: the new sentences join it now, as the intro promised
+    const t = today(), R = S.round;
+    if (R && R.day === t) {
+      const P = buildRound(S, D, t), have = new Set(R.items.map(x => x.id)), add = P.items.filter(x => x.m === "new" && !have.has(x.id));
+      if (add.length) { R.items.push(...add); R.lesson = b.dataset.k; R.tandem = null; }
+    }
+    save(); show("home");
+  }
 });
 
 // ================= start =================

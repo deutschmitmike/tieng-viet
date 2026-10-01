@@ -130,6 +130,19 @@ t("a new card that was interrupted comes back", () => {
   assert.ok(R2.items.some(x => x.id === "x0" && x.m === "new"));
 });
 
+t("a problem card stays in box 2 until three in a row", () => {
+  const S = migrated(MON), c = S.cards.s0001; c.box = 3; c.miss = 6; c.ok = 0;
+  for (let d = 0; d < 2; d++) C.answer(S, D, {items: [{id: "s0001", m: "echo"}], pos: 0, ms: 0}, "ok", MON + d, 1000);
+  assert.ok(c.box <= 2, "box " + c.box); assert.strictEqual(c.miss, 6); assert.ok(c.iv <= 2);
+  C.answer(S, D, {items: [{id: "s0001", m: "echo"}], pos: 0, ms: 0}, "ok", MON + 2, 1000);
+  assert.ok(!C.isLeech(c), "released after three in a row");
+});
+t("Again brings a card back at most twice per round", () => {
+  const S = migrated(MON), R = {items: [{id: "s0001", m: "echo"}, {id: "s0002", m: "echo"}], pos: 0, ms: 0};
+  while (!C.roundDone(R)) C.answer(S, D, R, R.items[R.pos].id === "s0001" ? "again" : "ok", MON, 1000);
+  assert.strictEqual(R.items.filter(x => x.id === "s0001").length, 3);
+});
+
 // ---- the load over months (why the round is limited by time, and new sentences by a share of it) ----
 for (const min of [10, 30]) t("simulated load at " + min + " minutes", () => {
   const DD = fakeLesson(3000), S = migrated(MON); S.introRead.l02 = true; S.cfg = {min};
@@ -206,5 +219,23 @@ t("voice marks", () => {
   assert.deepStrictEqual(C.voiceMarks("đi"), []);
 });
 t("fold", () => { assert.strictEqual(C.fold("Đức"), "duc"); assert.strictEqual(C.fold("người"), "nguoi"); });
+
+t("a card counts once a day across two rounds", () => {
+  const S = migrated(MON);
+  for (let k = 0; k < 2; k++) C.answer(S, D, {items: [{id: "s0001", m: "echo"}], pos: 0, ms: 0}, "ok", MON, 1000);
+  assert.strictEqual(S.cards.s0001.box, 2); assert.strictEqual(S.cards.s0001.n, 1);
+});
+t("syncAction: a lower cloud ts is still a change", () => { const L = migrated(MON); L.ts = 100; assert.strictEqual(C.syncAction(L, Object.assign({}, L, {ts: 90}), 100), "adopt"); });
+t("mergeStates: day done and newer round win, both directions", () => {
+  for (const flip of [false, true]) {
+    const A = migrated(MON), B = migrated(MON);
+    A.days[MON] = {n: 1, fresh: 0, ms: 0, ag: [], done: true}; B.days[MON] = {n: 5, fresh: 0, ms: 0, ag: [], done: false};
+    A.round = {day: MON + 1, pos: 0, items: []}; B.round = {day: MON, pos: 9, items: []};
+    const M = flip ? C.mergeStates(B, A) : C.mergeStates(A, B);
+    assert.ok(M.days[MON].done); assert.strictEqual(M.days[MON].n, 5); assert.strictEqual(M.round.day, MON + 1);
+  }
+});
+t("weekAgain: Monday to today", () => { const S = C.freshState(); S.days[MON - 1] = {ag: ["s0002"]}; S.days[MON] = {ag: ["s0001"]}; S.days[MON + 2] = {ag: ["s0001", "s0003"]};
+  assert.deepStrictEqual(C.weekAgain(S, MON + 4), [["s0001", 2], ["s0003", 1]]); });
 
 console.log((process.exitCode ? "TESTS FAILED" : "all " + n + " tests passed"));

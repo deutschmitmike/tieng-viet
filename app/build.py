@@ -85,6 +85,26 @@ def md(text, sent):
     return "\n".join(out)
 
 
+# ---------- text rules (CLAUDE.md) ----------
+# No em dashes anywhere, Taiwan-register traditional Chinese with full-width punctuation, 你 never 您.
+# SIMPLIFIED holds common simplified-only characters, not all of them: still read the zh yourself. 哪 is Taiwan usage too.
+SIMPLIFIED = set("説们这个说话时会对过还没给让钱见长门问间头书学习语读写车东来电视点开关热爱发应样经么为认识进远运选银饭馆鸡鱼鸟马龙风飞买卖丽岁华汉宁兰号吗贵儿边乐场机网单师课节妈爷")
+
+
+def text_problems(s):
+    out = []
+    if "—" in s:
+        out.append("em dash")
+    if re.search(r"[一-鿿][,.;:?!]\s*[一-鿿]", s):   # inside Chinese text; English after a quoted 字 is fine
+        out.append("ASCII punctuation inside Chinese text")
+    if "您" in s:
+        out.append("您 (use 你)")
+    bad = sorted(set(s) & SIMPLIFIED)
+    if bad:
+        out.append("simplified characters " + "".join(bad))
+    return out
+
+
 # ---------- lessons ----------
 def expand(spec, all_ids):
     """'s0001-s0010, s0120' -> ids, ranges in csv order."""
@@ -169,20 +189,37 @@ def main():
 
     # text rules (CLAUDE.md): no em dashes anywhere, Taiwan-register traditional Chinese with full-width punctuation,
     # 你 never 您. SIMPLIFIED holds common simplified-only characters, not all of them: still read the zh yourself.
-    SIMPLIFIED = set("们这个说话时会对过还没给让钱见长门问间头书学习语读写车东来电视点开关热爱发应样经么为认识进远运选银饭馆鸡鱼鸟马龙风飞买卖丽岁华汉宁兰号吗贵哪儿边乐场机网单师课节妈爷") - set("哪")   # 哪 is Taiwan usage too
     texts = [(f"{r['id']} {k}", r[k]) for r in sent_rows.values() for k in ("vi", "pron_note", "hanzi", "en", "zh")]
     texts += [(f"lesson {L['n']} page '{p['t']}'", re.sub("<[^>]+>", " ", p["h"])) for L in lessons for p in L["pages"]]
     texts += [(f"lesson {L['n']} tandem", re.sub("<[^>]+>", " ", L["tandem"])) for L in lessons]
+    for probe in ("a—b", "你好,我們", "您好", "他们"):   # the checks must themselves work
+        if not text_problems(probe):
+            err(f"build.py text check misses {probe!r}")
     for where, s in texts:
-        if "—" in s:
-            err(f"{where}: em dash")
-        if re.search(r"[一-鿿][,.;:?!]\s*[一-鿿]", s):   # inside Chinese text; English after a quoted 字 is fine
-            err(f"{where}: ASCII punctuation inside Chinese text")
-        if "您" in s:
-            err(f"{where}: 您 (use 你)")
-        bad = sorted(set(s) & SIMPLIFIED)
-        if bad:
-            err(f"{where}: simplified characters {''.join(bad)}")
+        for problem in text_problems(s):
+            err(f"{where}: {problem}")
+    for r in sent_rows.values():   # a Chinese gloss never ends or breaks with ASCII punctuation
+        if re.search(r"[\u4e00-\u9fff\uff09][,.;:?!]|[,.;:?!][\u4e00-\u9fff]", r["zh"]):
+            err(f"{r['id']} zh: ASCII punctuation in Chinese")
+    nums = sorted(int(i[1:]) for i in sent_rows)
+    if nums != list(range(nums[0], nums[-1] + 1)):
+        err("gaps in the id numbering: " + ", ".join(f"s{n:04d}" for n in sorted(set(range(nums[0], nums[-1] + 1)) - set(nums))))
+    for i in sent_rows:
+        if i not in seen:
+            err(f"{i} is in sentences.csv but in no lesson")
+    wpath = ROOT / "words.csv"
+    if wpath.exists():
+        for k, line in enumerate(wpath.read_text(encoding="utf-8").splitlines()[1:], 2):
+            if not line.strip():
+                continue
+            f = line.split("|")
+            if len(f) != 4:
+                err(f"words.csv line {k}: 4 fields expected")
+                continue
+            for problem in text_problems(line):
+                err(f"words.csv line {k}: {problem}")
+            if f[3].strip() not in sent_rows:
+                err(f"words.csv line {k}: first_id {f[3]} not in sentences.csv")
     for i, s in sent.items():
         if not s["en"] or not s["zh"]:
             err(f"{i}: gloss missing")

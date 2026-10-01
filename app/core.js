@@ -12,6 +12,7 @@ const NEW_MAX = 6;                     // never more new sentences in one day, h
 const NEW_SHARE = 0.4;                 // new sentences take at most 40 % of the time, so the reviews they cause later still fit
 const budgetMs = S => ((S.cfg && S.cfg.min) || MIN_DEFAULT) * 60000;
 const REQUEUE_GAP = 4;
+const MAX_RETRIES = 2;                 // at most two more tries of one card in a round
 const MS_CAP = 120000;                 // time counted per card at most                 // "Again" brings the card back four cards later
 const EST0 = {new: 75000, echo: 25000, recall: 25000, drill: 20000};
 
@@ -35,7 +36,7 @@ function planCard(c, t) {
   if ((c.box || 0) <= 3) iv = INTERVAL[c.box] || 1;                       // learning phase: 1, 2, 4 days
   else iv = Math.max(Math.max(prev, (prev + elapsed) / 2) * c.ease, prev + 1);
   iv = Math.min(365, Math.max(1, Math.round(iv)));
-  if (iv >= 4 && c.box > 3) { const f = Math.max(1, Math.round(iv * 0.05)); iv += Math.floor(Math.random() * (2 * f + 1)) - f; }   // spread a little, no clumps
+  if (iv >= 4 && c.box > 3) { const f = Math.max(1, Math.round(iv * 0.05)); iv = Math.min(365, iv + Math.floor(Math.random() * (2 * f + 1)) - f); }   // spread a little, no clumps
   if (isLeech(c)) iv = Math.min(iv, 2);
   c.iv = iv; c.last = t; c.due = addPractice(t, iv);
 }
@@ -62,12 +63,14 @@ function nextNew(S, D) { return practised(D, currentLesson(S, D)).filter(id => !
 
 // ----- the daily round -----
 function estOf(S, m) { return (S.avg && S.avg[m]) || EST0[m]; }
+// A card costs its own time plus, with the share of first answers that were Again, one more listen-and-repeat.
+function costOf(S, m) { return estOf(S, m) + (S.ar == null ? 0.12 : S.ar) * estOf(S, "echo"); }
 function buildRound(S, D, T) {
   const items = [], BUDGET = budgetMs(S); let est = 0, backlog = 0;
   const due = Object.keys(S.cards).filter(id => D.sent[id] && D.sent[id].kind !== "d" && !S.cards[id].ret && S.cards[id].due <= T)
-    .sort((a, b) => S.cards[a].due - S.cards[b].due || S.cards[a].box - S.cards[b].box || (a < b ? -1 : 1));
+    .sort((a, b) => (S.cards[a].box > 2) - (S.cards[b].box > 2) || S.cards[a].due - S.cards[b].due || S.cards[a].box - S.cards[b].box || (a < b ? -1 : 1));   // cards still being learned first, then the oldest
   for (const id of due) {
-    const m = modeOf(D.sent[id], S.cards[id]), e = estOf(S, m);
+    const m = modeOf(D.sent[id], S.cards[id]), e = costOf(S, m);
     if (est + e <= BUDGET) { items.push({id, m}); est += e; } else backlog++;
   }
   let fresh = 0;
@@ -77,7 +80,7 @@ function buildRound(S, D, T) {
     let used = 0;
     for (const id of nextNew(S, D)) {
       if (fresh >= NEW_MAX) break;
-      const e = estOf(S, "new"); if (used + e > room) break;
+      const e = costOf(S, "new"); if (used + e > room) break;
       used += e;
       items.push({id, m: "new"}); est += e; fresh++;
     }
@@ -98,14 +101,17 @@ function answer(S, D, R, rating, T, ms) {
   if (!retry) c.rv = T;
   if (!retry) {
     if (ms > 0) { S.avg = S.avg || {}; const old = estOf(S, it.m); S.avg[it.m] = Math.round(0.85 * old + 0.15 * Math.max(4000, ms)); }
+    if (it.m === "new" && !c.n) log.fresh++;
     c.n = (c.n || 0) + 1; log.n++;
-    if (it.m === "new") log.fresh++;
+    S.ar = Math.round(1000 * (0.95 * (S.ar == null ? 0.12 : S.ar) + 0.05 * (rating === "ok" ? 0 : 1))) / 1000;   // running share of Again
   }
   if (ms > 0) { R.ms += ms; log.ms += ms; }
   if (rating === "ok") {
     if (!c.box) { c.box = 1; c.iv = 1; c.last = T; c.due = addPractice(T, 1); }
     else if (!retry) {
-      c.box = Math.min(c.box + 1, MAX_BOX); c.ok = (c.ok || 0) + 1; c.miss = Math.max(0, (c.miss || 0) - 1);
+      const wasLeech = isLeech(c);   // a problem card stays in box 2 until it sits three times in a row (as in the kids' engine)
+      c.box = Math.min(c.box + 1, wasLeech ? 2 : MAX_BOX); c.ok = (c.ok || 0) + 1;
+      if (!wasLeech) c.miss = Math.max(0, (c.miss || 0) - 1);
       if (c.box > 4) c.ease = Math.min(2.5, (c.ease || 2.5) + 0.05);   // with two buttons ease could only fall; let it recover slowly
       planCard(c, T);
       if (item.kind === "d" && c.box >= DRILL_DONE_BOX) c.ret = 1;      // sound drills run out
@@ -116,7 +122,8 @@ function answer(S, D, R, rating, T, ms) {
       if (c.box) { c.box = (!isLeech(c) && c.box >= SURE_BOX) ? c.box - 2 : 1; c.ok = 0; c.miss = (c.miss || 0) + 1; lapseCard(c, T); }
     }
     const m = c.box ? (item.kind === "d" ? "drill" : "echo") : "new";       // the retry is always listen and repeat
-    R.items.splice(Math.min(R.pos + 1 + REQUEUE_GAP, R.items.length), 0, {id, m, retry: true});
+    const tries = R.items.filter(x => x.id === id && x.retry).length;
+    if (tries < MAX_RETRIES) R.items.splice(Math.min(R.pos + 1 + REQUEUE_GAP, R.items.length), 0, {id, m, retry: true});   // then it waits for tomorrow
   }
   R.pos++;
 }
@@ -163,6 +170,12 @@ function syncAction(L, o, synced) {
   if (localChanged) return "upload";
   return "none";
 }
+// The "Again" list of a day: per card the higher count of the two devices (never growing by merging twice).
+function mergeCounts(x, y) {
+  const cx = {}, cy = {}; for (const id of x) cx[id] = (cx[id] || 0) + 1; for (const id of y) cy[id] = (cy[id] || 0) + 1;
+  const out = []; for (const id of new Set([...x, ...y])) for (let i = 0; i < Math.max(cx[id] || 0, cy[id] || 0); i++) out.push(id);
+  return out;
+}
 // Card by card: the card that was answered more often wins, on a tie the one answered later.
 function mergeStates(local, cloud) {
   const L = fixState(JSON.parse(JSON.stringify(local))), M = fixState(JSON.parse(JSON.stringify(cloud)));
@@ -171,9 +184,14 @@ function mergeStates(local, cloud) {
   for (const d in L.days) {   // field by field: a day done on either device stays done
     const a = L.days[d], b = M.days[d];
     M.days[d] = !b ? a : {n: Math.max(a.n || 0, b.n || 0), fresh: Math.max(a.fresh || 0, b.fresh || 0), ms: Math.max(a.ms || 0, b.ms || 0),
-      ag: (a.ag || []).length >= (b.ag || []).length ? a.ag || [] : b.ag || [], done: !!(a.done || b.done), tandem: a.tandem || b.tandem || undefined, free: a.free || b.free || undefined};
+      ag: mergeCounts(a.ag || [], b.ag || []), done: !!(a.done || b.done), tandem: a.tandem || b.tandem || undefined, free: a.free || b.free || undefined};
   }
-  for (const k in L.checkins) { const a = L.checkins[k], b = M.checkins[k]; if (!b || (a.ts || 0) > (b.ts || 0)) M.checkins[k] = a; }
+  for (const k in L.checkins) {   // field by field: a text written on one device is never dropped for an empty one
+    const a = L.checkins[k], b = M.checkins[k]; if (!b) { M.checkins[k] = a; continue; }
+    const newer = (a.ts || 0) > (b.ts || 0) ? a : b, older = newer === a ? b : a, out = Object.assign({}, older, newer);
+    for (const f of ["hard", "used", "tandem"]) if (!out[f] && older[f]) out[f] = older[f];
+    M.checkins[k] = out;
+  }
   for (const k in L.introRead) if (L.introRead[k]) M.introRead[k] = true;
   if ((L.cfgTs || 0) > (M.cfgTs || 0)) { M.cfg = L.cfg; M.cfgTs = L.cfgTs; }
   M.avg = Object.assign({}, M.avg, L.avg);

@@ -24,6 +24,10 @@ T.startRound();
 let n = 0;
 while (T.cur() === "card" && n < 500) { T.rate(n % 5 === 2 ? "again" : "ok"); n++; }
 if (T.cur() !== "tandem" && T.cur() !== "home") fail("round did not end, screen " + T.cur());
+const S1 = T.S(); S1.round.day -= 1; const old = S1.round.day; T.show("home");
+if (!(S1.days[old] && S1.days[old].done) || S1.round.tandem !== "open") fail("an unticked round of yesterday must count for yesterday");
+S1.round.day += 1; S1.round.tandem = "done"; T.show("home");
+if (!/Done for today/.test(els.home.innerHTML)) fail("home after a finished day");
 for (const s of ["tandem", "checkin", "listen", "library", "lessons", "home"]) T.show(s);
 T.show("page", {key: "l01", i: 0}); T.show("page", {key: "l01", i: 7});
 for (const f of listeners.click || []) f({target: {closest: () => null}, stopPropagation() {}, stopImmediatePropagation() {}});
