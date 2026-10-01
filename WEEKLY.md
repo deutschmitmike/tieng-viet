@@ -51,7 +51,8 @@ Follow plan.md and CLAUDE.md exactly. The short version of what matters most:
 - Every pron_note: what he says, then what he will hear in Saigon, then what Hanoi does. The last two are
   recognition only. The voice warnings no longer need to be written into pron_note: the app dots r, tr, s
   and the palatal finals automatically. A pron_note is for what the dot does not say.
-- Persona: German teacher living in Germany, Chinese students, Vietnamese father, Chinese mother.
+- Persona: German teacher living in Germany, Chinese students, Vietnamese father, Chinese mother, an older sister
+  (chị), a cat. No partner is defined: ask Mike before writing about one.
   Countries: Germany, Vietnam, China. No Taiwan, no Portugal, no daughter.
 - About 30 sentences, 3 to 12 syllables each, something a Saigon speaker in their twenties says to a friend.
   Neutral colloquial register. No recognition items in the app (there is no recognition card type); slang goes

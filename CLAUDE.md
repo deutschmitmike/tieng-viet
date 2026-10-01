@@ -41,6 +41,12 @@ Read `plan.md` first (syllabus, audio, fixed decisions), then `WEEKLY.md` (how a
   of a sentence keeps its id (and its progress); a sentence that is wrong beyond repair stays in the csv and
   is taken out of its lesson's `ids:` line.
 
+## Persona (all material)
+
+German teacher living in Germany, Chinese students, Vietnamese father (family in Cần Thơ), Chinese mother, an older
+sister (chị), a cat. Countries: Germany, Vietnam, China; no Taiwan (Mike confirmed on 1 Oct 2026), no daughter, no
+partner unless Mike decides one.
+
 ## The app (details in app/README.md)
 
 - Sources: `app/core.js` (learning logic, tested), `app/ui.js` (screens), `app/shell.html` (page and style),

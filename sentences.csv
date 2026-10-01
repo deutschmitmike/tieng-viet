@@ -3,14 +3,14 @@ s0001|Chào em.||chào: huyền tone, low and relaxed; em: mid, flat||Hi. (to so
 s0002|Chào anh.||anh: short a plus n at the teeth, [ăn]; the final is not the ng of ăn||Hi. (what a younger person says to you)|嗨。（比你小的人對你說）|greeting;tone
 s0003|Em khỏe không?||khỏe: dip then rise, like a Mandarin 3rd tone; không is often "hông" in casual Saigon speech||How are you?|你好嗎？|greeting;question
 s0004|Anh khỏe. Còn em?||||I'm fine. And you?|我很好，你呢？|greeting
-s0005|Dạ, em khỏe.||dạ: d is y in Saigon, as in English yes; nặng tone. The polite answer word everywhere, the younger person's word: you will hear it from your tandems more than you say it. Hanoi also uses vâng, rare in Saigon||Yes, I'm fine.|嗯，我很好。（dạ 是禮貌的應答詞，南部最常用）|greeting;particle
+s0005|Dạ, con khỏe.||dạ: d is y in Saigon, as in English yes; nặng tone. To your father you open the answer with dạ and call yourself con. Hanoi also uses vâng, rare in Saigon||Yes, I'm fine. (to your father)|嗯，我很好。（對爸爸說）|greeting;particle;family
 s0006|Cảm ơn em.|||感恩|Thank you.|謝謝你。|greeting
 s0007|Không có gì.||||You're welcome. / It's nothing.|不客氣。|greeting
 s0008|Anh tên là Mike.||||My name is Mike.|我叫 Mike。|intro
 s0009|Em tên gì?||||What's your name?|你叫什麼名字？|intro;question
 s0010|Rất vui được gặp em.||rất: r curled back like the Mandarin 日, and the final t is said as c (rấc). The voice says z here, which is wrong 錄音的 r 不對，你要唸捲舌的「日」。||Nice to meet you.|很高興認識你。|intro
 s0120|Em ăn cơm chưa?||ăn sounds like "ăng" in Saigon||Have you eaten yet? (a common way to greet)|你吃飯了沒？（常見的打招呼）|greeting;question
-s0121|Dạ rồi. Còn anh?||||Yes, I have. And you?|吃了，你呢？|greeting;answer
+s0121|Anh ăn rồi. Còn em?||the answer to Anh ăn cơm chưa?: rồi = already, 了||Yes, I have (eaten). And you?|吃過了。你呢？|greeting;answer
 s0011|anh, em, ăn, đi, tên||ngang tone: flat, mid, no movement (lower than a Mandarin 1st tone)||(ngang) older brother, you; younger sibling, you; eat; go; name|（ngang）哥哥、你；弟弟妹妹、你；吃；去；名字|tone
 s0012|là, và, nhà, gì, người||huyền tone: low, falling gently, relaxed voice||(huyền) to be; and; house; what; person|（huyền）是；和；家；什麼；人|tone
 s0013|có, cá, nói, biết, sáng||sắc tone: rising, like a Mandarin 2nd tone; on biết it is short and high||(sắc) have; fish; speak; know; morning, bright|（sắc）有；魚；說；知道；早上、亮|tone
@@ -40,8 +40,8 @@ s0036|Hôm nay trời mưa.||||It's raining today.|今天下雨。|weather
 s0037|Anh muốn mua cà phê.||||I want to buy coffee.|我想買咖啡。|coffee
 s0038|Cho anh một ly cà phê sữa đá.||ly = glass (Saigon; Hanoi: cốc); một ends with the lips closed, like "mộc"||One iced milk coffee, please. (literally: give me one glass of ...)|我要一杯冰的煉乳咖啡。|coffee;order
 s0039|Cho anh một tô phở.||||A bowl of phở, please.|我要一碗河粉。|food;order
-s0040|Em biết không?||||Do you know?|你知道嗎？|question
-s0041|Chưa, em chưa biết.||||Not yet, I don't know yet.|還沒，我還不知道。|answer
+s0040|Em biết chưa?||chưa at the end asks whether something has happened yet, like 了嗎||Do you know yet? / Have you heard?|你知道了嗎？|question
+s0041|Chưa, anh chưa biết.||||Not yet, I don't know yet.|還沒，我還不知道。|answer
 s0042|Anh mệt quá.||||I'm so tired.|我好累。|feeling
 s0043|dạ, dài, dễ, gì, giờ, giá||d and gi are both y (as in English yes) in Saigon||yes (polite); long; easy; what; hour, time; price|是、嗯；長；容易；什麼；點、時間；價格|initial;d-gi
 s0044|đi, đâu, đó, được||đ is a real d, tongue at the teeth, with a slight inward gulp (implosive); a plain d is fine||go; where; there, that; can|去；哪裡；那、那個；可以|initial;đ
@@ -66,7 +66,7 @@ s0062|ngon, người, nghe, nghỉ||ng at the start of a syllable: the sound at 
 s0063|nhà, nhiều, nhớ, nhanh||nh: Spanish ñ, the ny in "canyon"||house; many, much; miss, remember; fast|家；多；想念、記得；快|initial;nh
 s0064|phở, phải, phim||ph = f||phở; must, right; film|河粉；必須、對；電影|initial;ph
 s0065|gà, ghế, ga||g, gh: a soft g with friction, like the g in Spanish "amigo"||chicken; chair; station (ga xe lửa)|雞；椅子；車站|initial;g
-s0066|Dạ, em hiểu rồi.|||曉 (hiểu)|Yes, I understand now. (hiểu rồi = got it)|嗯，我懂了。|understand
+s0066|Ừ, anh hiểu rồi.||ừ: the casual yes to a friend or someone younger; dạ is what they say to you. hiểu rồi = got it|曉 (hiểu)|Yeah, I get it now.|嗯，我懂了。|understand
 s0067|Anh về nhà.||||I'm going home.|我回家。|daily
 s0068|Trưa nay ăn gì?||||What are we having for lunch today?|今天中午吃什麼？|food;question
 s0069|Cái chai này bự quá.||bự = big, colloquial Southern; lớn is the neutral word; Hanoi mostly to||This bottle is so big.|這個瓶子好大。|describe
