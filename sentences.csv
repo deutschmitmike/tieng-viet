@@ -120,3 +120,35 @@ s0116|Thôi, anh đi ngủ nha.||||Okay, I'm going to sleep now.|好了，我去
 s0117|Ngủ ngon nghen.||nghen: warm Southern particle, softer than nha; it sounds older or Mekong and fits your father; with tandems nha is the usual choice||Sleep well.|晚安喔。|daily;particle
 s0118|Mai nói tiếp nha.||||Let's talk more tomorrow.|明天再聊喔。|daily;particle
 s0119|Hẹn gặp lại.||||See you again.|再見。|greeting
+s0122|Em ơi, cái này tiếng Việt nói sao?||em ơi: calling someone, as in a café or at the start of a message. sao at the end: how. Southern; Hanoi: thế nào (nói thế nào)|越 (Việt)|Hey, how do you say this in Vietnamese?|欸，這個用越南文怎麼說？|repair;question
+s0123|Chữ này nghĩa là gì?||nghĩa: ngã, said like hỏi in Saigon, a dip then a rise|義 (nghĩa)|What does this word mean?|這個字是什麼意思？|repair;question
+s0124|Chữ này viết sao?||viết: after iê the final t is said as c in Saigon, viếc||How do you write this word?|這個字怎麼寫？|repair;question
+s0125|Em nói vậy là sao?||asks what someone means; said gently it is a real question, said sharply it sounds annoyed||What do you mean?|你這樣說是什麼意思？|repair;question
+s0126|Em nói lại chậm chút được hông?||hông = không in Saigon speech; at the end of a question it is the usual form. Hanoi: không||Can you say it again, a bit slower?|你可以慢一點再說一次嗎？|repair;request
+s0127|Anh nghe hông kịp.||kịp: nặng, short, the lips close at the end and stay closed. nghe hông kịp: can't keep up||I can't keep up (with what I hear).|我跟不上。|repair
+s0128|Ủa, em ở Sài Gòn hả?||ủa: hỏi tone; surprise, like 咦. Southern; Hanoi: ơ||Huh, you're in Saigon?|咦，你在西貢喔？|particle;question
+s0129|Ủa, em chưa ngủ hả?||||Huh, you're not asleep yet?|咦，你還沒睡喔？|particle;question
+s0130|Ủa, sao vậy?||sao vậy: what's up, what happened. Hanoi: sao thế||Huh, what's wrong?|咦，怎麼了？|particle;question
+s0131|Cà phê này ngon ha.||ha at the end asks for agreement, soft and short, like 對吧 or 耶. Southern; Hanoi: nhỉ||This coffee is good, isn't it?|這杯咖啡很好喝，對吧？|particle
+s0132|Em nói tiếng Anh giỏi ha.||giỏi: gi is y, hỏi tone, yỏi|英 (Anh)|You speak English really well, huh.|你英文講得很好耶。|particle
+s0133|Cái này ngon lắm luôn.||luôn: n after uô is said as ng, luông. After lắm it means really, totally, like 超||This is really, really good.|這個超好吃。|particle
+s0134|Vậy hả? Anh không biết luôn.||luôn after a negative: at all. Southern colloquial; Hanoi: không biết gì cả||Really? I had no idea at all.|是喔？我完全不知道。|particle
+s0135|Phở ngon lắm á.||á at the end: you know, I'm telling you, like 喔 or 耶. Southern; Hanoi: đấy (ngon lắm đấy)||Phở is really good, you know.|河粉很好吃喔。|particle
+s0136|Em ăn đi.||đi at the end makes an invitation: go ahead, like 吧||Go ahead and eat.|你吃吧。|particle;request
+s0137|Em đi ngủ đi.||the first đi is go, the second softens the request||Go to sleep.|你去睡吧。|particle;request
+s0138|Thôi, vậy đi.||vậy đi: let's do it that way||Okay, let's do that.|好，就這樣吧。|particle
+s0139|Thiệt hông em?||thiệt hông really asks whether it is true; thiệt hả mostly shows surprise||Really?|真的嗎？|reaction;particle
+s0140|Trời, dữ vậy!||dữ: d is y, ngã said like hỏi, yữ. dữ vậy: wow, that much. Southern; Hanoi: ghê thế||Wow, seriously!|天啊，這麼誇張！|reaction
+s0141|Ờ ha, anh quên rồi.||ờ ha: oh right. quên: keep the k, kwên||Oh right, I forgot.|對喔，我忘了。|reaction
+s0142|Anh gửi em nè.||nè at the end: here, look, when you hand or send something. Southern; Hanoi: này. gửi is also written gởi in the South||Here, I'm sending it to you.|我傳給你喔。|chat;particle
+s0143|Em nhắn cho anh nha.||nhắn: after ă the final n is said as ng, nhắng||Text me, okay?|你傳訊息給我喔。|chat;request
+s0144|Giờ anh mới biết.||giờ at the start: now. mới here: only then, like 才||I only just found out.|我現在才知道。|chat
+s0145|Anh gửi voice cho em nha.||voice: roughly the English word; tandems say gửi voice for a voice message||I'll send you a voice message.|我傳語音給你喔。|chat
+s0146|Mình gọi video hông?||mình: we, you and I together. gọi video: video call||Shall we do a video call?|我們視訊好嗎？|chat;question
+s0147|Anh đang học gõ tiếng Việt.||gõ: type on a keyboard; ngã said like hỏi. đang: in the middle of, like 在|學 (học) / 越 (Việt)|I'm learning to type Vietnamese.|我在學打越南文。|chat
+s0148|Anh viết sai hả?||||Did I write it wrong?|我寫錯了嗎？|chat;repair
+s0149|Em sửa giùm anh nha.||giùm: gi is y, yùm; for me, as a favour. Southern; Hanoi: hộ (giúp is neutral everywhere)||Please correct it for me.|你幫我改一下喔。|chat;request
+s0150|Cảm ơn em nhiều nha.|||感恩 (cảm ơn)|Thanks a lot.|太謝謝你了。|greeting
+s0151|Có gì đâu.||the answer when someone thanks you; đâu makes it light||It's nothing.|沒什麼啦。|greeting
+s0152|Tiếng Việt khó quá.||khó: an aspirated k|越 (Việt)|Vietnamese is so hard.|越南文好難。|describe
+s0153|Nhưng mà vui lắm.||nhưng mà: but, in speech often just mà||But it's a lot of fun.|但是很好玩。|describe

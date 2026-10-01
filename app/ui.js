@@ -187,7 +187,7 @@ function renderHome() {
   let main = "";
   if (introNeeded) {
     main = '<div class="kicker">New lesson</div><h2>' + esc(L.title) + '</h2><p>Read the introduction first, then the new sentences start.</p>' +
-      '<button class="btn primary big" data-act="lesson" data-key="' + L.key + '">Read the introduction</button>';
+      '<button class="btn primary big" data-act="lesson" data-key="' + L.key + '">Read the introduction</button><hr class="sep">';
   }
   if (R && roundDone(R) && R.tandem) {
     const nc = R.items.filter(x => !x.retry).length, mn = Math.max(1, Math.round(R.ms / 60000));
