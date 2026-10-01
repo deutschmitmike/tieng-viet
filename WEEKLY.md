@@ -4,7 +4,7 @@ The recipe for one lesson of the course, written for Claude Code running on Mike
 Mike starts it with one sentence, for example "baue die nächste Lektion nach WEEKLY.md". He never types
 commands; everything below is yours to run. Read CLAUDE.md first, it holds the hard rules.
 
-A lesson is one line of plan.md (lesson N = plan week N), about 30 new sentences, met in the app at as many a
+A lesson is one line of plan.md under Lessons (lNN), with the notes from the review below the list, about 30 new sentences, met in the app at as many a
 day as fit into Mike's minutes (15 minutes: about 3 a day, a lesson in a bit more than a week). There is no day plan and no recycling schedule:
 the app's spaced repetition brings old sentences back by itself.
 

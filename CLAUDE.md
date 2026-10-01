@@ -1,6 +1,6 @@
 # Tiếng Việt Sài Gòn: project rules
 
-Mike's own Southern Vietnamese self-study course. Target: B1 by about July 2027, able to hold a
+Mike's own Southern Vietnamese self-study course. Target: B1, 50 lessons, about early 2028 at Mike's 15 minutes a day, able to hold a
 30 minute casual conversation with a Saigon tandem partner. Since 1 October 2026 the course runs as an app
 (the site root, deutschmitmike.github.io/tieng-viet): every day, 15 minutes (changeable in the app), whole sentences, lots of
 listening and repeating, spaced repetition instead of a day plan. No tutor for now (Mike finds a native
