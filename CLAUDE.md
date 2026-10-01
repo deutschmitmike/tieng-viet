@@ -77,7 +77,7 @@ per-sentence mp3s, `index.html` and `version.json`.
 ## Where things stand
 
 - Lesson 1 (s0001 to s0121, the sound system) was studied from the booklet from 21 September 2026 and moved
-  into the app on 1 October 2026 as already met. Lesson 2 is being built on 1 Oct 2026; from then on one lesson ahead, on request.
+  into the app on 1 October 2026 as already met. Lesson 2 (s0122 to s0153: particles, asking back, chatting, Telex) was built on 2 Oct 2026. Next is lesson 3, built when Mike asks, one lesson ahead of the one he is learning. words.csv exists since lesson 2.
 - To build a lesson, follow WEEKLY.md. Lessons are built on request, never by a scheduled task: the
   sentences are the course and they are not written unsupervised.
 - Work from a Claude Code session started in `~/Documents/tieng-viet`, so that this file is loaded.
