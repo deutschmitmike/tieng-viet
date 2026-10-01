@@ -162,6 +162,36 @@ t("fixState fills what Firebase drops", () => {
   assert.deepStrictEqual(S.days["20731"].ag, []); assert.deepStrictEqual(S.round.items, []); assert.deepStrictEqual(S.checkins, {});
 });
 
+// ---- sync v2: never let a device that changed nothing overwrite, merge when both changed ----
+t("syncAction", () => {
+  const L = migrated(MON); L.ts = 100;
+  assert.strictEqual(C.syncAction(L, null, 0), "upload", "empty cloud");
+  assert.strictEqual(C.syncAction(L, Object.assign({}, L, {ts: 100}), 100), "none");
+  assert.strictEqual(C.syncAction(L, Object.assign({}, L, {ts: 200}), 100), "adopt", "only the cloud changed");
+  L.ts = 300;
+  assert.strictEqual(C.syncAction(L, Object.assign({}, L, {ts: 100}), 100), "upload", "only this device changed");
+  assert.strictEqual(C.syncAction(L, Object.assign({}, L, {ts: 200}), 100), "merge", "both changed");
+  const stale = migrated(MON); stale.ts = 50;
+  assert.strictEqual(C.syncAction(stale, Object.assign({}, stale, {ts: 999}), 50), "adopt", "a stale tab takes the newer cloud");
+});
+t("mergeStates keeps the work of both devices", () => {
+  const A = migrated(MON), B = migrated(MON);
+  C.answer(A, D, {items: [{id: "s0001", m: "echo"}], pos: 0, ms: 0}, "ok", MON, 1000);          // phone
+  C.answer(B, D, {items: [{id: "s0002", m: "echo"}], pos: 0, ms: 0}, "again", MON + 1, 1000);    // Mac
+  A.checkins.k1 = {ts: 5, hard: "a"}; B.checkins.k2 = {ts: 6, hard: "b"};
+  A.cfg = {min: 20}; A.cfgTs = 9; B.cfg = {min: 10}; B.cfgTs = 3;
+  const M = C.mergeStates(A, B);
+  assert.strictEqual(M.cards.s0001.box, 2); assert.strictEqual(M.cards.s0002.box, 1); assert.strictEqual(M.cards.s0002.ag, 1);
+  assert.ok(M.checkins.k1 && M.checkins.k2); assert.strictEqual(M.cfg.min, 20);
+  assert.ok(M.days[MON] && M.days[MON + 1]);
+});
+t("time per card is capped", () => {
+  const S = migrated(MON), R = {items: [{id: "s0001", m: "echo"}], pos: 0, ms: 0};
+  C.answer(S, D, R, "ok", MON, 3600000);
+  assert.strictEqual(R.ms, C.MS_CAP); assert.strictEqual(S.days[MON].ms, C.MS_CAP);
+});
+t("the round remembers its lesson", () => { const S = migrated(MON); assert.strictEqual(C.buildRound(S, D, MON).lesson, "l01"); });
+
 // ---- voice marks ----
 t("voice marks", () => {
   assert.deepStrictEqual(C.voiceMarks("rồi"), ["r"]);

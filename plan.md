@@ -2,19 +2,19 @@
 
 Start: Monday 21 September 2026, decided on 18 Sep 2026 (the first planned week went by while the voice was still being fixed). Target: conversational B1 (originally by 1 July 2027; since the app the date follows Mike's minutes a day, about early 2028 at 15 minutes), measured as a 30-minute casual conversation with a Saigon tandem partner in their twenties, following their normal speed, and a comfortable conversation with your father. 50 lessons (in the app since 1 October 2026: lessons instead of weeks, every day, 15 minutes; the date follows the pace, see Lessons), no passive listening, no tutor for now.
 
-Progress is counted in week numbers, not calendar weeks. If you skip a week, the next generated week is still the next week number; nothing is lost, the end date moves.
+Progress is counted in lessons. A skipped day loses nothing; the end date moves.
 
 ## Fixed decisions
 
 - Saigon only. Strict Saigon pronunciation from day one, also where it contradicts the spelling. No Northern module.
-- Register: neutral colloquial Saigon for production. Youth slang appears only in the recognition layer (what tandems write to you), never in the echo tracks.
+- Register: neutral colloquial Saigon for production. Youth slang appears only in the lesson pages for recognition (what tandems write to you), never in the sentences practised in the app.
 - Persona in all material: a German teacher living in Germany, Chinese students, Vietnamese father, Chinese mother. Countries that come up: Germany, Vietnam, China.
-- Glosses: English, plus Chinese (繁體) wherever Mandarin is the closer analogue. 漢字 on every word that has a Sino-Vietnamese etymology. From week 6 a small correspondence track (Mandarin sound to Hán Việt sound) runs alongside.
-- Since 1 October 2026 (Mike's decision): the course runs in an app with spaced repetition. Each line under Lessons below is one lesson of about 30 new sentences; the app brings old sentences back by itself, so there is no recycling schedule and no day plan. Whole sentences, lots of listening and repeating, vocabulary growing slowly out of the sentences (at most one or two new words per sentence). Simulated 1 October 2026, every day: 10 minutes fit about 2 new sentences a day (14 a week, a lesson in about two weeks), 15 minutes about 3, 20 minutes about 4, 30 minutes about 6. All 40 topics stay, each one leaner; the pace follows the minutes Mike chooses. How a lesson is built: WEEKLY.md; how the app works: app/README.md.
+- Glosses: English, plus Chinese (繁體) wherever Mandarin is the closer analogue. 漢字 on every word that has a Sino-Vietnamese etymology. From lesson 9 a small correspondence track (Mandarin sound to Hán Việt sound) runs alongside.
+- Since 1 October 2026 (Mike's decision): the course runs in an app with spaced repetition. Each line under Lessons below is one lesson of about 30 new sentences; the app brings old sentences back by itself, so there is no recycling schedule and no day plan. Whole sentences, lots of listening and repeating, vocabulary growing slowly out of the sentences (at most one or two new words per sentence). Simulated 1 October 2026, every day: 10 minutes fit about 2 new sentences a day (14 a week, a lesson in about two weeks), 15 minutes about 3, 20 minutes about 4, 30 minutes about 6. All topics stay in 50 lessons (see Lessons), each one leaner; the pace follows the minutes Mike chooses. How a lesson is built: WEEKLY.md; how the app works: app/README.md.
 - Audio: ElevenLabs only, one file per sentence, generated once, reused every time the sentence comes back. The app plays them on a button press only, never by itself.
 - Feedback loop: the Friday check-in in the app (what was hard, what you used with the tandems, what the tandem said), plus the app's own count of which sentences needed "Again". `app/pull_checkin.py` writes both into `checkin.md`; the next lesson is built from it. Tandem corrections fix the sentence itself.
 
-## The daily half hour
+## The daily round
 
 One round in the app every day, as many minutes as Mike sets (15). First the sentences that are due, then as many new ones as fit. Each card: play, say it in the pause, play again and say it on top of the voice, as often as you like, then Again or Got it. After three Got its a sentence comes as its meaning only: say it from memory, then check against the voice. Whole sentences only, no sound drills (decided 1 October 2026). After the round, the tandem task of the lesson (a few messages using what you have). Friday adds the check-in.
 
@@ -117,7 +117,7 @@ Grammar coverage was checked against the tables of contents of three textbooks: 
 - Every Southern-specific word is marked in `pron_note` with its Northern equivalent once, so you recognise the Hanoi word when it turns up, but never produce it.
 - `pron_note` is filled only where the Saigon pronunciation contradicts the spelling or a Mandarin or German habit would interfere. Empty means: read it as written.
 - 漢字 only where the etymology is certain. Doubtful cases stay blank rather than guessing.
-- Three layers in `pron_note`, in this order: what you say, what you will hear in Saigon, and what Hanoi does. The last two are recognition only and never enter the echo tracks.
+- Three layers in `pron_note`, in this order: what you say, what you will hear in Saigon, and what Hanoi does. The last two are recognition only and never enter the sentences practised in the app.
 - The production target throughout is careful Saigon, not fast Saigon: qu keeps its k (quá, never wá), v stays v (về, never yề), s and x stay apart, tr and ch stay apart, r stays retroflex. This is a matter of care, not of dialect. Where the careful Saigon form happens to match Hanoi, as with qu, that is a coincidence of care and no reason to avoid it.
 - What is Southern in the system itself is never touched, whatever "standard" is said to mean: d and gi are y and never z, r is retroflex and never z, the five tones stay with hỏi = ngã, and the Southern finals stay: -t becomes -c after rounded vowels (một = mộc), and the palatal -nh and -ch become -n and -t. That last one is not a full merger, because the vowel keeps the trace: anh is ăn, tinh is tưn, chính is chứn, so tin and tinh remain two words and careful speech keeps them apart. Undoing any of this would not be careful speech, it would be Northern speech, where the difference sits in the final consonant instead.
 - Chinese glosses in Taiwan-register 繁體 with the Chinese comma, 你 not 您.
@@ -127,9 +127,9 @@ Grammar coverage was checked against the tables of contents of three textbooks: 
 
 - Voice: your own v3 voice, `2vKhvfp40Pq0JeXGdL7F`, model `eleven_v3`, stability 1.0. Decided 18 Sep 2026 after a head to head against Minh and Anh PM from the library.
 - Stability 1.0, not 0.5: at 0.5 the voice glued "cho anh" into one word. 1.0 keeps the syllables apart. v3 accepts only 0.0, 0.5 and 1.0.
-- Saigon respelling: at the start of a syllable, d becomes y and gi becomes y before the voice sees the text. dạ is read as yạ, giờ as yờ. đ and gh are never touched, so đúng stays đúng and ghi stays ghi. The rule lives in `scripts/common.py`, function `saigon_respell`, and runs on every sentence automatically. The booklet always shows the correct spelling.
-- The r is the one sound no voice on ElevenLabs gets right: every Vietnamese voice says a z there, and unlike d and gi there is no second letter in the alphabet that carries the retroflex value, so respelling cannot fix it. The three r drills carry the warning in their note: you hear z, you say the Mandarin 日.
-- Every sentence file is generated once and reused when the sentence comes back in a later week, so nothing is paid for twice. v3 varies between generations, so a regenerated file sounds slightly different.
+- Saigon respelling: at the start of a syllable, d becomes y and gi becomes y before the voice sees the text. dạ is read as yạ, giờ as yờ. đ and gh are never touched, so đúng stays đúng and ghi stays ghi. The rule lives in `scripts/common.py`, function `saigon_respell`, and runs on every sentence automatically. The app always shows the correct spelling.
+- The r is the one sound no voice on ElevenLabs gets right: every Vietnamese voice says a z there, and unlike d and gi there is no second letter in the alphabet that carries the retroflex value, so respelling cannot fix it. The app dots every r; tapping it says: you hear z, you say the Mandarin 日.
+- Every sentence file is generated once and reused when the sentence comes back in a later review, so nothing is paid for twice. v3 varies between generations, so a regenerated file sounds slightly different.
 
 ## Output format
 

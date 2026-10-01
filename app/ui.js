@@ -2,7 +2,7 @@
 // Rules from Mike (2026-09-30): sound only on a button press, never autoplay. English interface. Phone first.
 
 const {practised, dayOf, dow, practiceDay, monday, isoDate, buildRound, roundDone, answer, dayLog, currentLesson, nextNew,
-  migrateLesson1, freshState, fixState, nCards, MINUTES, MIN_DEFAULT, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain, modeOf, SURE_BOX} = CORE;
+  migrateLesson1, freshState, fixState, MINUTES, MIN_DEFAULT, syncAction, mergeStates, voiceMarks, fold, sureCount, weekAgain, SURE_BOX} = CORE;
 
 // Test mode, nothing goes to the cloud: ?local, and always anywhere except the published site (a local preview must never touch Mike's state)
 const LOCAL = /[?&]local\b/.test(location.search) || location.hostname !== "deutschmitmike.github.io";
@@ -18,11 +18,16 @@ const ICON = {
 };
 
 // ================= storage and sync =================
+// S.ts changes only with a real change (save). Each device remembers the cloud ts it last synced with, so a tab
+// that changed nothing never uploads, and two devices that both changed something are merged card by card.
 function load() { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.cards) return fixState(s); } catch (e) {} return freshState(); }
 let S = load();
-let syncInfo = {ok: null, at: 0}, lastCloudN = null, lastCloudAt = 0, saveTimer = 0;
-function saveLocal() { S.ts = Date.now(); S.build = APP_BUILD; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
-function save() { saveLocal(); clearTimeout(saveTimer); saveTimer = setTimeout(cloudSave, 800); }
+const SYNCED_KEY = KEY + "_synced";
+let synced = 0; try { synced = +localStorage.getItem(SYNCED_KEY) || 0; } catch (e) {}
+let syncInfo = {ok: null, at: 0}, lastCloudAt = 0, saveTimer = 0, syncing = false, syncAgain = false;
+function persist() { S.build = APP_BUILD; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function save() { S.ts = Date.now(); persist(); clearTimeout(saveTimer); saveTimer = setTimeout(cloudSync, 800); }
+function setSynced(ts) { synced = ts || 0; try { localStorage.setItem(SYNCED_KEY, String(synced)); } catch (e) {} }
 function setSync(ok) { syncInfo = {ok, at: Date.now()}; const el = $("sync"); if (el) el.textContent = syncText(); }
 function syncText() {
   if (LOCAL) return "test mode, not synced";
@@ -30,26 +35,35 @@ function syncText() {
   if (!syncInfo.ok) return "not synced";
   return "synced " + new Date(syncInfo.at).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
 }
-function cloudGet() { return fetch(SYNC_URL + "?t=" + Date.now()).then(r => { if (!r.ok) throw 0; return r.json(); }).then(o => { lastCloudN = nCards(o, D); lastCloudAt = Date.now(); return o; }); }
-function cloudPut() { lastCloudN = nCards(S, D); return fetch(SYNC_URL, {method: "PUT", body: JSON.stringify(S), keepalive: true}).then(r => { if (!r.ok) throw 0; setSync(true); }); }
-function adopt(o) { S = fixState(o); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
-function cloudSave() {
-  if (!SYNC_URL) return;
-  cloudGet().then(o => {
-    if (cloudWins(S, o, D)) { adopt(o); setSync(true); if (cur === "home") show("home"); return; }   // another device is further: take its state
-    if (mayUpload(S, o, D)) return cloudPut();
-  }).catch(() => setSync(false));
+function cloudGet() { return fetch(SYNC_URL + "?t=" + Date.now()).then(r => { if (!r.ok) throw 0; return r.json(); }).then(o => { lastCloudAt = Date.now(); return o; }); }
+function cloudPut(leaving) {
+  const body = JSON.stringify(S), ts = S.ts;
+  return fetch(SYNC_URL, {method: "PUT", body, keepalive: !!leaving && body.length < 60000})   // keepalive bodies over 64 KB are refused
+    .then(r => { if (!r.ok) throw 0; setSynced(ts); setSync(true); });
 }
-function cloudSync(after) {
-  if (!SYNC_URL) { after && after(); return; }
-  cloudGet().then(o => { if (cloudWins(S, o, D)) adopt(o); setSync(true); after && after(o); })
-    .catch(() => { setSync(false); after && after(); });
+function adopt(o) { S = fixState(o); persist(); setSynced(S.ts); }
+function afterReplace() {   // the state came from the cloud: keep the open screen consistent with it
+  if (cur === "home") show("home");
+  else if (cur === "card") { const R = S.round; if (R && R.day === today() && !roundDone(R)) { cs = null; renderCard(); } else show("home"); }
+  else if (cur === "tandem") { if (!S.round || !roundDone(S.round) || S.round.tandem) show("home"); }
+}
+function cloudSync() {
+  if (!SYNC_URL) return;
+  if (syncing) { syncAgain = true; return; }
+  syncing = true;
+  cloudGet().then(o => {
+    const act = syncAction(S, o, synced);
+    if (act === "adopt") { adopt(o); setSync(true); afterReplace(); }
+    else if (act === "merge") { S = mergeStates(S, o); S.ts = Date.now(); persist(); afterReplace(); return cloudPut(); }
+    else if (act === "upload") return cloudPut();
+    else setSync(true);
+  }).catch(() => setSync(false)).then(() => { syncing = false; if (syncAgain) { syncAgain = false; cloudSync(); } });
 }
 document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "hidden") {   // leaving: upload at once if the cloud was read recently (iOS freezes the page otherwise)
-    saveLocal();
-    if (SYNC_URL && lastCloudN != null && nCards(S, D) >= lastCloudN && Date.now() - lastCloudAt < 20 * 60000) cloudPut().catch(() => {});
-  } else { cloudSync(() => { if (cur === "home") show("home"); }); checkVersion(); }
+  if (document.visibilityState === "hidden") {   // leaving with changes not yet uploaded: upload now, iOS freezes the page otherwise
+    persist();
+    if (SYNC_URL && (S.ts || 0) > synced && Date.now() - lastCloudAt < 5 * 60000) { clearTimeout(saveTimer); cloudPut(true).catch(() => {}); }
+  } else { if (cs) cs.shownAt = Date.now(); cloudSync(); checkVersion(); }
 });
 function checkVersion() {
   if (LOCAL) return;
@@ -65,11 +79,12 @@ function play(id, slow, done) {
   playing = id; onEnd = done || null;
   A.src = src(id); A.preservesPitch = true; A.webkitPreservesPitch = true;
   A.defaultPlaybackRate = A.playbackRate = slow ? 0.75 : 1;
-  A.play().catch(() => {});
+  A.play().catch(() => { if (LS.on) { stopListen(); renderListen(); } });
   markPlaying();
 }
 function stopAudio() { try { A.pause(); } catch (e) {} playing = null; onEnd = null; markPlaying(); }
 A.addEventListener("loadedmetadata", () => { if (A.playbackRate !== A.defaultPlaybackRate) A.playbackRate = A.defaultPlaybackRate; });
+A.addEventListener("error", () => { playing = null; onEnd = null; markPlaying(); if (LS.on) { stopListen(); renderListen(); } });
 A.addEventListener("ended", () => { const f = onEnd; playing = null; onEnd = null; markPlaying(); f && f(); });
 function markPlaying() { document.querySelectorAll("[data-play]").forEach(b => b.classList.toggle("on", b.dataset.play === playing)); }
 function preload(id) { if (!id) return; const a = new Audio(); a.preload = "auto"; a.src = src(id); }
@@ -98,7 +113,10 @@ function noteHtml(item) {
 const playBtn = (id, label) => '<button class="btn play" data-play="' + id + '" data-act="play" data-id="' + id + '">' + ICON.play + (label ? "<span>" + label + "</span>" : "") + "</button>";
 document.addEventListener("click", e => {
   const vm = e.target.closest(".vm");
-  if (vm) { const box = vm.closest(".card, .row, .page")?.querySelector(".markinfo"); if (box) { box.innerHTML = vm.dataset.m.split(" ").map(k => "<p>" + esc(MARK_TEXT[k]) + "</p>").join(""); box.style.display = "block"; } return; }
+  if (vm && !vm.closest('[data-act="play"]')) {   // inside a play button the tap plays; in a closed list row it opens the row
+    const box = vm.closest(".card, .row, .page")?.querySelector(".markinfo");
+    if (box) { box.innerHTML = vm.dataset.m.split(" ").map(k => "<p>" + esc(MARK_TEXT[k]) + "</p>").join(""); box.style.display = "block"; e.stopImmediatePropagation(); return; }
+  }
   const b = e.target.closest("[data-act]"); if (!b) return;
   const a = b.dataset.act;
   if (a === "play") { play(b.dataset.id, b.dataset.slow === "1"); e.stopPropagation(); }
@@ -120,7 +138,7 @@ function show(name, arg) {
 // ----- home -----
 function weekSnapshot(t) {
   const mo = monday(t), sure = sureCount(S, D);
-  if (!S.wk || S.wk.w !== mo) { const prevGain = S.wk && S.wk.w === mo - 7 ? sure - S.wk.start : null; S.wk = {w: mo, start: sure, prev: prevGain}; saveLocal(); }
+  if (!S.wk || S.wk.w !== mo) { const prevGain = S.wk && S.wk.w === mo - 7 ? sure - S.wk.start : null; S.wk = {w: mo, start: sure, prev: prevGain}; persist(); }
   return {sure, gain: sure - S.wk.start, prev: S.wk.prev};
 }
 function weekDots(t) {
@@ -134,8 +152,15 @@ function weekDots(t) {
   }).join("");
   return {html: '<div class="dots">' + dots + "</div>", n};
 }
+// A finished round from an earlier day whose tandem step was never ticked still counts as a practice day.
+function settleOldRound(t) {
+  const R = S.round;
+  if (R && R.day < t && roundDone(R) && !R.tandem) { R.tandem = "open"; dayLog(S, R.day).done = true; save(); }
+}
+function roundLesson() { return (S.round && D.lessons.find(x => x.key === S.round.lesson)) || currentLesson(S, D); }
 function renderHome() {
-  const t = today(), real = dayOf(Date.now()), L = currentLesson(S, D), R = S.round && S.round.day === t ? S.round : null;
+  const t = today(); settleOldRound(t);
+  const real = dayOf(Date.now()), L = currentLesson(S, D), R = S.round && S.round.day === t ? S.round : null;
   const pending = nextNew(S, D).length, introNeeded = pending && !(S.introRead || {})[L.key];
   let main = "";
   if (introNeeded) {
@@ -152,7 +177,10 @@ function renderHome() {
       '<button class="btn primary big" data-act="start">Continue</button>';
   } else {
     const P = buildRound(S, D, t), nNew = P.items.filter(x => x.m === "new").length, nRev = P.items.length - nNew, min = Math.max(1, Math.round(P.est / 60000));
-    if (!P.items.length) main += '<div class="kicker">Today</div><h2>Nothing due today.</h2><p>' + (pending ? "" : "All sentences of this lesson are in. The next lesson comes after your Friday check-in.") + "</p>";
+    if (!P.items.length) {   // nothing to do counts as a done day, not as a missed one
+      const log = dayLog(S, t); if (!log.done && !introNeeded) { log.done = true; log.free = true; save(); }
+      main += '<div class="kicker">Today</div><h2>Nothing due today.</h2>';
+    }
     else main += '<div class="kicker">Today</div><h2>About ' + min + " minutes</h2><p>" +
       nRev + (nRev === 1 ? " review" : " reviews") + (nNew ? ", " + nNew + " new" : "") + (P.backlog ? ". " + P.backlog + " more are waiting, new sentences pause until they are through." : ".") + "</p>" +
       '<button class="btn primary big" data-act="start">Start</button>';
@@ -177,7 +205,7 @@ function renderHome() {
 }
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b) return;
-  if (b.dataset.act === "mins") { S.cfg = Object.assign({}, S.cfg, {min: +b.dataset.m}); save(); renderHome(); }   // takes effect with the next round that is built
+  if (b.dataset.act === "mins") { S.cfg = Object.assign({}, S.cfg, {min: +b.dataset.m}); S.cfgTs = Date.now(); save(); renderHome(); }   // takes effect with the next round that is built
   if (b.dataset.act === "start") startRound();
   if (b.dataset.act === "lesson") show("page", {key: b.dataset.key, i: 0});
 });
@@ -186,6 +214,7 @@ document.addEventListener("click", e => {
 let cs = null;   // card state: {plays, revealed, shownAt, notes}
 function startRound() {
   const t = today();
+  settleOldRound(t);
   if (!S.round || S.round.day !== t) { S.round = buildRound(S, D, t); save(); }
   else {   // a round built before 1 Oct 2026 may still hold sound drills: drop the ones not yet answered
     const R = S.round, keep = R.items.filter((x, i) => i < R.pos || !D.sent[x.id] || D.sent[x.id].kind !== "d");
@@ -197,7 +226,7 @@ function startRound() {
 const MODE_LABEL = {new: "New sentence", echo: "Listen and repeat", drill: "Sound drill", recall: "Say it from the meaning"};
 function renderCard() {
   const R = S.round, it = R.items[R.pos], item = D.sent[it.id];
-  if (!cs || cs.id !== it.id + ":" + R.pos) cs = {id: it.id + ":" + R.pos, plays: 0, revealed: it.m !== "recall", shownAt: Date.now(), notes: it.m === "new"};
+  if (!cs || cs.id !== it.id + ":" + R.pos) cs = {id: it.id + ":" + R.pos, plays: 0, revealed: it.m !== "recall", shownAt: Date.now(), readyAt: Date.now() + 350, notes: it.m === "new"};
   const ready = cs.revealed;   // Mike 2026-10-01: rating never waits for a play
   const pct = Math.round(100 * R.pos / R.items.length);
   let body = "";
@@ -228,7 +257,10 @@ function cardPlay(slow) {
   play(it.id, slow, () => { if (cur === "card" && cs) { cs.plays++; renderCard(); } });
 }
 function rate(r) {
-  const R = S.round, ms = Date.now() - cs.shownAt;
+  const R = S.round, it = R && R.items[R.pos];
+  if (!cs || !it || cs.id !== it.id + ":" + R.pos) { if (it) renderCard(); else show("home"); return; }   // the state changed under the card
+  if (Date.now() < cs.readyAt) return;   // a double tap must not rate the next card unseen
+  const ms = Date.now() - cs.shownAt;
   answer(S, D, R, r, today(), ms); cs = null; stopAudio(); save();
   if (roundDone(R)) show("tandem"); else renderCard();
 }
@@ -241,7 +273,7 @@ document.addEventListener("click", e => {
   if (a === "rate" && !b.disabled) rate(b.dataset.r);
 }, true);
 document.addEventListener("keydown", e => {   // on the Mac: space play, s slow, enter check, 1 again, 2 got it
-  if (cur !== "card" || e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
+  if (cur !== "card" || e.repeat || e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
   const q = s => document.querySelector("#card " + s);
   if (e.key === " ") { e.preventDefault(); if (cs && cs.revealed) cardPlay(false); }
   else if (e.key === "s") { if (cs && cs.revealed) cardPlay(true); }
@@ -252,22 +284,23 @@ document.addEventListener("keydown", e => {   // on the Mac: space play, s slow,
 
 // ----- tandem task: the round counts once this is ticked -----
 function renderTandem() {
-  const L = currentLesson(S, D);
+  const L = roundLesson();
   $("tandem").innerHTML = '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + "</button></div>" +
     '<div class="panel page"><div class="kicker">Tandem task, lesson ' + L.n + "</div>" + L.tandem + "</div>" +
     '<div class="rate"><button class="btn again" data-act="tandem" data-v="skip">Not today</button><button class="btn ok" data-act="tandem" data-v="done">Done</button></div>';
 }
 document.addEventListener("click", e => {
   const b = e.target.closest('[data-act="tandem"]'); if (!b) return;
-  const t = today(); if (!S.round || S.round.day !== t) return;
-  S.round.tandem = b.dataset.v; const log = dayLog(S, t); log.done = true; log.tandem = b.dataset.v; save();
+  const R = S.round, t = today(); if (!R || !roundDone(R) || (R.tandem && R.tandem !== "open")) { show("home"); return; }
+  R.tandem = b.dataset.v; const log = dayLog(S, R.day); log.done = true; log.tandem = b.dataset.v; save();
   const ci = S.checkins && S.checkins[isoDate(monday(t))];
   show(dow(dayOf(Date.now())) >= 4 && !ci ? "checkin" : "home");
 });
 
 // ----- Friday check-in -----
 function renderCheckin() {
-  const t = today(), key = isoDate(monday(t)), ci = (S.checkins || {})[key] || {}, L = currentLesson(S, D);
+  const t = today(), key = isoDate(monday(t)), saved = (S.checkins || {})[key] || {}, L = roundLesson();
+  let ci = saved; try { const d = JSON.parse(localStorage.getItem(KEY + "_cidraft")); if (d && d.key === key && (d.at || 0) > (saved.ts || 0)) ci = Object.assign({}, saved, d); } catch (e) {}
   const hard = weekAgain(S, t).slice(0, 8);
   const list = hard.length ? "<ul class=\"hardlist\">" + hard.map(([id, n]) => "<li><span>" + esc(D.sent[id] ? D.sent[id].vi : id) + "</span><small>" + n + "× again</small></li>").join("") + "</ul>"
     : '<p class="muted">No “Again” this week yet.</p>';
@@ -278,14 +311,15 @@ function renderCheckin() {
     '<label>What was hard?<textarea id="ci_hard" rows="3">' + esc(ci.hard) + "</textarea></label>" +
     '<label>What did you actually use with your tandems?<textarea id="ci_used" rows="3">' + esc(ci.used) + "</textarea></label>" +
     '<label>What did the tandem say? Paste corrections or replies.<textarea id="ci_tandem" rows="5">' + esc(ci.tandem) + "</textarea></label>" +
-    '<button class="btn primary big" data-act="cisave">' + (ci.ts ? "Update" : "Save") + "</button></div>";
+    '<button class="btn primary big" data-act="cisave">' + (saved.ts ? "Update" : "Save") + "</button></div>";
 }
 document.addEventListener("click", e => {
   const b = e.target.closest('[data-act="cisave"]'); if (!b) return;
   const t = today(), key = isoDate(monday(t));
   S.checkins = S.checkins || {};
   S.checkins[key] = {hard: $("ci_hard").value.trim(), used: $("ci_used").value.trim(), tandem: $("ci_tandem").value.trim(), ts: Date.now(),
-    lesson: currentLesson(S, D).n, again: weekAgain(S, t).slice(0, 12)};
+    lesson: roundLesson().n, again: weekAgain(S, t).slice(0, 12)};
+  try { localStorage.removeItem(KEY + "_cidraft"); } catch (e) {}
   save(); show("home");
 });
 
@@ -355,9 +389,15 @@ function renderLibList() {
   }
   $("liblist").innerHTML = h || '<p class="muted">Nothing found.</p>';
 }
-document.addEventListener("input", e => { if (e.target.id === "q") { libQuery = e.target.value; renderLibList(); } });
+document.addEventListener("input", e => {
+  if (e.target.id === "q") { libQuery = e.target.value; renderLibList(); }
+  if (/^ci_/.test(e.target.id)) {   // the tandem's reply is pasted from another app; iOS may drop the tab meanwhile
+    const v = id => ($(id) || {}).value || "";
+    try { localStorage.setItem(KEY + "_cidraft", JSON.stringify({key: isoDate(monday(today())), hard: v("ci_hard"), used: v("ci_used"), tandem: v("ci_tandem"), at: Date.now()})); } catch (e2) {}
+  }
+});
 document.addEventListener("click", e => {
-  if (cur !== "library" || e.target.closest("[data-act]") || e.target.closest(".vm")) return;
+  if (cur !== "library" || e.target.closest("[data-act]")) return;
   const r = e.target.closest("[data-row]"); if (!r) return;
   libOpen = libOpen === r.dataset.row ? null : r.dataset.row; renderLibList();
 });
@@ -385,13 +425,23 @@ document.addEventListener("click", e => {
 });
 
 // ================= start =================
+// A device without any local state starts only after the cloud has answered: a failed request must never create
+// a second, fresh course that could later be taken for real progress.
 function boot() {
-  const go = () => {
-    if (!Object.keys(S.cards).length) { migrateLesson1(S, D, today()); save(); }
-    show("home");
-  };
-  if (SYNC_URL) cloudSync(() => { go(); cloudSave(); });
-  else go();
   checkVersion();
+  if (!SYNC_URL || Object.keys(S.cards).length) {
+    if (!Object.keys(S.cards).length) { migrateLesson1(S, D, today()); save(); }
+    show("home"); cloudSync(); return;
+  }
+  $("home").innerHTML = '<header><h1>Tiếng Việt</h1></header><div class="panel"><p>Loading your progress …</p></div>';
+  cloudGet().then(o => {
+    if (o && o.cards) { adopt(o); setSync(true); show("home"); }
+    else { migrateLesson1(S, D, today()); save(); show("home"); }
+  }).catch(() => {
+    setSync(false);
+    $("home").innerHTML = '<header><h1>Tiếng Việt</h1></header><div class="panel"><p>Could not reach the server, so your progress could not be loaded.</p>' +
+      '<button class="btn primary big" data-act="retry">Try again</button></div>';
+  });
 }
+document.addEventListener("click", e => { if (e.target.closest('[data-act="retry"]')) boot(); });
 boot();

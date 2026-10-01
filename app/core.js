@@ -11,7 +11,8 @@ const MINUTES = [10, 15, 20, 30], MIN_DEFAULT = 15;   // Mike 2026-10-01: every 
 const NEW_MAX = 6;                     // never more new sentences in one day, however much time is left
 const NEW_SHARE = 0.4;                 // new sentences take at most 40 % of the time, so the reviews they cause later still fit
 const budgetMs = S => ((S.cfg && S.cfg.min) || MIN_DEFAULT) * 60000;
-const REQUEUE_GAP = 4;                 // "Again" brings the card back four cards later
+const REQUEUE_GAP = 4;
+const MS_CAP = 120000;                 // time counted per card at most                 // "Again" brings the card back four cards later
 const EST0 = {new: 75000, echo: 25000, recall: 25000, drill: 20000};
 
 // ----- days -----
@@ -81,7 +82,7 @@ function buildRound(S, D, T) {
       items.push({id, m: "new"}); est += e; fresh++;
     }
   }
-  return {day: T, items, pos: 0, est, backlog, ms: 0, tandem: null};
+  return {day: T, lesson: L.key, items, pos: 0, est, backlog, ms: 0, tandem: null};
 }
 function roundDone(R) { return !!R && R.pos >= R.items.length; }
 
@@ -90,8 +91,9 @@ function answer(S, D, R, rating, T, ms) {
   const it = R.items[R.pos], id = it.id, item = D.sent[id];
   let c = S.cards[id]; if (!c) c = S.cards[id] = newCard(T);
   const log = dayLog(S, T);
+  ms = Math.min(Math.max(0, ms || 0), MS_CAP);   // a phone left lying on a card must not count as an hour of practice
   if (!it.retry) {
-    if (ms > 0) { S.avg = S.avg || {}; const old = estOf(S, it.m); S.avg[it.m] = Math.round(0.85 * old + 0.15 * Math.min(180000, Math.max(4000, ms))); }
+    if (ms > 0) { S.avg = S.avg || {}; const old = estOf(S, it.m); S.avg[it.m] = Math.round(0.85 * old + 0.15 * Math.max(4000, ms)); }
     c.n = (c.n || 0) + 1; log.n++;
     if (it.m === "new") log.fresh++;
   }
@@ -100,6 +102,7 @@ function answer(S, D, R, rating, T, ms) {
     if (!c.box) { c.box = 1; c.iv = 1; c.last = T; c.due = addPractice(T, 1); }
     else if (!it.retry) {
       c.box = Math.min(c.box + 1, MAX_BOX); c.ok = (c.ok || 0) + 1; c.miss = Math.max(0, (c.miss || 0) - 1);
+      if (c.box > 4) c.ease = Math.min(2.5, (c.ease || 2.5) + 0.05);   // with two buttons ease could only fall; let it recover slowly
       planCard(c, T);
       if (item.kind === "d" && c.box >= DRILL_DONE_BOX) c.ret = 1;      // sound drills run out
     }
@@ -142,7 +145,39 @@ function fixState(o) {
   return S;
 }
 
-// ----- sync: the same rules as the kids' app. A state with fewer cards never replaces one with more. -----
+// ----- sync between phone and Mac -----
+// Every device remembers the cloud ts it last synced with ("synced"). Then: only the cloud changed -> adopt it;
+// only this device changed -> upload; both changed -> merge card by card, then upload. A device that changed
+// nothing never uploads, so a stale tab cannot overwrite newer progress (review of 1 Oct 2026).
+function syncAction(L, o, synced) {
+  const localChanged = (L.ts || 0) > synced;
+  if (!o || typeof o !== "object" || !o.cards) return localChanged || Object.keys(L.cards || {}).length ? "upload" : "none";
+  if ((o.resetAt || 0) > (L.resetAt || 0)) return "adopt";
+  const cloudChanged = (o.ts || 0) > synced;
+  if (cloudChanged && localChanged) return "merge";
+  if (cloudChanged) return "adopt";
+  if (localChanged) return "upload";
+  return "none";
+}
+// Card by card: the card that was answered more often wins, on a tie the one answered later.
+function mergeStates(local, cloud) {
+  const L = fixState(JSON.parse(JSON.stringify(local))), M = fixState(JSON.parse(JSON.stringify(cloud)));
+  const more = (a, b) => (a.n || 0) > (b.n || 0) || ((a.n || 0) === (b.n || 0) && (a.last || 0) > (b.last || 0));
+  for (const id in L.cards) { const a = L.cards[id], b = M.cards[id]; if (!b || more(a, b)) M.cards[id] = a; }
+  for (const d in L.days) { const a = L.days[d], b = M.days[d]; if (!b || a.n > b.n || (a.n === b.n && a.done && !b.done)) M.days[d] = a; }
+  for (const k in L.checkins) { const a = L.checkins[k], b = M.checkins[k]; if (!b || (a.ts || 0) > (b.ts || 0)) M.checkins[k] = a; }
+  for (const k in L.introRead) if (L.introRead[k]) M.introRead[k] = true;
+  if ((L.cfgTs || 0) > (M.cfgTs || 0)) { M.cfg = L.cfg; M.cfgTs = L.cfgTs; }
+  M.avg = Object.assign({}, M.avg, L.avg);
+  const ra = L.round, rb = M.round;
+  if (ra && (!rb || ra.day > rb.day || (ra.day === rb.day && (ra.pos > rb.pos || (ra.pos === rb.pos && ra.tandem && !rb.tandem))))) M.round = ra;
+  if (L.wk && (!M.wk || L.wk.w > M.wk.w)) M.wk = L.wk;
+  M.resetAt = Math.max(L.resetAt || 0, M.resetAt || 0);
+  M.ts = Math.max(L.ts || 0, M.ts || 0);
+  return M;
+}
+
+// ----- old sync rules (kept for the tests): a state with fewer cards never replaces one with more -----
 function nCards(o, D) { return Object.keys((o && o.cards) || {}).filter(id => D.sent[id]).length; }
 // Returns true if the cloud state o should replace the local state L.
 function cloudWins(L, o, D) {
@@ -185,5 +220,5 @@ function weekAgain(S, T) {   // which cards needed "Again" most this week (for t
 
 const CORE = {INTERVAL, MAX_BOX, SURE_BOX, RECALL_BOX, DRILL_DONE_BOX, MINUTES, MIN_DEFAULT, budgetMs, NEW_MAX, NEW_SHARE, EST0, dayOf, dow, practiceDay, addPractice,
   practiceBetween, monday, isoDate, isLeech, planCard, lapseCard, newCard, modeOf, currentLesson, nextNew, buildRound, roundDone,
-  practised, answer, dayLog, migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain};
+  practised, answer, dayLog, syncAction, mergeStates, MS_CAP, migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain};
 if (typeof module !== "undefined") module.exports = CORE;

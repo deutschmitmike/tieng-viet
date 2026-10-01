@@ -5,7 +5,7 @@ scripts/.env
 !scripts/.env.example
 
 # Abgeleitete Dateien. Werden aus csv und den Satz-mp3s in einem Befehl neu gebaut
-# und wären über 41 Wochen mehr als ein Gigabyte.
+# (die alten Wochenhefte).
 # Die geschnittenen Tages- und Echospuren, rund 30 MB pro Woche:
 weeks/*/audio/
 # Die eigenständige Heftfassung mit eingebackenem Audio, 4,4 MB pro Woche.
@@ -27,7 +27,7 @@ audio/modeltest/
 audio/dtest/
 audio/voicetest/
 
-# Deine Freitagsnotizen mit den rohen Tandem-Nachrichten.
+# Die Check-ins mit den rohen Tandem-Nachrichten.
 # Bleiben lokal, weil das Repo oeffentlich ist.
 checkin.md
 

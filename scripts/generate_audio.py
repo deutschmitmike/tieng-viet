@@ -2,13 +2,15 @@
 """Generate one mp3 per sentence with ElevenLabs.
 
 Usage:
-  python3 scripts/generate_audio.py --week 1            # all sentences scheduled in week 1
+  python3 scripts/generate_audio.py --lesson 2          # all sentences of lessons/l02.md (the normal case)
+  python3 scripts/generate_audio.py --lesson 2 --dry-run  # show what would be generated, spend nothing
+  python3 scripts/generate_audio.py --week 1            # old: all sentences scheduled in week 1
   python3 scripts/generate_audio.py --week 1 --day 3    # one day
   python3 scripts/generate_audio.py --ids s0001 s0002   # specific ids
   python3 scripts/generate_audio.py --week 1 --dry-run  # show what would be generated
   python3 scripts/generate_audio.py --week 1 --force    # regenerate even if the file exists
 
-Existing files are skipped, so recycled sentences are never paid for twice.
+Existing files are skipped, so a sentence is never paid for twice.
 The API key is read from scripts/.env (ELEVENLABS_API_KEY=...).
 """
 import argparse
@@ -90,7 +92,7 @@ def main():
             continue
         seen.add(sid)
         if sid not in sentences:
-            sys.exit(f"{sid} is in schedule.csv but not in sentences.csv")
+            sys.exit(f"{sid} is in the lesson or schedule but not in sentences.csv")
         if sentence_audio(sid).exists() and not args.force:
             continue
         todo.append(sid)

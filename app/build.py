@@ -161,6 +161,8 @@ def main():
     drills = {d for L in lessons for d in L["drills"]}
     sent = {}
     for i in seen:
+        if i not in sent_rows:
+            continue
         r = sent_rows[i]
         sent[i] = {"vi": r["vi"], "note": r["pron_note"], "hz": r["hanzi"], "en": r["en"], "zh": r["zh"], "kind": "d" if i in drills else "s"}
 
@@ -209,10 +211,13 @@ def main():
     chk = APP / "tests" / "page_check.js"
     chk.write_text(page.split("<script>", 1)[1].rsplit("</script>", 1)[0], encoding="utf-8")
     r = subprocess.run(["node", "--check", str(chk)], capture_output=True, text=True)
+    if r.returncode == 0:
+        r = subprocess.run(["node", str(APP / "tests" / "smoke.js"), str(chk)], capture_output=True, text=True)
+        print(r.stdout.rstrip())
     chk.unlink()
     if r.returncode != 0:
         print(r.stderr.strip())
-        print("PAGE SCRIPT DOES NOT PARSE, nothing written.")
+        print("PAGE SCRIPT BROKEN (syntax or smoke test), nothing written.")
         sys.exit(1)
     (ROOT / "index.html").write_text(page, encoding="utf-8")
     (ROOT / "version.json").write_text(json.dumps({"build": build}) + "\n", encoding="utf-8")

@@ -63,7 +63,7 @@ def main():
     days = S.get("days") or {}
     done = sorted(int(d) for d, g in days.items() if g and g.get("done"))
     mins = sum((g or {}).get("ms", 0) for g in days.values()) / 60000
-    print(f"\npractice days done: {len(done)}, minutes in total: {mins:.0f}, sentences met: {len(cards)}, sure (box 4+): {sum(1 for c in cards.values() if c.get('box', 0) >= 4)}")
+    print(f"\ndays done: {len(done)}, minutes in total: {mins:.0f}, sentences met: {len(cards)}, sure (box 4+): {sum(1 for c in cards.values() if c.get('box', 0) >= 4)}")
 
 
 if __name__ == "__main__":

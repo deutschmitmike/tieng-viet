@@ -58,7 +58,8 @@ Read `plan.md` first (syllabus, audio, fixed decisions), then `WEEKLY.md` (how a
   (Telex) comes with lesson 2, slowly, only for sure sentences, as its own track that never pushes a
   speaking card back.
 - The old week booklets (`scripts/render_*`, `build_day.py`, `schedule.csv`, `weeks/`) are out of the
-  routine. Do not run them. `weeks/w01/index.html` stays online as an archive for now.
+  routine. Do not run them. `weeks/w01/index.html` stays online as an archive for now. `schedule.csv` must stay:
+  build.py reads lesson 1's start days from it.
 
 ## GitHub
 

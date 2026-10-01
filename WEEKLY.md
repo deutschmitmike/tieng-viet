@@ -18,9 +18,18 @@ the retired booklet scripts used it). The ElevenLabs key is in `scripts/.env`. N
 Run `python3 app/pull_checkin.py`. It reads Mike's app state (read only), writes new Friday check-ins into
 `checkin.md` and prints the check-ins, the cards he needed "Again" for most, the problem cards and his totals.
 
-Stop condition: if there is no check-in for the week in which the current lesson ran, Mike has not finished
-it. Build nothing, change nothing, tell him you are waiting for his check-in. He can also give the check-in to
-you in the chat: then write it into checkin.md yourself, in the format the script uses, and go on.
+Stop condition: if there is no check-in dated after the current lesson was published (for lesson 1: after it
+moved into the app on 1 October 2026), Mike has not finished it. Build nothing, change nothing, tell him you are
+waiting for his check-in. He can also give the check-in to you in the chat: then write it into checkin.md
+yourself, newest at the top, in exactly the format the script writes:
+
+```
+## Week of 2026-10-05, lesson 1      (the Monday of that week, ISO date)
+hard: ...
+used: ...
+tandem said: ...
+app, most Again: ...
+```
 
 Reference books, on Mike's Mac only, never in the repo and never copied (copyrighted, and Northern at the core):
 `~/Downloads/Elementary Vietnamese.pdf` (Binh Ngo; the clearest grammar explanations; a scan, read pages as images),
@@ -29,7 +38,8 @@ Southern variants with (S), so grep it with `pdftotext` to check that no Norther
 `~/Downloads/Tieng Viet for Foreigners.pdf` (Lê Thị Hiệp; a scan, Hanoi). Use them for the grammar of the lesson and as
 a cross-check, never as a source of sentences.
 
-Then read plan.md (the line for lesson N+1 is the brief), checkin.md, sentences.csv, `words.csv` and the
+Then read plan.md (the line for lesson N+1 is the brief), checkin.md, sentences.csv, `words.csv` (from lesson 3 on;
+when building lesson 2, create it first, see step 2) and the
 previous lesson file `lessons/lNN.md`.
 
 ## 2. Write the lesson
@@ -46,7 +56,8 @@ Follow plan.md and CLAUDE.md exactly. The short version of what matters most:
 - Persona: German teacher living in Germany, Chinese students, Vietnamese father, Chinese mother.
   Countries: Germany, Vietnam, China. No Taiwan, no Portugal, no daughter.
 - About 30 sentences, 3 to 12 syllables each, something a Saigon speaker in their twenties says to a friend.
-  Neutral colloquial register; youth slang only as recognition items tagged `recog`.
+  Neutral colloquial register. No recognition items in the app (there is no recognition card type); slang goes
+  into the lesson pages only.
 - Vocabulary grows slowly out of the sentences: each new sentence brings at most one or two words that are
   not yet in `words.csv` and otherwise recombines known ones. Add the new words to `words.csv`
   (`word|en|zh|first_id`, pipe-separated; create it from lessons 1 and 2 when lesson 2 is built).
@@ -58,13 +69,14 @@ Follow plan.md and CLAUDE.md exactly. The short version of what matters most:
 - No em dashes anywhere.
 - Ids continue the sequence, never reuse. Rows go into sentences.csv (8 columns), exact existing format,
   tts column empty.
-- Write `lessons/lNN.md` in the format of lessons/l01.md: first line `# Lesson N: Title`, then `ids:` in the
+- Write `lessons/lNN.md` in the format of lessons/l01.md, without its `drills:` and `start:` lines (lesson 1 only): first line `# Lesson N: Title`, then `ids:` in the
   order they should be met (whole sentences only; no sound drills, Mike's decision of 1 Oct 2026), then
   pages starting with `== Page title`, and a `== Tandem` page with the task Mike sees after every round.
   Pages: short, English, in the tone of lesson 1; together no longer than about 800 words. No commands and no
   file names for Mike. `@@play s0123 s0124` renders play buttons.
-- Lesson 2 also brings Telex typing (plan.md, week 2): a page on setting up the Vietnamese Telex keyboard on
-  the Mac and the iPhone, and the typing cards in the app (not built yet; see app/README.md, "Typing").
+- Lesson 2 also brings Telex typing (plan.md, l02): a page on setting up the Vietnamese Telex keyboard on
+  the Mac and the iPhone, and the typing cards in the app (not built yet; see app/README.md, "Typing"). Ask Mike before building the typing
+  track: it is app work, not lesson work.
 
 ## 3. Validate and build
 
@@ -79,7 +91,8 @@ Look at the new lesson in the local preview (it is test mode there, nothing reac
 
 Spawn one subagent with fresh context to review the new lesson strictly: Vietnamese correctness and Saigon
 naturalness, phonology claims, glosses, hanzi, dialect labels, consistency with earlier lessons. Fix what it
-finds and rebuild.
+finds and rebuild. If a sentence's vi text changes, regenerate its mp3 with
+`python3 scripts/generate_audio.py --force --ids sNNNN`. Count BUILD up only once per deploy.
 
 ## 5. Publish
 
