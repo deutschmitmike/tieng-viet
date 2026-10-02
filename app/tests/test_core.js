@@ -150,6 +150,25 @@ t("free practice: Again makes a card due tomorrow, nothing else", () => {
   assert.ok(!C.practiceAgain(S, "s0001", MON), "already due tomorrow");
 });
 
+t("Easy: a new card skips a step, a learning card jumps two boxes, a sure card goes further", () => {
+  const S = migrated(MON), R1 = {items: [{id: "x", m: "new"}], pos: 0, ms: 0};
+  const DD = {sent: Object.assign({x: {vi: "a b c", en: "e", zh: "z", kind: "s"}}, D.sent), lessons: D.lessons};
+  C.answer(S, DD, R1, "easy", MON, 1000);
+  assert.strictEqual(S.cards.x.box, 2); assert.strictEqual(S.cards.x.due, MON + 2);
+  const c = S.cards.s0001; c.box = 1;
+  C.answer(S, D, {items: [{id: "s0001", m: "echo"}], pos: 0, ms: 0}, "easy", MON, 1000);
+  assert.strictEqual(c.box, 3); assert.strictEqual(c.due, MON + 4);
+  const a = S.cards.s0002, b = S.cards.s0003; for (const k of [a, b]) { k.box = 5; k.iv = 10; k.last = MON - 10; k.ease = 2.5; }
+  C.answer(S, D, {items: [{id: "s0002", m: "recall"}], pos: 0, ms: 0}, "ok", MON, 1000);
+  C.answer(S, D, {items: [{id: "s0003", m: "recall"}], pos: 0, ms: 0}, "easy", MON, 1000);
+  assert.ok(b.iv > a.iv * 1.15, "easy " + b.iv + " vs ok " + a.iv); assert.ok(b.ease > a.ease);
+});
+t("Easy on a problem card counts as Got it", () => {
+  const S = migrated(MON), c = S.cards.s0001; c.box = 2; c.miss = 6; c.ok = 0;
+  C.answer(S, D, {items: [{id: "s0001", m: "echo"}], pos: 0, ms: 0}, "easy", MON, 1000);
+  assert.ok(c.box <= 2 && c.iv <= 2);
+});
+
 // ---- the load over months (why the round is limited by time, and new sentences by a share of it) ----
 for (const min of [10, 30]) t("simulated load at " + min + " minutes", () => {
   const DD = fakeLesson(3000), S = migrated(MON); S.introRead.l02 = true; S.cfg = {min};

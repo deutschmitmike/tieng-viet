@@ -20,7 +20,8 @@ nothing if a check or a test fails.
 - Card types: `new` (text, meaning and notes visible), `echo` (listen and repeat), `recall` (from box 3:
   meaning only, say it, then Check reveals and plays). Sound drills (`drills:` in lesson 1, kind `d`) are
   never practised since 1 Oct 2026; they stay as reference in the sentence list and on the lesson pages.
-- Nothing plays by itself. Again and Got it are always active (Mike, 1 Oct 2026: no play needed to go on); on a recall card they appear after Check, which reveals and plays.
+- Three ratings: Again, Got it, Easy (Easy added 2 Oct 2026, for sentences so easy that reviewing them wastes time: a new card skips a step and comes back in 2 days, a learning card jumps two boxes, a sure card goes 30 % further and its ease rises by 0.15 up to 3.0; on a retry or a problem card Easy counts as Got it; keys 1, 2, 3 on the Mac). Free practice keeps two buttons.
+- Nothing plays by itself. Again, Got it and Easy are always active (Mike, 1 Oct 2026: no play needed to go on); on a recall card they appear after Check, which reveals and plays.
 - Again: the card comes back four cards later as listen and repeat, at most twice per round; the retry does not count as a review. The time estimate per card includes the expected retries (the running share of Again, `S.ar`). Cards still being learned (box 1 and 2) come first, then the oldest due. A problem card (5 open misses) stays in box 2 until it sits three times in a row.
 - After the last card the tandem task of the lesson; the day counts as done when it is ticked (Done or Not
   today). There is no check-in (Mike, 1 Oct 2026); the app's own data is the feedback.

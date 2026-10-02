@@ -28,13 +28,13 @@ function isoDate(d) { return new Date(d * 86400000).toISOString().slice(0, 10); 
 
 // ----- cards -----
 function isLeech(c) { return !!c && (c.miss || 0) >= LEECH_MISS && (c.ok || 0) < LEECH_OK; }
-function planCard(c, t) {
+function planCard(c, t, easy) {
   c.ease = c.ease || 2.5;
   const prev = c.iv || INTERVAL[Math.max(1, (c.box || 1) - 1)] || 1;
   const elapsed = c.last != null ? practiceBetween(c.last, t) : prev;
   let iv;
   if ((c.box || 0) <= 3) iv = INTERVAL[c.box] || 1;                       // learning phase: 1, 2, 4 days
-  else iv = Math.max(Math.max(prev, (prev + elapsed) / 2) * c.ease, prev + 1);
+  else iv = Math.max(Math.max(prev, (prev + elapsed) / 2) * c.ease * (easy ? 1.3 : 1), prev + 1);   // Easy: 30 % further, as "easy" in the kids' engine
   iv = Math.min(365, Math.max(1, Math.round(iv)));
   if (iv >= 4 && c.box > 3) { const f = Math.max(1, Math.round(iv * 0.05)); iv = Math.min(365, iv + Math.floor(Math.random() * (2 * f + 1)) - f); }   // spread a little, no clumps
   if (isLeech(c)) iv = Math.min(iv, 2);
@@ -103,17 +103,22 @@ function answer(S, D, R, rating, T, ms) {
     if (ms > 0) { S.avg = S.avg || {}; const old = estOf(S, it.m); S.avg[it.m] = Math.round(0.85 * old + 0.15 * Math.max(4000, ms)); }
     if (it.m === "new" && !c.n) log.fresh++;
     c.n = (c.n || 0) + 1; log.n++;
-    S.ar = Math.round(1000 * (0.95 * (S.ar == null ? 0.12 : S.ar) + 0.05 * (rating === "ok" ? 0 : 1))) / 1000;   // running share of Again
+    S.ar = Math.round(1000 * (0.95 * (S.ar == null ? 0.12 : S.ar) + 0.05 * (rating === "again" ? 1 : 0))) / 1000;   // running share of Again
   }
   if (ms > 0) { R.ms += ms; log.ms += ms; }
-  if (rating === "ok") {
-    if (!c.box) { c.box = 1; c.iv = 1; c.last = T; c.due = addPractice(T, 1); }
+  if (rating === "ok" || rating === "easy") {
+    // Easy (Mike, 2 Oct 2026): a sentence so easy that reviewing it wastes time. A new one skips a step (back in 2 days),
+    // one in the learning phase jumps two boxes, a sure one goes 30 % further and counts as easier from now on.
+    // On a retry or a problem card Easy counts as Got it.
+    const easy = rating === "easy" && !retry && !isLeech(c);
+    if (!c.box) { c.box = easy ? 2 : 1; c.iv = INTERVAL[c.box]; c.last = T; c.due = addPractice(T, c.iv); }
     else if (!retry) {
       const wasLeech = isLeech(c);   // a problem card stays in box 2 until it sits three times in a row (as in the kids' engine)
-      c.box = Math.min(c.box + 1, wasLeech ? 2 : MAX_BOX); c.ok = (c.ok || 0) + 1;
+      c.box = Math.min(c.box + (easy && c.box < 3 ? 2 : 1), wasLeech ? 2 : MAX_BOX); c.ok = (c.ok || 0) + 1;
       if (!wasLeech) c.miss = Math.max(0, (c.miss || 0) - 1);
-      if (c.box > 4) c.ease = Math.min(2.5, (c.ease || 2.5) + 0.05);   // with two buttons ease could only fall; let it recover slowly
-      planCard(c, T);
+      if (easy && c.box > 3) c.ease = Math.min(3, (c.ease || 2.5) + 0.15);
+      else if (c.box > 4) c.ease = Math.min(2.5, (c.ease || 2.5) + 0.05);   // without Easy, ease could only fall; let it recover slowly
+      planCard(c, T, easy && c.box > 3);
       if (item.kind === "d" && c.box >= DRILL_DONE_BOX) c.ret = 1;      // sound drills run out
     }
   } else {

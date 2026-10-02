@@ -267,7 +267,8 @@ function renderCard() {
       '<button class="btn play" data-play="' + it.id + '" data-act="cplay" data-slow="1">' + ICON.play + "<span>Slow</span></button></div>" +
       (it.m === "new" ? '<p class="hint small">Play it, say it, play it again. Then rate yourself.</p>' : "") +
       '<div class="rate"><button class="btn again" data-act="rate" data-r="again"' + (ready ? "" : " disabled") + ">Again</button>" +
-      '<button class="btn ok" data-act="rate" data-r="ok"' + (ready ? "" : " disabled") + ">Got it</button></div>";
+      '<button class="btn ok" data-act="rate" data-r="ok"' + (ready ? "" : " disabled") + ">Got it</button>" +
+      '<button class="btn easy" data-act="rate" data-r="easy"' + (ready ? "" : " disabled") + ">Easy</button></div>";
   }
   $("card").innerHTML =
     '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + '</button><div class="bar"><i style="width:' + pct + '%"></i></div><span class="count">' + (R.pos + 1) + "/" + R.items.length + "</span></div>" +
@@ -295,7 +296,7 @@ document.addEventListener("click", e => {
   if (a === "notes") { cs.notes = true; renderCard(); }
   if (a === "rate" && !b.disabled) rate(b.dataset.r);
 }, true);
-document.addEventListener("keydown", e => {   // on the Mac: space play, s slow, enter check, 1 again, 2 got it
+document.addEventListener("keydown", e => {   // on the Mac: space play, s slow, enter check, 1 again, 2 got it, 3 easy
   if (cur !== "card" || e.repeat || e.metaKey || e.ctrlKey || e.altKey || e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
   const q = s => document.querySelector("#card " + s);
   if (e.key === " ") { e.preventDefault(); if (cs && cs.revealed) cardPlay(false); }
@@ -303,6 +304,7 @@ document.addEventListener("keydown", e => {   // on the Mac: space play, s slow,
   else if (e.key === "Enter") { const b = q('[data-act="reveal"]'); if (b) b.click(); }
   else if (e.key === "1") { const b = q('[data-r="again"]'); if (b && !b.disabled) rate("again"); }
   else if (e.key === "2") { const b = q('[data-r="ok"]'); if (b && !b.disabled) rate("ok"); }
+  else if (e.key === "3") { const b = q('[data-r="easy"]'); if (b && !b.disabled) rate("easy"); }
 });
 
 // ----- tandem task: the round counts once this is ticked -----
