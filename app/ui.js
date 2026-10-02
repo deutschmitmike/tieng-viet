@@ -1,7 +1,7 @@
 // ui.js: screens, audio, storage and sync. Uses CORE (core.js) and D (the data from build.py).
 // Rules from Mike (2026-09-30): sound only on a button press, never autoplay. English interface. Phone first.
 
-const {practised, practiceAgain, dayOf, dow, practiceDay, monday, isoDate, buildRound, roundDone, answer, dayLog, currentLesson, nextNew,
+const {practised, practiceAgain, undoPoint, applyUndo, dayOf, dow, practiceDay, monday, isoDate, buildRound, roundDone, answer, dayLog, currentLesson, nextNew,
   migrateLesson1, freshState, fixState, MINUTES, MIN_DEFAULT, syncAction, mergeStates, voiceMarks, fold, sureCount, weekAgain, SURE_BOX} = CORE;
 
 // Test mode, nothing goes to the cloud: ?local, and always anywhere except the published site (a local preview must never touch Mike's state)
@@ -50,7 +50,7 @@ function cloudPut(leaving) {
   return fetch(SYNC_URL, {method: "PUT", body, keepalive: keep, headers: {"if-match": tag, "X-Firebase-ETag": "true"}})
     .then(r => { if (r.status === 412) throw "stale"; if (!r.ok) throw 0; etag = r.headers.get("ETag") || null; setSynced(ts); setSync(true); });
 }
-function adopt(o) { S = fixState(o); persist(); setSynced(S.ts); }
+function adopt(o) { S = fixState(o); persist(); setSynced(S.ts); UNDO = null; }
 function afterReplace() {   // the state came from the cloud: keep the open screen consistent with it
   if (cur === "home") show("home");
   else if (cur === "card") { const R = S.round; if (R && R.day === today() && !roundDone(R)) { cs = null; renderCard(); } else show("home"); }
@@ -67,7 +67,7 @@ function cloudSync() {
     let act = syncAction(S, o, synced);
     if (act === "adopt" && o && buildKey(o.build) < buildKey(APP_BUILD) && (o.resetAt || 0) <= (S.resetAt || 0)) act = "merge";   // a tab on an older build: merge, never take it wholesale
     if (act === "adopt") { adopt(o); setSync(true); afterReplace(); }
-    else if (act === "merge") { S = mergeStates(S, o); S.ts = Math.max(Date.now(), (o.ts || 0) + 1, (S.ts || 0) + 1); persist(); afterReplace(); return cloudPut(); }
+    else if (act === "merge") { UNDO = null; S = mergeStates(S, o); S.ts = Math.max(Date.now(), (o.ts || 0) + 1, (S.ts || 0) + 1); persist(); afterReplace(); return cloudPut(); }
     else if (act === "upload") return cloudPut();
     else setSync(true);
   }).then(() => { staleRuns = 0; }, e => {
@@ -237,7 +237,7 @@ let cs = null;   // card state: {plays, revealed, shownAt, notes}
 function startRound() {
   const t = today();
   settleOldRound(t);
-  if (!S.round || S.round.day !== t) { S.round = buildRound(S, D, t); save(); }
+  if (!S.round || S.round.day !== t) { S.round = buildRound(S, D, t); UNDO = null; save(); }
   else {   // a round built before 1 Oct 2026 may still hold sound drills: drop the ones not yet answered
     const R = S.round, keep = R.items.filter((x, i) => i < R.pos || !D.sent[x.id] || D.sent[x.id].kind !== "d");
     if (keep.length !== R.items.length) { R.items = keep; save(); }
@@ -248,7 +248,7 @@ function startRound() {
 const MODE_LABEL = {new: "New sentence", echo: "Listen and repeat", drill: "Sound drill", recall: "Say it from the meaning"};
 function renderCard() {
   const R = S.round, it = R.items[R.pos], item = D.sent[it.id];
-  if (!cs || cs.id !== it.id + ":" + R.pos) cs = {id: it.id + ":" + R.pos, plays: 0, revealed: it.m !== "recall", shownAt: Date.now(), readyAt: Date.now() + 350, notes: it.m === "new"};
+  if (!cs || cs.id !== it.id + ":" + R.pos) cs = {id: it.id + ":" + R.pos, plays: 0, revealed: it.m !== "recall", shownAt: Date.now(), notes: it.m === "new"};
   const ready = cs.revealed;   // Mike 2026-10-01: rating never waits for a play
   const pct = Math.round(100 * R.pos / R.items.length);
   let body = "";
@@ -271,7 +271,7 @@ function renderCard() {
       '<button class="btn easy" data-act="rate" data-r="easy"' + (ready ? "" : " disabled") + ">Easy</button></div>";
   }
   $("card").innerHTML =
-    '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + '</button><div class="bar"><i style="width:' + pct + '%"></i></div><span class="count">' + (R.pos + 1) + "/" + R.items.length + "</span></div>" +
+    '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + '</button><div class="bar"><i style="width:' + pct + '%"></i></div><span class="count">' + (R.pos + 1) + "/" + R.items.length + "</span>" + undoLink() + "</div>" +
     '<div class="card"><div class="kicker">' + MODE_LABEL[it.m] + (it.retry ? ", once more" : "") + "</div>" + body + "</div>";
   const nxt = R.items[R.pos + 1]; if (nxt) preload(nxt.id);
 }
@@ -279,12 +279,21 @@ function cardPlay(slow) {
   const it = S.round.items[S.round.pos];
   play(it.id, slow, () => { if (cs) cs.plays++; });   // no redraw: an open explanation of a dotted syllable stays open
 }
+// Undo: one step back, the last rating of the round (Mike, 2 Oct 2026). Gone when the cloud replaces the state.
+let UNDO = null;
+const undoLink = () => UNDO ? '<button class="link undo" data-act="undo">Undo</button>' : "";
+function undoLast() {
+  if (!UNDO) return;
+  applyUndo(S, UNDO); UNDO = null; cs = null; stopAudio(); save();
+  if (S.round && !roundDone(S.round) && S.round.day === today()) show("card"); else show("home");
+}
+document.addEventListener("click", e => { if (e.target.closest('[data-act="undo"]')) { e.stopImmediatePropagation(); undoLast(); } }, true);
 function rate(r) {
   const R = S.round, it = R && R.items[R.pos];
   if (!cs || !it || cs.id !== it.id + ":" + R.pos) { if (it) renderCard(); else show("home"); return; }   // the state changed under the card
-  if (Date.now() < cs.readyAt) return;   // a double tap must not rate the next card unseen
   if (R.day !== today()) { show("home"); return; }   // the card stayed open past midnight: today gets its own round
   const ms = Date.now() - cs.shownAt;
+  UNDO = undoPoint(S, R, today());
   answer(S, D, R, r, today(), ms); cs = null; stopAudio(); save();
   if (roundDone(R)) show("tandem"); else renderCard();
 }
@@ -310,7 +319,7 @@ document.addEventListener("keydown", e => {   // on the Mac: space play, s slow,
 // ----- tandem task: the round counts once this is ticked -----
 function renderTandem() {
   const L = roundLesson();
-  $("tandem").innerHTML = '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + "</button></div>" +
+  $("tandem").innerHTML = '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + '</button><span style="flex:1"></span>' + undoLink() + "</div>" +
     '<div class="panel page"><div class="kicker">Tandem task, lesson ' + L.n + "</div>" + L.tandem + "</div>" +
     '<div class="rate"><button class="btn again" data-act="tandem" data-v="skip">Not today</button><button class="btn ok" data-act="tandem" data-v="done">Done</button></div>';
 }
@@ -333,12 +342,12 @@ function renderPractice() {
     return;
   }
   if (PR.pos >= PR.items.length) {
-    $("practice").innerHTML = back + '</div><div class="panel"><h2>Done.</h2><p>' + PR.done + (PR.done === 1 ? " sentence" : " sentences") + " practised." +
+    $("practice").innerHTML = back + '<span style="flex:1"></span>' + (PR.undo ? '<button class="link undo" data-act="prundo">Undo</button>' : "") + '</div><div class="panel"><h2>Done.</h2><p>' + PR.done + (PR.done === 1 ? " sentence" : " sentences") + " practised." +
       (PR.again ? " " + PR.again + " of them come back in tomorrow's round." : "") + '</p><button class="btn primary big" data-act="prquit">Back</button></div>';
     return;
   }
   const id = PR.items[PR.pos], item = D.sent[id], c = S.cards[id] || {}, recall = c.box >= 3;
-  if (!PR.cs || PR.cs.id !== id + ":" + PR.pos) PR.cs = {id: id + ":" + PR.pos, revealed: !recall, readyAt: Date.now() + 350, notes: false};
+  if (!PR.cs || PR.cs.id !== id + ":" + PR.pos) PR.cs = {id: id + ":" + PR.pos, revealed: !recall, notes: false};
   const q = PR.cs, pct = Math.round(100 * PR.pos / PR.items.length);
   const body = !q.revealed
     ? '<div class="meaning big">' + esc(item.en) + '</div><div class="zh big">' + esc(item.zh) + '</div><p class="hint">Say it in Vietnamese, out loud. Then check.</p><button class="btn primary big" data-act="prreveal">Check</button>'
@@ -348,7 +357,7 @@ function renderPractice() {
       '<div class="plays"><button class="btn play big" data-play="' + id + '" data-act="play" data-id="' + id + '">' + ICON.play + "<span>Play</span></button>" +
       '<button class="btn play" data-play="' + id + '" data-act="play" data-id="' + id + '" data-slow="1">' + ICON.play + "<span>Slow</span></button></div>" +
       '<div class="rate"><button class="btn again" data-act="prrate" data-r="again">Again</button><button class="btn ok" data-act="prrate" data-r="ok">Got it</button></div>';
-  $("practice").innerHTML = back + '<div class="bar"><i style="width:' + pct + '%"></i></div><span class="count">' + (PR.pos + 1) + "/" + PR.items.length + "</span></div>" +
+  $("practice").innerHTML = back + '<div class="bar"><i style="width:' + pct + '%"></i></div><span class="count">' + (PR.pos + 1) + "/" + PR.items.length + "</span>" + (PR.undo ? '<button class="link undo" data-act="prundo">Undo</button>' : "") + "</div>" +
     '<div class="card"><div class="kicker">Free practice, lesson ' + PR.n + (recall ? ", say it from the meaning" : ", listen and repeat") + "</div>" + body + "</div>";
 }
 document.addEventListener("click", e => {
@@ -360,11 +369,16 @@ document.addEventListener("click", e => {
     PR = {key: L.key, n: L.n, items: ids, pos: 0, done: 0, again: 0, cs: null}; renderPractice();
   }
   if (a === "prquit") { PR = null; stopAudio(); show("home"); }
+  if (a === "prundo" && PR && PR.undo) {
+    const u = PR.undo; Object.assign(PR, {pos: u.pos, items: u.items, done: u.done, again: u.again, undo: null, cs: null});
+    if (S.cards[u.id] && u.due != null && S.cards[u.id].due !== u.due) { S.cards[u.id].due = u.due; save(); }
+    stopAudio(); renderPractice();
+  }
   if (a === "prreveal") { PR.cs.revealed = true; play(PR.items[PR.pos], false); renderPractice(); }
   if (a === "prnotes") { PR.cs.notes = true; renderPractice(); }
   if (a === "prrate") {
-    if (Date.now() < PR.cs.readyAt) return;
     const id = PR.items[PR.pos];
+    PR.undo = {pos: PR.pos, items: PR.items.slice(), done: PR.done, again: PR.again, id, due: S.cards[id] ? S.cards[id].due : null};
     if (b.dataset.r === "again") {
       if (practiceAgain(S, id, today())) save();
       if (PR.items.indexOf(id, PR.pos + 1) < 0) PR.items.splice(Math.min(PR.pos + 5, PR.items.length), 0, id);   // once more, a few cards later

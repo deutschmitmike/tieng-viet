@@ -169,6 +169,17 @@ t("Easy on a problem card counts as Got it", () => {
   assert.ok(c.box <= 2 && c.iv <= 2);
 });
 
+t("Undo restores card, round, day log and averages exactly", () => {
+  const S = migrated(MON), R = C.buildRound(Object.assign(S, {cfg: {min: 30}}), D, MON); S.round = R;
+  C.answer(S, D, R, "ok", MON, 20000);
+  const before = JSON.stringify(S);
+  const u = C.undoPoint(S, S.round, MON);
+  C.answer(S, D, S.round, "again", MON, 30000);
+  assert.notStrictEqual(JSON.stringify(S), before);
+  C.applyUndo(S, u);
+  assert.strictEqual(JSON.stringify(S), before);
+});
+
 // ---- the load over months (why the round is limited by time, and new sentences by a share of it) ----
 for (const min of [10, 30]) t("simulated load at " + min + " minutes", () => {
   const DD = fakeLesson(3000), S = migrated(MON); S.introRead.l02 = true; S.cfg = {min};

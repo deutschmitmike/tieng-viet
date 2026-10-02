@@ -132,6 +132,18 @@ function answer(S, D, R, rating, T, ms) {
   }
   R.pos++;
 }
+// Undo of the last rating (Mike, 2 Oct 2026): a snapshot of everything answer() can change, taken just before it.
+function undoPoint(S, R, T) {
+  const it = R.items[R.pos], days = S.days || {};
+  return JSON.parse(JSON.stringify({id: it.id, card: S.cards[it.id] || null, round: R, T, day: days[T] || null, ar: S.ar == null ? null : S.ar, avg: S.avg || {}}));
+}
+function applyUndo(S, u) {
+  if (u.card) S.cards[u.id] = u.card; else delete S.cards[u.id];
+  S.round = u.round; S.days = S.days || {};
+  if (u.day) S.days[u.T] = u.day; else delete S.days[u.T];
+  if (u.ar == null) delete S.ar; else S.ar = u.ar;
+  S.avg = u.avg;
+}
 // Free practice (not the daily round): Again makes a card due tomorrow at the latest, nothing else changes.
 function practiceAgain(S, id, T) {
   const c = S.cards[id]; if (!c || !c.box) return false;
@@ -257,5 +269,5 @@ function weekAgain(S, T) {   // which cards needed "Again" most this week (for t
 
 const CORE = {INTERVAL, MAX_BOX, SURE_BOX, RECALL_BOX, DRILL_DONE_BOX, MINUTES, MIN_DEFAULT, budgetMs, NEW_MAX, NEW_SHARE, EST0, dayOf, dow, practiceDay, addPractice,
   practiceBetween, monday, isoDate, isLeech, planCard, lapseCard, newCard, modeOf, currentLesson, nextNew, buildRound, roundDone,
-  practised, answer, practiceAgain, dayLog, syncAction, mergeStates, MS_CAP, migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain};
+  practised, answer, practiceAgain, undoPoint, applyUndo, dayLog, syncAction, mergeStates, MS_CAP, migrateLesson1, freshState, fixState, nCards, cloudWins, mayUpload, voiceMarks, fold, sureCount, weekAgain};
 if (typeof module !== "undefined") module.exports = CORE;

@@ -59,7 +59,7 @@ partner unless Mike decides one.
   `python3 app/pull_checkin.py` reads it (read only) and prints progress and the hardest cards.
 - Mike's decisions (30 Sep and 1 Oct 2026): sound only on a button press, never autoplay; no record button;
   English interface; phone first; every day, minutes chosen on the home screen (10, 15, 20 or 30; 15 by default, Mike's choice); as many new sentences as fit, at most six, and new ones take at most 40 % of the day's minutes; rating with three
-  buttons, Again, Got it and Easy (Easy added 2 Oct 2026), always active, no play needed to go on; from box 3 a sentence is said from its meaning;
+  buttons, Again, Got it and Easy (Easy added 2 Oct 2026), always active, no play needed to go on, no delay or lockout ("bin kein Kind"), an Undo for the last rating; from box 3 a sentence is said from its meaning;
   no sound drills (Mike, 1 Oct 2026: the word-list rows of lesson 1 stay only as reference, never practised, and new lessons have none); no check-in (1 Oct 2026: the app data is the feedback, lessons are built one ahead on request); free practice of any lesson (Got it changes nothing, Again makes the card due tomorrow); typing
   (Telex) comes with lesson 2, slowly, only for sure sentences, as its own track that never pushes a
   speaking card back.
