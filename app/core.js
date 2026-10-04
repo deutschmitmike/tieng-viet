@@ -53,7 +53,7 @@ function modeOf(item, c) {
 // ----- lessons -----
 // Sound drills (kind "d") are never practised (Mike, 1 Oct 2026: no more sound drills). They stay in the data
 // for the play buttons on the lesson pages and in the sentence list.
-const practised = (D, L) => L.ids.filter(id => D.sent[id] && D.sent[id].kind !== "d");
+const practised = (D, L) => L.ids.filter(id => D.sent[id] && D.sent[id].kind === "s");   // kind "d" sound drill, "h" only to hear: never practised
 // The current lesson is the first one that still has sentences you have not met.
 function currentLesson(S, D) {
   for (const L of D.lessons) if (practised(D, L).some(id => !S.cards[id])) return L;
@@ -67,7 +67,7 @@ function estOf(S, m) { return (S.avg && S.avg[m]) || EST0[m]; }
 function costOf(S, m) { return estOf(S, m) + (S.ar == null ? 0.12 : S.ar) * estOf(S, "echo"); }
 function buildRound(S, D, T) {
   const items = [], BUDGET = budgetMs(S); let est = 0, backlog = 0;
-  const due = Object.keys(S.cards).filter(id => D.sent[id] && D.sent[id].kind !== "d" && !S.cards[id].ret && S.cards[id].due <= T)
+  const due = Object.keys(S.cards).filter(id => D.sent[id] && D.sent[id].kind === "s" && !S.cards[id].ret && S.cards[id].due <= T)
     .sort((a, b) => (S.cards[a].box > 2) - (S.cards[b].box > 2) || S.cards[a].due - S.cards[b].due || S.cards[a].box - S.cards[b].box || (a < b ? -1 : 1));   // cards still being learned first, then the oldest
   for (const id of due) {
     const m = modeOf(D.sent[id], S.cards[id]), e = costOf(S, m);

@@ -251,7 +251,7 @@ function startRound() {
   settleOldRound(t);
   if (!S.round || S.round.day !== t) { S.round = buildRound(S, D, t); UNDO = null; save(); }
   else {   // a round built before 1 Oct 2026 may still hold sound drills: drop the ones not yet answered
-    const R = S.round, keep = R.items.filter((x, i) => i < R.pos || !D.sent[x.id] || D.sent[x.id].kind !== "d");
+    const R = S.round, keep = R.items.filter((x, i) => i < R.pos || !D.sent[x.id] || D.sent[x.id].kind === "s");
     if (keep.length !== R.items.length) { R.items = keep; save(); }
   }
   if (roundDone(S.round)) { show(S.round.tandem ? "home" : "tandem"); return; }
@@ -458,7 +458,7 @@ function renderLibList() {
     if (!ids.length) continue;
     h += '<div class="kicker sect">Lesson ' + L.n + ": " + esc(L.title) + "</div>";
     for (const id of ids) {
-      const it = D.sent[id], c = S.cards[id], st = it.kind === "d" ? "sound" : c.box >= SURE_BOX ? "sure" : c.box ? "learning" : "new";
+      const it = D.sent[id], c = S.cards[id], st = it.kind === "d" ? "sound" : it.kind === "h" ? "hear" : c.box >= SURE_BOX ? "sure" : c.box ? "learning" : "new";
       h += '<div class="row" data-row="' + id + '">' + playBtn(id) + '<div class="rt">' + (libOpen === id ? sentenceHtml(it, true) + (noteHtml(it) ? '<div class="notes">' + noteHtml(it) + "</div>" : "")
           : '<div class="vi s">' + viHtml(it.vi) + '</div><div class="meaning s">' + esc(it.en) + "</div>") + '</div><span class="tag ' + st + '">' + st + "</span></div>";
     }

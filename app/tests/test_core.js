@@ -47,9 +47,9 @@ t("lesson 1 migrates as met, spread over five days", () => {
 t("round stays within its minutes and puts reviews first", () => {
   const S = migrated(MON); for (const id of ids) S.cards[id].due = MON;
   let R = C.buildRound(S, D, MON);
-  assert.ok(R.est <= C.budgetMs(S) && R.backlog > 0, "62 sentences do not fit into 15 minutes");
+  assert.ok(R.est <= C.budgetMs(S) && R.backlog > 0, "61 sentences do not fit into 15 minutes");
   S.cfg = {min: 30}; R = C.buildRound(S, D, MON);
-  assert.strictEqual(R.items.length, 62, "all 62 sentences of lesson 1 fit into 30 minutes");
+  assert.strictEqual(R.items.length, 61, "all 61 practised sentences of lesson 1 fit into 30 minutes");
   const DD = fakeLesson(200), S2 = migrated(MON); S2.introRead.l02 = true;
   for (let i = 0; i < 150; i++) { const c = S2.cards["x" + i] = C.newCard(MON - 10); c.box = 2; c.due = MON; }
   for (const id of ids) S2.cards[id].due = MON;
@@ -119,7 +119,7 @@ t("sound drills are never in a round, never new, never keep a lesson open", () =
   const T = C.freshState(); T.introRead.l01 = true;
   for (const id of ids) if (D.sent[id].kind === "s") T.cards[id] = C.newCard(MON + 100);
   assert.deepStrictEqual(C.nextNew(T, D), [], "only drills left: nothing new");
-  assert.strictEqual(C.practised(D, D.lessons[0]).length, 62);
+  assert.strictEqual(C.practised(D, D.lessons[0]).length, 61);
 });
 t("a new card that was interrupted comes back", () => {
   const DD = fakeLesson(3), S = migrated(MON); S.introRead.l02 = true;

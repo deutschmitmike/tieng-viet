@@ -136,10 +136,14 @@ def parse_lesson(path, sent):
     meta = dict(re.findall(r"^(\w+):\s*(.+)$", head, flags=re.M))
     ids = expand(meta.get("ids", ""), sent)
     drills = set(expand(meta.get("drills", ""), sent))
+    hear = set(expand(meta.get("hear", ""), sent))   # the other person's lines: shown and played, never practised
     for d in drills:
         if d not in ids:
             err(f"{path.name}: drill {d} is not in ids")
-    L = {"key": f"l{n:02d}", "n": n, "title": title, "ids": ids, "drills": sorted(drills), "pages": [], "tandem": ""}
+    for h in hear:
+        if h not in ids:
+            err(f"{path.name}: hear {h} is not in ids")
+    L = {"key": f"l{n:02d}", "n": n, "title": title, "ids": ids, "drills": sorted(drills), "hear": sorted(hear), "pages": [], "tandem": ""}
     for p in pages:
         t, _, body = p.partition("\n")
         t = t.strip()
@@ -180,12 +184,13 @@ def main():
                 err(f"{i}: no audio file audio/sentences/{i}.mp3 (run scripts/generate_audio.py)")
 
     drills = {d for L in lessons for d in L["drills"]}
+    hears = {h for L in lessons for h in L.get("hear", [])}
     sent = {}
     for i in seen:
         if i not in sent_rows:
             continue
         r = sent_rows[i]
-        sent[i] = {"vi": r["vi"], "note": r["pron_note"], "hz": r["hanzi"], "en": r["en"], "zh": r["zh"], "kind": "d" if i in drills else "s"}
+        sent[i] = {"vi": r["vi"], "note": r["pron_note"], "hz": r["hanzi"], "en": r["en"], "zh": r["zh"], "kind": "d" if i in drills else "h" if i in hears else "s"}
 
     # word by word (gloss.json, Mike 4 Oct 2026): every practised sentence has its words with a short Chinese gloss and,
     # where Sino-Vietnamese and certain, the Hán Việt characters, plus "x", how the sentence is built.
