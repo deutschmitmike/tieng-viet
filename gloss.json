@@ -1,0 +1,2010 @@
+{
+ "s0001": {
+  "w": [
+   [
+    "Chào",
+    "嗨"
+   ],
+   [
+    "em.",
+    "你"
+   ]
+  ],
+  "x": "chào + the person you greet; em = you, for someone younger. Xin chào exists but is rare in casual speech: you greet the person by what you call them."
+ },
+ "s0002": {
+  "w": [
+   [
+    "Chào",
+    "嗨"
+   ],
+   [
+    "anh.",
+    "你（哥）"
+   ]
+  ],
+  "x": "What a younger person says to you: you are anh, older brother. You hear this one; your own greeting is Chào em."
+ },
+ "s0003": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "khỏe",
+    "好"
+   ],
+   [
+    "không?",
+    "嗎"
+   ]
+  ],
+  "x": "No verb 'to be' before an adjective: em khỏe = you (are) well. không at the end makes a yes-or-no question, like 嗎; in Saigon you often hear hông."
+ },
+ "s0004": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "khỏe.",
+    "很好"
+   ],
+   [
+    "Còn",
+    "那"
+   ],
+   [
+    "em?",
+    "你呢"
+   ]
+  ],
+  "x": "anh = I when you speak to someone younger. Còn + person = and what about…, like 那…呢."
+ },
+ "s0005": {
+  "w": [
+   [
+    "Dạ,",
+    "是"
+   ],
+   [
+    "con",
+    "我（對爸媽）"
+   ],
+   [
+    "khỏe.",
+    "很好"
+   ]
+  ],
+  "x": "To your father you are con (child) and he is ba. Dạ opens a polite answer to someone older."
+ },
+ "s0006": {
+  "w": [
+   [
+    "Cảm ơn",
+    "謝謝",
+    "感恩"
+   ],
+   [
+    "em.",
+    "你"
+   ]
+  ],
+  "x": "Thanks usually names the person: cảm ơn em, cảm ơn anh, cảm ơn ba."
+ },
+ "s0007": {
+  "w": [
+   [
+    "Không",
+    "沒"
+   ],
+   [
+    "có",
+    "有"
+   ],
+   [
+    "gì.",
+    "什麼"
+   ]
+  ],
+  "x": "Literally 沒有什麼: the usual answer to thanks."
+ },
+ "s0008": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "tên",
+    "名字"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "Mike.",
+    "Mike"
+   ]
+  ],
+  "x": "Literally 我名字是 Mike: the topic first, then là. là links two nouns, like 是."
+ },
+ "s0009": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "tên",
+    "名字"
+   ],
+   [
+    "gì?",
+    "什麼"
+   ]
+  ],
+  "x": "Question words stand where the answer goes: Em tên gì? Anh tên (là) Mike. The question needs no là."
+ },
+ "s0010": {
+  "w": [
+   [
+    "Rất",
+    "很"
+   ],
+   [
+    "vui",
+    "高興"
+   ],
+   [
+    "được",
+    "能"
+   ],
+   [
+    "gặp",
+    "見"
+   ],
+   [
+    "em.",
+    "你"
+   ]
+  ],
+  "x": "rất before an adjective = 很. được before a verb = get to (do): vui được gặp = glad to get to meet. A little textbook, fine in a first chat."
+ },
+ "s0120": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "ăn",
+    "吃"
+   ],
+   [
+    "cơm",
+    "飯"
+   ],
+   [
+    "chưa?",
+    "了嗎"
+   ]
+  ],
+  "x": "chưa at the end asks whether something has happened yet, 了嗎. A friendly greeting, like 吃飽沒."
+ },
+ "s0121": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "ăn",
+    "吃"
+   ],
+   [
+    "rồi.",
+    "了"
+   ],
+   [
+    "Còn",
+    "那"
+   ],
+   [
+    "em?",
+    "你呢"
+   ]
+  ],
+  "x": "rồi after the verb = already, 了. The answer to …chưa? is …rồi (yes) or chưa (not yet)."
+ },
+ "s0035": {
+  "w": [
+   [
+    "Trời",
+    "天氣"
+   ],
+   [
+    "mát",
+    "涼爽"
+   ],
+   [
+    "quá.",
+    "好",
+    "過"
+   ]
+  ],
+  "x": "trời = sky, here the weather. quá after an adjective = so, really: 好涼喔."
+ },
+ "s0036": {
+  "w": [
+   [
+    "Hôm nay",
+    "今天"
+   ],
+   [
+    "trời",
+    "天"
+   ],
+   [
+    "mưa.",
+    "下雨"
+   ]
+  ],
+  "x": "Time words come first. trời mưa = the sky rains, 下雨."
+ },
+ "s0037": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "muốn",
+    "想"
+   ],
+   [
+    "mua",
+    "買"
+   ],
+   [
+    "cà phê.",
+    "咖啡"
+   ]
+  ],
+  "x": "muốn + verb = want to, 想. The order is the Mandarin one: 我想買咖啡."
+ },
+ "s0038": {
+  "w": [
+   [
+    "Cho",
+    "給"
+   ],
+   [
+    "anh",
+    "我"
+   ],
+   [
+    "một",
+    "一"
+   ],
+   [
+    "ly",
+    "杯"
+   ],
+   [
+    "cà phê",
+    "咖啡"
+   ],
+   [
+    "sữa",
+    "煉乳"
+   ],
+   [
+    "đá.",
+    "冰"
+   ]
+  ],
+  "x": "Cho anh + thing = give me…, the standard way to order. ly is the classifier for a glass. What describes the noun follows it: cà phê sữa đá = coffee, (with) milk, (with) ice."
+ },
+ "s0039": {
+  "w": [
+   [
+    "Cho",
+    "給"
+   ],
+   [
+    "anh",
+    "我"
+   ],
+   [
+    "một",
+    "一"
+   ],
+   [
+    "tô",
+    "大碗"
+   ],
+   [
+    "phở.",
+    "河粉"
+   ]
+  ],
+  "x": "The same frame: number + classifier + noun, as in 一碗河粉."
+ },
+ "s0040": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "biết",
+    "知道"
+   ],
+   [
+    "chưa?",
+    "了嗎"
+   ]
+  ],
+  "x": "chưa at the end: has it happened yet? Here: do you know yet, have you heard?"
+ },
+ "s0041": {
+  "w": [
+   [
+    "Chưa,",
+    "還沒"
+   ],
+   [
+    "anh",
+    "我"
+   ],
+   [
+    "chưa",
+    "還沒"
+   ],
+   [
+    "biết.",
+    "知道"
+   ]
+  ],
+  "x": "chưa before a verb = not yet, 還沒. The short answer simply repeats it."
+ },
+ "s0042": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "mệt",
+    "累"
+   ],
+   [
+    "quá.",
+    "好",
+    "過"
+   ]
+  ],
+  "x": "Adjectives work like verbs, no 是 needed: anh mệt = I (am) tired."
+ },
+ "s0066": {
+  "w": [
+   [
+    "Ừ,",
+    "嗯"
+   ],
+   [
+    "anh",
+    "我"
+   ],
+   [
+    "hiểu",
+    "懂",
+    "曉"
+   ],
+   [
+    "rồi.",
+    "了"
+   ]
+  ],
+  "x": "ừ = the casual yes to a friend or someone younger. hiểu rồi = got it, 懂了."
+ },
+ "s0067": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "về",
+    "回"
+   ],
+   [
+    "nhà.",
+    "家"
+   ]
+  ],
+  "x": "về = go back (home, to where you belong). No word for 'to': về nhà = 回家."
+ },
+ "s0068": {
+  "w": [
+   [
+    "Trưa nay",
+    "今天中午"
+   ],
+   [
+    "ăn",
+    "吃"
+   ],
+   [
+    "gì?",
+    "什麼"
+   ]
+  ],
+  "x": "nay after a time word = this: trưa nay, tối nay. The subject is dropped, as so often in Mandarin."
+ },
+ "s0069": {
+  "w": [
+   [
+    "Cái",
+    "個"
+   ],
+   [
+    "chai",
+    "瓶子"
+   ],
+   [
+    "này",
+    "這"
+   ],
+   [
+    "bự",
+    "大"
+   ],
+   [
+    "quá.",
+    "好",
+    "過"
+   ]
+  ],
+  "x": "classifier + noun + này = this…: cái chai này = 這個瓶子. này comes after the noun."
+ },
+ "s0070": {
+  "w": [
+   [
+    "Thôi,",
+    "好了"
+   ],
+   [
+    "đủ",
+    "夠"
+   ],
+   [
+    "rồi.",
+    "了"
+   ]
+  ],
+  "x": "thôi = stop, okay then, 算了 or 好了. đủ rồi = 夠了."
+ },
+ "s0071": {
+  "w": [
+   [
+    "Cà phê",
+    "咖啡"
+   ],
+   [
+    "này",
+    "這"
+   ],
+   [
+    "ngon",
+    "好喝"
+   ],
+   [
+    "quá.",
+    "好",
+    "過"
+   ]
+  ],
+  "x": "No classifier needed here: cà phê này = this coffee. ngon = tasty, for food and drinks."
+ },
+ "s0072": {
+  "w": [
+   [
+    "Người",
+    "人"
+   ],
+   [
+    "Sài Gòn",
+    "西貢"
+   ],
+   [
+    "nói",
+    "說話"
+   ],
+   [
+    "nhanh",
+    "快"
+   ],
+   [
+    "quá.",
+    "好",
+    "過"
+   ]
+  ],
+  "x": "người + place = the people from there. How you do something follows the verb: nói nhanh = 說得快."
+ },
+ "s0073": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "nói",
+    "說"
+   ],
+   [
+    "chậm",
+    "慢"
+   ],
+   [
+    "chút",
+    "一點"
+   ],
+   [
+    "nha.",
+    "喔"
+   ]
+  ],
+  "x": "chút = a bit, after the adjective: chậm chút = 慢一點. nha softens the request."
+ },
+ "s0074": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "nghe",
+    "聽"
+   ],
+   [
+    "không",
+    "不"
+   ],
+   [
+    "hiểu.",
+    "懂",
+    "曉"
+   ]
+  ],
+  "x": "verb + không + result: nghe không hiểu = 聽不懂, exactly as in Mandarin."
+ },
+ "s0075": {
+  "w": [
+   [
+    "Cổ",
+    "她"
+   ],
+   [
+    "đẹp",
+    "漂亮"
+   ],
+   [
+    "quá.",
+    "好",
+    "過"
+   ]
+  ],
+  "x": "cổ = cô ấy, she: a Saigon contraction."
+ },
+ "s0088": {
+  "w": [
+   [
+    "một,",
+    "一"
+   ],
+   [
+    "hai,",
+    "二"
+   ],
+   [
+    "ba,",
+    "三"
+   ],
+   [
+    "bốn,",
+    "四"
+   ],
+   [
+    "năm,",
+    "五"
+   ],
+   [
+    "sáu,",
+    "六"
+   ],
+   [
+    "bảy,",
+    "七"
+   ],
+   [
+    "tám,",
+    "八"
+   ],
+   [
+    "chín,",
+    "九"
+   ],
+   [
+    "mười",
+    "十"
+   ]
+  ],
+  "x": "The numbers one to ten. From eleven on they combine: mười một (11), hai mươi (20)."
+ },
+ "s0089": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "ăn",
+    "吃"
+   ],
+   [
+    "cơm",
+    "飯"
+   ],
+   [
+    "rồi.",
+    "了"
+   ]
+  ],
+  "x": "rồi at the end = already: the answer to Em ăn cơm chưa?"
+ },
+ "s0090": {
+  "w": [
+   [
+    "Chín",
+    "九"
+   ],
+   [
+    "giờ",
+    "點"
+   ],
+   [
+    "tối.",
+    "晚上"
+   ]
+  ],
+  "x": "Number + giờ = o'clock; the part of the day comes after: chín giờ tối = 晚上九點."
+ },
+ "s0091": {
+  "w": [
+   [
+    "Cái này",
+    "這個"
+   ],
+   [
+    "mắc",
+    "貴"
+   ],
+   [
+    "quá.",
+    "太",
+    "過"
+   ]
+  ],
+  "x": "cái này = this (thing), 這個. mắc = expensive in the South."
+ },
+ "s0092": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "học",
+    "學",
+    "學"
+   ],
+   [
+    "tiếng Việt.",
+    "越南文",
+    "越"
+   ]
+  ],
+  "x": "tiếng + country = its language: tiếng Việt, tiếng Đức, tiếng Anh."
+ },
+ "s0093": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "nói",
+    "說"
+   ],
+   [
+    "được",
+    "會"
+   ],
+   [
+    "tiếng Anh",
+    "英文",
+    "英"
+   ],
+   [
+    "không?",
+    "嗎"
+   ]
+  ],
+  "x": "được after the verb = can, manage to, like 會 or 能: nói được tiếng Anh = 會說英文."
+ },
+ "s0094": {
+  "w": [
+   [
+    "Sách",
+    "書",
+    "冊"
+   ],
+   [
+    "này",
+    "這"
+   ],
+   [
+    "hay",
+    "好看"
+   ],
+   [
+    "lắm.",
+    "很"
+   ]
+  ],
+  "x": "lắm after the adjective = very, really. hay = good, interesting, for books, films and songs."
+ },
+ "s0095": {
+  "w": [
+   [
+    "Không",
+    "沒"
+   ],
+   [
+    "sao",
+    "事"
+   ],
+   [
+    "đâu.",
+    "啦"
+   ]
+  ],
+  "x": "không sao = no problem, 沒關係. đâu at the end makes the denial emphatic and reassuring: 啦."
+ },
+ "s0096": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "không",
+    "不"
+   ],
+   [
+    "hiểu.",
+    "懂",
+    "曉"
+   ]
+  ],
+  "x": "không before the verb = not, 不."
+ },
+ "s0097": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "người",
+    "人"
+   ],
+   [
+    "Đức.",
+    "德國",
+    "德"
+   ]
+  ],
+  "x": "là + noun = to be. Inside người Đức the order flips against Mandarin: person first, then German."
+ },
+ "s0098": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "giáo viên",
+    "老師",
+    "教員"
+   ],
+   [
+    "tiếng Đức.",
+    "德文",
+    "德"
+   ]
+  ],
+  "x": "What describes a noun follows it: giáo viên tiếng Đức = teacher (of) German, 德文老師."
+ },
+ "s0099": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "dạy",
+    "教"
+   ],
+   [
+    "tiếng Đức",
+    "德文",
+    "德"
+   ],
+   [
+    "cho",
+    "給"
+   ],
+   [
+    "người",
+    "人"
+   ],
+   [
+    "Trung Quốc.",
+    "中國",
+    "中國"
+   ]
+  ],
+  "x": "dạy + what + cho + whom = teach something to someone. cho here = to, for; it follows the verb, where Mandarin puts 給 before it."
+ },
+ "s0100": {
+  "w": [
+   [
+    "Ba",
+    "爸爸"
+   ],
+   [
+    "anh",
+    "我（的）"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "người",
+    "人"
+   ],
+   [
+    "Việt.",
+    "越南",
+    "越"
+   ]
+  ],
+  "x": "Possession: the owner follows the noun, ba anh = my dad. của (of) can be added but is usually left out."
+ },
+ "s0101": {
+  "w": [
+   [
+    "Má",
+    "媽媽"
+   ],
+   [
+    "anh",
+    "我（的）"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "người",
+    "人"
+   ],
+   [
+    "Trung Quốc.",
+    "中國",
+    "中國"
+   ]
+  ],
+  "x": "The same pattern: má anh = my mom."
+ },
+ "s0102": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "nói",
+    "說"
+   ],
+   [
+    "được",
+    "會"
+   ],
+   [
+    "tiếng Trung.",
+    "中文",
+    "中"
+   ]
+  ],
+  "x": "verb + được + object = can do it: 會說中文."
+ },
+ "s0103": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "mới",
+    "剛"
+   ],
+   [
+    "học",
+    "學",
+    "學"
+   ],
+   [
+    "tiếng Việt.",
+    "越南文",
+    "越"
+   ]
+  ],
+  "x": "mới before the verb = just, recently, 剛."
+ },
+ "s0104": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "ở",
+    "住"
+   ],
+   [
+    "Đức.",
+    "德國",
+    "德"
+   ]
+  ],
+  "x": "ở = be at, live in, with no extra verb: 我住在德國."
+ },
+ "s0105": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "ở",
+    "住"
+   ],
+   [
+    "đâu?",
+    "哪裡"
+   ]
+  ],
+  "x": "đâu = where; like all question words it stands where the answer goes."
+ },
+ "s0106": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "ở",
+    "在"
+   ],
+   [
+    "Sài Gòn",
+    "西貢"
+   ],
+   [
+    "hả?",
+    "喔"
+   ]
+  ],
+  "x": "hả at the end checks what you think you heard: you're in Saigon, right?"
+ },
+ "s0107": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "làm",
+    "做"
+   ],
+   [
+    "nghề",
+    "職業"
+   ],
+   [
+    "gì?",
+    "什麼"
+   ]
+  ],
+  "x": "làm nghề gì = do which job. Young people also just ask Em làm gì?"
+ },
+ "s0108": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "sinh viên",
+    "大學生",
+    "生員"
+   ],
+   [
+    "hả?",
+    "喔"
+   ]
+  ],
+  "x": "sinh viên = university student; a school pupil is học sinh."
+ },
+ "s0109": {
+  "w": [
+   [
+    "Ổng",
+    "他"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "ba",
+    "爸爸"
+   ],
+   [
+    "anh.",
+    "我（的）"
+   ]
+  ],
+  "x": "ổng = ông ấy, he (an older man). About your own father it sounds casual."
+ },
+ "s0110": {
+  "w": [
+   [
+    "Ảnh",
+    "他"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "người",
+    "人"
+   ],
+   [
+    "Sài Gòn.",
+    "西貢"
+   ]
+  ],
+  "x": "ảnh = anh ấy, he (a young man)."
+ },
+ "s0111": {
+  "w": [
+   [
+    "Cổ",
+    "她"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "bạn",
+    "朋友",
+    "伴"
+   ],
+   [
+    "anh.",
+    "我（的）"
+   ]
+  ],
+  "x": "bạn anh = my friend: the owner after the noun again."
+ },
+ "s0112": {
+  "w": [
+   [
+    "Thiệt",
+    "真的"
+   ],
+   [
+    "hả?",
+    "喔"
+   ]
+  ],
+  "x": "The most common reaction: really? thiệt is the Southern form of thật."
+ },
+ "s0113": {
+  "w": [
+   [
+    "Vậy",
+    "這樣"
+   ],
+   [
+    "hả?",
+    "喔"
+   ]
+  ],
+  "x": "vậy = like that: is that so?, 是喔."
+ },
+ "s0114": {
+  "w": [
+   [
+    "Trời",
+    "天"
+   ],
+   [
+    "ơi,",
+    "啊"
+   ],
+   [
+    "mắc",
+    "貴"
+   ],
+   [
+    "quá!",
+    "太",
+    "過"
+   ]
+  ],
+  "x": "trời ơi = oh my god, literally 天啊. ơi calls someone, here heaven."
+ },
+ "s0115": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "nói",
+    "說"
+   ],
+   [
+    "lại",
+    "再"
+   ],
+   [
+    "được",
+    "可以"
+   ],
+   [
+    "không?",
+    "嗎"
+   ]
+  ],
+  "x": "lại after the verb = again. … được không? = can you…?, 可以…嗎."
+ },
+ "s0116": {
+  "w": [
+   [
+    "Thôi,",
+    "好了"
+   ],
+   [
+    "anh",
+    "我"
+   ],
+   [
+    "đi",
+    "去"
+   ],
+   [
+    "ngủ",
+    "睡"
+   ],
+   [
+    "nha.",
+    "喔"
+   ]
+  ],
+  "x": "thôi opens a goodbye: okay then. đi ngủ = go to sleep."
+ },
+ "s0117": {
+  "w": [
+   [
+    "Ngủ",
+    "睡"
+   ],
+   [
+    "ngon",
+    "好"
+   ],
+   [
+    "nghen.",
+    "喔"
+   ]
+  ],
+  "x": "ngủ ngon = sleep well (ngon = tasty, here: deeply). nghen is a warmer nha."
+ },
+ "s0118": {
+  "w": [
+   [
+    "Mai",
+    "明天"
+   ],
+   [
+    "nói",
+    "說"
+   ],
+   [
+    "tiếp",
+    "繼續",
+    "接"
+   ],
+   [
+    "nha.",
+    "喔"
+   ]
+  ],
+  "x": "tiếp after a verb = go on doing it: nói tiếp = 繼續說."
+ },
+ "s0119": {
+  "w": [
+   [
+    "Hẹn",
+    "約"
+   ],
+   [
+    "gặp",
+    "見"
+   ],
+   [
+    "lại.",
+    "再"
+   ]
+  ],
+  "x": "Literally: arrange to meet again, 再見."
+ },
+ "s0122": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "ơi,",
+    "欸"
+   ],
+   [
+    "cái này",
+    "這個"
+   ],
+   [
+    "tiếng Việt",
+    "越南文",
+    "越"
+   ],
+   [
+    "nói",
+    "說"
+   ],
+   [
+    "sao?",
+    "怎麼"
+   ]
+  ],
+  "x": "The topic first, cái này (this thing), then the question about it. sao at the end = how, 怎麼."
+ },
+ "s0123": {
+  "w": [
+   [
+    "Chữ",
+    "字"
+   ],
+   [
+    "này",
+    "這"
+   ],
+   [
+    "nghĩa",
+    "意思",
+    "義"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "gì?",
+    "什麼"
+   ]
+  ],
+  "x": "Literally 這個字意思是什麼: the Mandarin order, except that này follows the noun."
+ },
+ "s0124": {
+  "w": [
+   [
+    "Chữ",
+    "字"
+   ],
+   [
+    "này",
+    "這"
+   ],
+   [
+    "viết",
+    "寫"
+   ],
+   [
+    "sao?",
+    "怎麼"
+   ]
+  ],
+  "x": "sao after the verb = how: viết sao = 怎麼寫, nói sao = 怎麼說."
+ },
+ "s0125": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "nói",
+    "說"
+   ],
+   [
+    "vậy",
+    "這樣"
+   ],
+   [
+    "là",
+    "是"
+   ],
+   [
+    "sao?",
+    "怎麼"
+   ]
+  ],
+  "x": "Literally: you say it like that, that is how? = what do you mean?"
+ },
+ "s0126": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "nói",
+    "說"
+   ],
+   [
+    "lại",
+    "再"
+   ],
+   [
+    "chậm",
+    "慢"
+   ],
+   [
+    "chút",
+    "一點"
+   ],
+   [
+    "được",
+    "可以"
+   ],
+   [
+    "hông?",
+    "嗎"
+   ]
+  ],
+  "x": "Two additions after the verb: lại (again) and chậm chút (a bit slower). … được hông? = can you…?"
+ },
+ "s0127": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "nghe",
+    "聽"
+   ],
+   [
+    "hông",
+    "不"
+   ],
+   [
+    "kịp.",
+    "來得及"
+   ]
+  ],
+  "x": "verb + hông + kịp = not manage to keep up, 跟不上. The same frame as nghe không hiểu."
+ },
+ "s0128": {
+  "w": [
+   [
+    "Ủa,",
+    "咦"
+   ],
+   [
+    "em",
+    "你"
+   ],
+   [
+    "ở",
+    "在"
+   ],
+   [
+    "Sài Gòn",
+    "西貢"
+   ],
+   [
+    "hả?",
+    "喔"
+   ]
+  ],
+  "x": "ủa at the start shows surprise, hả at the end checks."
+ },
+ "s0129": {
+  "w": [
+   [
+    "Ủa,",
+    "咦"
+   ],
+   [
+    "em",
+    "你"
+   ],
+   [
+    "chưa",
+    "還沒"
+   ],
+   [
+    "ngủ",
+    "睡"
+   ],
+   [
+    "hả?",
+    "喔"
+   ]
+  ],
+  "x": "chưa before the verb = not yet."
+ },
+ "s0130": {
+  "w": [
+   [
+    "Ủa,",
+    "咦"
+   ],
+   [
+    "sao vậy?",
+    "怎麼了"
+   ]
+  ],
+  "x": "sao vậy = what's the matter, 怎麼了. Like 怎麼, sao covers how, why and what's wrong."
+ },
+ "s0131": {
+  "w": [
+   [
+    "Cà phê",
+    "咖啡"
+   ],
+   [
+    "này",
+    "這"
+   ],
+   [
+    "ngon",
+    "好喝"
+   ],
+   [
+    "ha.",
+    "對吧"
+   ]
+  ],
+  "x": "ha at the end invites agreement: 對吧、耶."
+ },
+ "s0132": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "nói",
+    "說"
+   ],
+   [
+    "tiếng Anh",
+    "英文",
+    "英"
+   ],
+   [
+    "giỏi",
+    "很好"
+   ],
+   [
+    "ha.",
+    "耶"
+   ]
+  ],
+  "x": "The judgement comes after the verb phrase: nói tiếng Anh giỏi = 英文說得好."
+ },
+ "s0133": {
+  "w": [
+   [
+    "Cái này",
+    "這個"
+   ],
+   [
+    "ngon",
+    "好吃"
+   ],
+   [
+    "lắm",
+    "很"
+   ],
+   [
+    "luôn.",
+    "超"
+   ]
+  ],
+  "x": "lắm luôn = really, totally: a stronger lắm."
+ },
+ "s0134": {
+  "w": [
+   [
+    "Vậy",
+    "這樣"
+   ],
+   [
+    "hả?",
+    "喔"
+   ],
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "không",
+    "不"
+   ],
+   [
+    "biết",
+    "知道"
+   ],
+   [
+    "luôn.",
+    "完全"
+   ]
+  ],
+  "x": "luôn after a negative = at all: không biết luôn = 完全不知道."
+ },
+ "s0135": {
+  "w": [
+   [
+    "Phở",
+    "河粉"
+   ],
+   [
+    "ngon",
+    "好吃"
+   ],
+   [
+    "lắm",
+    "很"
+   ],
+   [
+    "á.",
+    "喔"
+   ]
+  ],
+  "x": "á at the end tells: I'm telling you, 喔、耶."
+ },
+ "s0136": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "ăn",
+    "吃"
+   ],
+   [
+    "đi.",
+    "吧"
+   ]
+  ],
+  "x": "đi at the end turns it into an invitation, 吧."
+ },
+ "s0137": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "đi",
+    "去"
+   ],
+   [
+    "ngủ",
+    "睡"
+   ],
+   [
+    "đi.",
+    "吧"
+   ]
+  ],
+  "x": "The first đi is go, the second the invitation: 你去睡吧."
+ },
+ "s0138": {
+  "w": [
+   [
+    "Thôi,",
+    "好"
+   ],
+   [
+    "vậy",
+    "這樣"
+   ],
+   [
+    "đi.",
+    "吧"
+   ]
+  ],
+  "x": "vậy đi = let's do it like that, 就這樣吧."
+ },
+ "s0139": {
+  "w": [
+   [
+    "Thiệt",
+    "真的"
+   ],
+   [
+    "hông",
+    "嗎"
+   ],
+   [
+    "em?",
+    "你"
+   ]
+  ],
+  "x": "hông as the question word, then the person you ask. It really asks whether it is true."
+ },
+ "s0140": {
+  "w": [
+   [
+    "Trời,",
+    "天啊"
+   ],
+   [
+    "dữ",
+    "誇張"
+   ],
+   [
+    "vậy!",
+    "這麼"
+   ]
+  ],
+  "x": "dữ vậy = that intense, that much: 這麼誇張、這麼厲害."
+ },
+ "s0141": {
+  "w": [
+   [
+    "Ờ",
+    "喔"
+   ],
+   [
+    "ha,",
+    "對"
+   ],
+   [
+    "anh",
+    "我"
+   ],
+   [
+    "quên",
+    "忘"
+   ],
+   [
+    "rồi.",
+    "了"
+   ]
+  ],
+  "x": "ờ ha = oh right. quên rồi = forgot, 忘了."
+ },
+ "s0142": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "gửi",
+    "傳"
+   ],
+   [
+    "em",
+    "你"
+   ],
+   [
+    "nè.",
+    "給你"
+   ]
+  ],
+  "x": "gửi + person = send to someone. nè when you hand something over: here you go."
+ },
+ "s0143": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "nhắn",
+    "傳訊息"
+   ],
+   [
+    "cho",
+    "給"
+   ],
+   [
+    "anh",
+    "我"
+   ],
+   [
+    "nha.",
+    "喔"
+   ]
+  ],
+  "x": "nhắn cho + person = text someone, 傳訊息給…."
+ },
+ "s0144": {
+  "w": [
+   [
+    "Giờ",
+    "現在"
+   ],
+   [
+    "anh",
+    "我"
+   ],
+   [
+    "mới",
+    "才"
+   ],
+   [
+    "biết.",
+    "知道"
+   ]
+  ],
+  "x": "mới before the verb here = only then, 才, as in 我現在才知道."
+ },
+ "s0145": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "gửi",
+    "傳"
+   ],
+   [
+    "voice",
+    "語音"
+   ],
+   [
+    "cho",
+    "給"
+   ],
+   [
+    "em",
+    "你"
+   ],
+   [
+    "nha.",
+    "喔"
+   ]
+  ],
+  "x": "gửi + thing + cho + person: send something to someone."
+ },
+ "s0146": {
+  "w": [
+   [
+    "Mình",
+    "我們"
+   ],
+   [
+    "gọi video",
+    "視訊"
+   ],
+   [
+    "hông?",
+    "好嗎"
+   ]
+  ],
+  "x": "mình = we, you and I. A suggestion as a question: shall we…?"
+ },
+ "s0147": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "đang",
+    "正在"
+   ],
+   [
+    "học",
+    "學",
+    "學"
+   ],
+   [
+    "gõ",
+    "打字"
+   ],
+   [
+    "tiếng Việt.",
+    "越南文",
+    "越"
+   ]
+  ],
+  "x": "đang before the verb = in the middle of, 在、正在."
+ },
+ "s0148": {
+  "w": [
+   [
+    "Anh",
+    "我"
+   ],
+   [
+    "viết",
+    "寫"
+   ],
+   [
+    "sai",
+    "錯"
+   ],
+   [
+    "hả?",
+    "喔"
+   ]
+  ],
+  "x": "The result follows the verb: viết sai = 寫錯."
+ },
+ "s0149": {
+  "w": [
+   [
+    "Em",
+    "你"
+   ],
+   [
+    "sửa",
+    "改"
+   ],
+   [
+    "giùm",
+    "幫"
+   ],
+   [
+    "anh",
+    "我"
+   ],
+   [
+    "nha.",
+    "喔"
+   ]
+  ],
+  "x": "verb + giùm + person = do it for someone: sửa giùm anh = 幫我改."
+ },
+ "s0150": {
+  "w": [
+   [
+    "Cảm ơn",
+    "謝謝",
+    "感恩"
+   ],
+   [
+    "em",
+    "你"
+   ],
+   [
+    "nhiều",
+    "很多"
+   ],
+   [
+    "nha.",
+    "喔"
+   ]
+  ],
+  "x": "nhiều after the thanks = a lot."
+ },
+ "s0151": {
+  "w": [
+   [
+    "Có",
+    "有"
+   ],
+   [
+    "gì",
+    "什麼"
+   ],
+   [
+    "đâu.",
+    "哪有"
+   ]
+  ],
+  "x": "có … đâu = there is no … at all: đâu turns it into a denial, 沒什麼啦. Without đâu, Có gì? is a real question."
+ },
+ "s0152": {
+  "w": [
+   [
+    "Tiếng Việt",
+    "越南文",
+    "越"
+   ],
+   [
+    "khó",
+    "難"
+   ],
+   [
+    "quá.",
+    "好",
+    "過"
+   ]
+  ],
+  "x": "An adjective as the predicate again: no 是 needed."
+ },
+ "s0153": {
+  "w": [
+   [
+    "Nhưng mà",
+    "但是"
+   ],
+   [
+    "vui",
+    "好玩"
+   ],
+   [
+    "lắm.",
+    "很"
+   ]
+  ],
+  "x": "nhưng mà = but; vui = fun, happy."
+ }
+}

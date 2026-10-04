@@ -13,6 +13,7 @@ CLAUDE.md                the rules that must never be got wrong
 sentences.csv            id|vi|tts|pron_note|hanzi|en|zh|tags
 lessons/lNN.md           one lesson: ids, introduction pages, tandem task (lesson 1 also has a `drills:` reference line and `start: schedule`)
 words.csv                the vocabulary met so far (created when lesson 2 is built)
+gloss.json               every practised sentence word by word (Chinese, Hán Việt) and how it is built
 audio/sentences/         one mp3 per sentence id, generated once, reused forever
 voices.json              ElevenLabs voice and settings (decided, do not edit)
 app/                     the app: core.js, ui.js, shell.html, build.py, pull_checkin.py, tests/, README.md

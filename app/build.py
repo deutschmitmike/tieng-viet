@@ -63,7 +63,7 @@ def md(text, sent):
             for i in ids:
                 if i not in sent:
                     err(f"@@play: unknown id {i}")
-            out.append("<p>" + "".join(f'<button class="pl" data-id="{i}"></button>' for i in ids) + "</p>")
+            out.append('<div class="exs">' + "".join(f'<div class="pl" data-id="{i}"></div>' for i in ids) + "</div>")
         elif s.startswith("### ") or s.startswith("## "):
             flush()
             out.append("<h3>" + inline(s.lstrip("#").strip()) + "</h3>")
@@ -187,9 +187,56 @@ def main():
         r = sent_rows[i]
         sent[i] = {"vi": r["vi"], "note": r["pron_note"], "hz": r["hanzi"], "en": r["en"], "zh": r["zh"], "kind": "d" if i in drills else "s"}
 
+    # word by word (gloss.json, Mike 4 Oct 2026): every practised sentence has its words with a short Chinese gloss and,
+    # where Sino-Vietnamese and certain, the Hán Việt characters, plus "x", how the sentence is built.
+    gpath = ROOT / "gloss.json"
+    gloss = json.loads(gpath.read_text(encoding="utf-8")) if gpath.exists() else {}
+    for i, s in sent.items():
+        g = gloss.get(i)
+        if g:
+            if " ".join(u[0] for u in g["w"]) != s["vi"]:
+                err(f"{i}: gloss.json words do not spell the sentence: {' '.join(u[0] for u in g['w'])!r}")
+            if any(len(u) not in (2, 3) or not u[1] for u in g["w"]):
+                err(f"{i}: gloss.json unit without a Chinese gloss")
+            if any(len(u) == 3 and not re.fullmatch(r"[\u4e00-\u9fff]+", u[2]) for u in g["w"]):
+                err(f"{i}: gloss.json Hán Việt must be Chinese characters only")
+            if not g.get("x"):
+                err(f"{i}: gloss.json has no explanation x")
+            s["g"], s["x"] = g["w"], g.get("x", "")
+        elif s["kind"] == "s":
+            err(f"{i}: no word-by-word entry in gloss.json")
+        else:   # sound drills: word list and Chinese list line up
+            words = [w.strip() for w in s["vi"].split(",")]
+            zhs = [z.strip() for z in re.sub(r"^（[^）]*）", "", s["zh"]).split("；")]
+            if len(words) == len(zhs):
+                s["g"] = [[w + ("," if k < len(words) - 1 else ""), z] for k, (w, z) in enumerate(zip(words, zhs))]
+    for i in gloss:
+        if i not in sent_rows:
+            err(f"gloss.json: {i} is not in sentences.csv")
+
+    # a "Words" page per lesson from words.csv (the words first met in that lesson), with Hán Việt from gloss.json
+    hv = {}
+    for g in gloss.values():
+        for u in g["w"]:
+            if len(u) == 3:
+                hv.setdefault(re.sub(r"[.,?!]", "", u[0]).lower(), u[2])
+    wpath = ROOT / "words.csv"
+    wrows = [l.split("|") for l in wpath.read_text(encoding="utf-8").splitlines()[1:] if l.strip()] if wpath.exists() else []
+    PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>'
+    for L in lessons:
+        mine = [w for w in wrows if len(w) == 4 and w[3].strip() in L["ids"]]
+        if not mine:
+            continue
+        body = "".join(f'<div class="wl"><div class="wlt"><b>{html.escape(w[0])}</b> <span class="wlh">{html.escape(hv.get(w[0].lower(), ""))}</span>'
+                       f'<div class="wlz">{html.escape(w[2])}</div><div class="wle">{html.escape(w[1])}</div></div>'
+                       f'<button class="btn play mini" data-act="play" data-play="{w[3].strip()}" data-id="{w[3].strip()}" aria-label="first sentence">{PLAY}</button></div>' for w in mine)
+        L["pages"].append({"t": "Words in this lesson", "h": f'<p>{len(mine)} words, in the order you meet them. The button plays the sentence where each one first comes up.</p>'
+                           f'<div class="wls">{body}</div>'})
+
     # text rules (CLAUDE.md): no em dashes anywhere, Taiwan-register traditional Chinese with full-width punctuation,
     # 你 never 您. SIMPLIFIED holds common simplified-only characters, not all of them: still read the zh yourself.
     texts = [(f"{r['id']} {k}", r[k]) for r in sent_rows.values() for k in ("vi", "pron_note", "hanzi", "en", "zh")]
+    texts += [(f"{i} gloss.json", " ".join("".join(u[1:]) for u in g["w"]) + " " + g.get("x", "")) for i, g in gloss.items()]
     texts += [(f"lesson {L['n']} page '{p['t']}'", re.sub("<[^>]+>", " ", p["h"])) for L in lessons for p in L["pages"]]
     texts += [(f"lesson {L['n']} tandem", re.sub("<[^>]+>", " ", L["tandem"])) for L in lessons]
     for probe in ("a—b", "你好,我們", "您好", "他们"):   # the checks must themselves work

@@ -62,6 +62,13 @@ sentences a week; at 30 minutes about 33 minutes and 41 a week.
 - Daily backup: `~/Desktop/claude cowork/backups/backup.js` saves all of `save/`, this state included.
   The state has no `playerName`, so the kids' weekly report skips it.
 
+## Word by word (gloss.json)
+
+`D.sent[id].g` = units `[vi, zh, hv?]`, `.x` = explanation, from gloss.json via build.py (sound drills get units
+from their own vi/zh lists). `glossHtml` / `sentenceHtml` in ui.js render them on cards, lesson pages, the tandem
+step, the sentence list (opened row), Listen and free practice; on recall cards only after Check. build.py adds a
+"Words in this lesson" page per lesson from words.csv, with Hán Việt taken from gloss.json.
+
 ## Voice marks
 
 `voiceMarks` in core.js dots r, tr, s at the start of a syllable and -nh/-ch after i and ê, the four sounds

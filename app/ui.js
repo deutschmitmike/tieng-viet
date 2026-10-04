@@ -126,9 +126,21 @@ function viHtml(vi) {
   }).join("");
 }
 function hasMarks(vi) { return vi.split(/\s+/).some(t => voiceMarks(t).length); }
+// The sentence word by word (Mike, 4 Oct 2026): each Vietnamese word with its Chinese gloss underneath and, for
+// Sino-Vietnamese words, the Hán Việt characters; then the whole sentence in Chinese and English.
+function glossHtml(item, small) {
+  if (!item.g) return '<div class="vi' + (small ? " s" : "") + '">' + viHtml(item.vi) + "</div>";
+  return '<div class="gl' + (small ? " s" : "") + '">' + item.g.map(u => '<span class="u"><span class="v">' + viHtml(u[0]) + '</span><span class="z">' + esc(u[1]) + "</span>" +
+    (u[2] ? '<span class="h">' + esc(u[2]) + "</span>" : "") + "</span>").join("") + "</div>";
+}
+function sentenceHtml(item, small) {   // words, then the whole sentence in Chinese and English
+  return glossHtml(item, small) + (!small && hasMarks(item.vi) ? '<p class="hint small">The voice is off on the dotted syllable. Tap it.</p>' : "") + '<div class="markinfo"></div>' +
+    '<div class="zh' + (small ? " s" : "") + '">' + esc(item.zh) + '</div><div class="meaning' + (small ? " s" : "") + '">' + esc(item.en) + "</div>";
+}
 function noteHtml(item) {
   let h = "";
-  if (item.hz) h += '<div class="hz">' + esc(item.hz) + "</div>";
+  if (item.x) h += '<div class="x">' + esc(item.x) + "</div>";
+  if (item.hz && !(item.g && item.g.some(u => u[2]))) h += '<div class="hz">' + esc(item.hz) + "</div>";   // the words already show their Hán Việt
   if (item.note) h += '<div class="note">' + esc(item.note) + "</div>";
   return h;
 }
@@ -257,11 +269,8 @@ function renderCard() {
       '<p class="hint">Say it in Vietnamese, out loud. Then check.</p>' +
       '<button class="btn primary big" data-act="reveal">Check</button>';
   } else {
-    body = '<div class="vi">' + viHtml(item.vi) + "</div>" +
-      (hasMarks(item.vi) ? '<p class="hint small">The voice is off on the dotted syllable. Tap it.</p>' : "") +
-      '<div class="markinfo"></div>' +
-      '<div class="meaning">' + esc(item.en) + '</div><div class="zh">' + esc(item.zh) + "</div>" +
-      ((item.note || item.hz) ? (cs.notes ? '<div class="notes">' + noteHtml(item) + "</div>" : '<button class="link" data-act="notes">Notes</button>') : "") +
+    body = sentenceHtml(item) +
+      ((item.note || item.hz || item.x) ? (cs.notes ? '<div class="notes">' + noteHtml(item) + "</div>" : '<button class="link" data-act="notes">Notes</button>') : "") +
       '<div class="plays">' +
       '<button class="btn play big" data-play="' + it.id + '" data-act="cplay">' + ICON.play + "<span>Play</span></button>" +
       '<button class="btn play" data-play="' + it.id + '" data-act="cplay" data-slow="1">' + ICON.play + "<span>Slow</span></button></div>" +
@@ -322,6 +331,8 @@ function renderTandem() {
   $("tandem").innerHTML = '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + '</button><span style="flex:1"></span>' + undoLink() + "</div>" +
     '<div class="panel page"><div class="kicker">Tandem task, lesson ' + L.n + "</div>" + L.tandem + "</div>" +
     '<div class="rate"><button class="btn again" data-act="tandem" data-v="skip">Not today</button><button class="btn ok" data-act="tandem" data-v="done">Done</button></div>';
+  document.querySelectorAll("#tandem .pl").forEach(b => { const id = b.dataset.id, it = D.sent[id];
+    b.outerHTML = '<div class="ex">' + playBtn(id) + '<div class="exb">' + (it ? sentenceHtml(it, true) : esc(id)) + "</div></div>"; });
 }
 document.addEventListener("click", e => {
   const b = e.target.closest('[data-act="tandem"]'); if (!b) return;
@@ -351,9 +362,8 @@ function renderPractice() {
   const q = PR.cs, pct = Math.round(100 * PR.pos / PR.items.length);
   const body = !q.revealed
     ? '<div class="meaning big">' + esc(item.en) + '</div><div class="zh big">' + esc(item.zh) + '</div><p class="hint">Say it in Vietnamese, out loud. Then check.</p><button class="btn primary big" data-act="prreveal">Check</button>'
-    : '<div class="vi">' + viHtml(item.vi) + '</div>' + (hasMarks(item.vi) ? '<p class="hint small">The voice is off on the dotted syllable. Tap it.</p>' : "") + '<div class="markinfo"></div>' +
-      '<div class="meaning">' + esc(item.en) + '</div><div class="zh">' + esc(item.zh) + "</div>" +
-      ((item.note || item.hz) ? (q.notes ? '<div class="notes">' + noteHtml(item) + "</div>" : '<button class="link" data-act="prnotes">Notes</button>') : "") +
+    : sentenceHtml(item) +
+      ((item.note || item.hz || item.x) ? (q.notes ? '<div class="notes">' + noteHtml(item) + "</div>" : '<button class="link" data-act="prnotes">Notes</button>') : "") +
       '<div class="plays"><button class="btn play big" data-play="' + id + '" data-act="play" data-id="' + id + '">' + ICON.play + "<span>Play</span></button>" +
       '<button class="btn play" data-play="' + id + '" data-act="play" data-id="' + id + '" data-slow="1">' + ICON.play + "<span>Slow</span></button></div>" +
       '<div class="rate"><button class="btn again" data-act="prrate" data-r="again">Again</button><button class="btn ok" data-act="prrate" data-r="ok">Got it</button></div>';
@@ -402,7 +412,7 @@ function renderListen() {
   const id = LS.list[LS.i], item = id && D.sent[id];
   $("listen").innerHTML = '<div class="top"><button class="icon" data-act="go" data-to="home" aria-label="Back">' + ICON.back + "</button></div>" +
     '<header><h1>Listen</h1><div class="sub">' + LS.list.length + " sentences you have met in " + (LS.fromPrev ? "the previous lesson" : "this lesson") + ". Each one plays, then a pause to say it" + (LS.echo ? ", then once more." : ".") + "</div></header>" +
-    '<div class="card">' + (item ? '<div class="kicker">' + (LS.i + 1) + " of " + LS.list.length + '</div><div class="vi">' + viHtml(item.vi) + '</div><div class="markinfo"></div><div class="meaning">' + esc(item.en) + "</div>" : "<p>Nothing to play yet.</p>") + "</div>" +
+    '<div class="card">' + (item ? '<div class="kicker">' + (LS.i + 1) + " of " + LS.list.length + '</div>' + sentenceHtml(item) : "<p>Nothing to play yet.</p>") + "</div>" +
     '<div class="plays"><button class="btn primary big" data-act="lstart">' + (LS.on ? ICON.stop + "<span>Stop</span>" : ICON.play + "<span>" + (LS.i ? "Go on" : "Start") + "</span>") + "</button></div>" +
     '<div class="toggles"><label><input type="checkbox" id="l_slow"' + (LS.slow ? " checked" : "") + "> slow</label>" +
     '<label><input type="checkbox" id="l_echo"' + (LS.echo ? " checked" : "") + "> play twice</label>" +
@@ -449,8 +459,8 @@ function renderLibList() {
     h += '<div class="kicker sect">Lesson ' + L.n + ": " + esc(L.title) + "</div>";
     for (const id of ids) {
       const it = D.sent[id], c = S.cards[id], st = it.kind === "d" ? "sound" : c.box >= SURE_BOX ? "sure" : c.box ? "learning" : "new";
-      h += '<div class="row" data-row="' + id + '">' + playBtn(id) + '<div class="rt"><div class="vi s">' + viHtml(it.vi) + '</div><div class="meaning s">' + esc(it.en) + '</div>' +
-        (libOpen === id ? '<div class="markinfo"></div><div class="zh s">' + esc(it.zh) + '</div>' + (noteHtml(it) ? '<div class="notes">' + noteHtml(it) + "</div>" : "") : "") + '</div><span class="tag ' + st + '">' + st + "</span></div>";
+      h += '<div class="row" data-row="' + id + '">' + playBtn(id) + '<div class="rt">' + (libOpen === id ? sentenceHtml(it, true) + (noteHtml(it) ? '<div class="notes">' + noteHtml(it) + "</div>" : "")
+          : '<div class="vi s">' + viHtml(it.vi) + '</div><div class="meaning s">' + esc(it.en) + "</div>") + '</div><span class="tag ' + st + '">' + st + "</span></div>";
     }
   }
   $("liblist").innerHTML = h || '<p class="muted">Nothing found.</p>';
@@ -478,7 +488,8 @@ function renderPage(arg) {
     (last ? (unread ? '<button class="btn ok" data-act="pgdone" data-k="' + L.key + '">Start learning</button>' : '<button class="btn" data-act="go" data-to="lessons">Done</button>')
       : '<button class="btn ok" data-act="pg" data-k="' + L.key + '" data-i="' + (i + 1) + '">Next</button>') + "</div>";
   // play buttons inside the text, as written in the lesson file with @@play
-  document.querySelectorAll("#page .pl").forEach(b => { const id = b.dataset.id; b.outerHTML = playBtn(id, esc(D.sent[id] ? D.sent[id].vi : id)); });   // no dots inside buttons: a tap there plays
+  document.querySelectorAll("#page .pl").forEach(b => { const id = b.dataset.id, it = D.sent[id];   // every example with its words and translations
+    b.outerHTML = '<div class="ex">' + playBtn(id) + '<div class="exb">' + (it ? sentenceHtml(it, true) : esc(id)) + "</div></div>"; });
 }
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b) return;

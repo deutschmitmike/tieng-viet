@@ -67,6 +67,12 @@ partner unless Mike decides one.
   routine. Do not run them. `weeks/w01/index.html` stays online as an archive for now. `schedule.csv` must stay:
   build.py reads lesson 1's start days from it.
 
+## The app is the teacher and the coursebook (Mike, 4 Oct 2026)
+
+Every sentence is shown word by word: Chinese under each word, Hán Việt in small where certain, then the whole
+sentence in Chinese and English, plus a short explanation of how it is built. The data is in `gloss.json` (see
+WEEKLY.md). Every lesson has a grammar page with translated examples and a generated word list.
+
 ## GitHub
 
 Public repo at github.com/deutschmitmike/tieng-viet, published at deutschmitmike.github.io/tieng-viet from the
